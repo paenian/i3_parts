@@ -92,7 +92,7 @@ extruder(bowden_tap, none, m5);
 //translate([motor_r*2+wall, 0, 0]) mirror([1,0,0]) extruder(bowden_tap, none, m3);
 //translate([motor_r*2+wall, motor_r*2+wall, 0]) extruder(groovemount, graber, m3);
 //translate([0, motor_r*2+wall, 0]) extruder(groovemount, none, m5);
-//extruder_mount(screws=1, flip=1, fan_mount=0, mount_screw_rad=m5_rad);
+//extruder_mount(screws=1, flip=1, fan_mount=0, mount_screw_rad=m5_rad, angle=15, height=18, offset=-2.5);
 
 
 
@@ -151,8 +151,7 @@ module fan_shroud(length = 20, hotend_offset = 20, hotend_rad = 10){
 }
 
 //attaches the motor with one or two screws.
-module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad){
-	height = 15;
+module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad, angle=0, height=15, offset=0){
 	echo(height);
 	wall=4;
 	lower_hole_sep = 30;
@@ -178,10 +177,11 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 
 			//mount base
 			hull(){
-				translate([-motor_w/2-wall-wall/2+.05+1,0,height/2]) cube([wall+2,motor_w,height], center=true);
+				translate([-motor_w/2+.05,0,height/2]) cube([1,motor_w,height], center=true);
+				translate([-motor_w/2-wall-wall/2+.05+1+offset,0,height/2]) rotate([0,0,angle]) cube([wall+2,motor_w,height], center=true);
 
 				if(screws == 2){
-					translate([-motor_w/2-wall-wall,0,632_cap_rad+wall/2+hole_sep]) rotate([0,90,0]) cylinder(r=632_cap_rad+wall-.75, h=wall+2);
+					translate([-motor_w/2-wall-wall,0,632_cap_rad+wall/2+hole_sep]) rotate([0,0,angle]) rotate([0,90,0]) cylinder(r=632_cap_rad+wall-.75, h=wall+2);
 				}
 			}
 
@@ -221,9 +221,13 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 		//clamp holes
 		render() translate([0,motor_w/2+wall+mount_screw_rad+wall,height/2]) rotate([0,90,0]) clamp(height=height, 0, mount_screw_rad, 1);
 		
-		//bolt hole
-		translate([-motor_w/2-wall*2-.05,0,mount_screw_rad*2+wall/2]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad, h=wall+1+motor_r*2);
-		translate([-motor_w/2-632_cap_height,0,mount_screw_rad*2+wall/2]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad*2, h=632_cap_height+.1);
+		//mounting holes
+		translate([-motor_w/2-wall*2-.05,0,height/2]) rotate([0,0,angle]) {
+			rotate([0,90,0]) rotate([0,0,-90]) translate([0,0,offset*2]) cap_cylinder(r=mount_screw_rad, h=motor_r*4);
+		
+			translate([wall,0,0]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad*2, h=wall*3);
+		}
+	
 
 		if(screws == 2) {
 			translate([0,0,hole_sep]) translate([-motor_w/2-wall*2-.05,0,mount_screw_rad*2+wall/2]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad, h=wall*2);
@@ -250,8 +254,9 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 
 module clamp(solid = 1, mount_screw_rad = 632_rad, m5=0){
 	len = wall*5;
+	facets = 6;
 	if(solid==1){
-		cylinder(r=height/2, h=len, center=true);	
+		rotate([0,0,180/facets]) cylinder(r=height/2/cos(180/facets), h=len, center=true, $fn=facets);	
 	}else{
 		//screwhole
 		rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad, h=len*2, center=true); 
@@ -361,14 +366,6 @@ module body(solid = 0, type=0, mount=0, idler=0){
 			if(mount == 4)
 				kossel_mount(0);
 		}
-
-		//m3 clamp
-		translate([0,-(motor_w/2+gear_rad)/2,filament_height-wall-1.1]){
-			rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=m3_rad, h=50, center=true);
-			#rotate([0,90,0]) render() rotate([0,0,-90]) translate([0,0,-wall*2]) cap_cylinder(tensioner_rad+slop, wall*4, center=true);
-			translate([motor_w/2-wall-wall,0,0]) rotate([0,90,0]) cylinder(r1=m3_nut_rad, r2=m3_nut_rad+.5, h=30, $fn=6);
-		}
-
 		
 		//flatten bottom
 		translate([0,0,-20]) cube([100,100,40],center=true);
@@ -408,6 +405,25 @@ module idler(idler_dia = 16, idler_thick = 6, idler_flat_rad = 4, idler_nut_rad 
 	//cut the slit
 	translate([slit_offset,slit_l,0]) cylinder(r=slit_w/2, h=100, center=true);
 	translate([slit_offset,slit_l-motor_w/2,0]) cube([slit_w,motor_w,100],center=true);
+
+	//widen the slit bottom
+	hull() {
+		translate([slit_offset,0,0]) cylinder(r=slit_w/2, h=100, center=true);
+		translate([slit_offset+slit_w/2,-motor_w/2,0]) cylinder(r=slit_w, h=100, center=true);	
+	}
+
+	//slit clamper
+	render() translate([slit_offset,-(motor_w/2+gear_rad)/2,filament_height-wall-1.1]){
+		hull(){	//this little bit lets the screw rotate with extreme clamp angles
+			rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=m3_rad, h=wall*4+.1, center=true);
+			translate([0,slit_w/2,0]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=m3_rad, h=.1, center=true);
+			translate([0,-slit_w/2,0]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=m3_rad, h=.1, center=true);
+		}
+			
+		translate([-wall*2-wall*4,0,0]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(tensioner_rad+slop, wall*4);
+			
+		translate([wall*2,0,0]) rotate([0,90,0]) cylinder(r1=m3_nut_rad, r2=m3_nut_rad+.5, h=idler_nut_height*2, $fn=6);
+	}
 }
 
 module bowden_tap(solid=1){
