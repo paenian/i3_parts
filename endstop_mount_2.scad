@@ -9,7 +9,7 @@ hole_height = 2.75;
 hole_sep = 19.25;
 
 height = 8;
-length = hole_sep+wall*3;
+length = hole_sep+wall*2;
 
 endstop_width = 7.5;
 
@@ -28,7 +28,7 @@ module holder(){
 	difference(){
 		hull(){
 			translate([-m8_rad,0,height/2]) cube([length, m8_rad*2+wall*3, height],center=true);
-			translate([length/2,0,height/2]) cylinder(r=m8_rad+wall, h=height, center=true);
+			translate([length/2,0,height/2]) cylinder(r=m8_rad+wall/2, h=height, center=true);
 
 			//screwholes
 			
@@ -42,10 +42,10 @@ module holder(){
 		translate([-clamp_offset,0,height/2]) cube([length, m8_rad*2, height+1],center=true);
 
 		//screwholes
-		for(i=[-1,1]) translate([i*hole_sep/2-m8_rad/2, 0, height-hole_height]) rotate([-90,0,0]) {
+		for(i=[-1,1]) translate([i*hole_sep/2-m8_rad/2-wall, 0, height-hole_height]) rotate([-90,0,0]) {
 			cap_cylinder(r=m3_rad, h=length, center=true);
-			translate([0,0,m8_rad+wall]) cap_cylinder(r=m3_cap_rad, h=wall);
-			translate([0,0,-m8_rad-wall*2]) cylinder(r=m3_nut_rad, h=wall, $fn=6);
+			translate([0,0,m8_rad+wall*2/3]) cap_cylinder(r=m3_cap_rad, h=wall);
+			translate([0,0,-m8_rad-wall*2]) cylinder(r=m3_nut_rad, h=wall*1.3333, $fn=6);
 		}
 	}
 }

@@ -87,7 +87,7 @@ m5 = 1;
 tensioner_rad = 3;
 tensioner_cap_rad = 4.5;
 
-mirror([1,0,0])		//I use this to make a left and right version for dualstrusion :-)
+//mirror([1,0,0])		//I use this to make a left and right version for dualstrusion :-)
 extruder(bowden_tap, none, m5);
 //translate([motor_r*2+wall, 0, 0]) mirror([1,0,0]) extruder(bowden_tap, none, m3);
 //translate([motor_r*2+wall, motor_r*2+wall, 0]) extruder(groovemount, graber, m3);
