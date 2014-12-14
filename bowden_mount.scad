@@ -3,7 +3,7 @@ slop = .2;
 lower_hole_sep = 30;
 lower_hole_rad = 5.5+slop;
 lower_hole_height = -7.5;
-e3d_fin_rad = 12.75;  //////////increased just slightly.
+e3d_fin_rad = 23/2;  //////////increased just slightly.
 echo("Nozzle Sep = ", e3d_fin_rad*2);
 extruder_sep = e3d_fin_rad*2;
 
@@ -48,7 +48,7 @@ nut_mount = wall+nut_height/2;	//thickness behind cone
 arm_sep = 54;
 
 
-//bowden_mount();
+bowden_mount();
 //translate([0,25,0]) nut_trap();
 translate([0,50,0]) fan_duct(); 
 
@@ -69,14 +69,14 @@ module nut_trap(){
 }
 
 module fan_duct(){
-	height = 52;
-	fan_w = 50;
-	fan_screwhole = 40/2;
-	fan_rad = 46/2;
+	height = 40;
+	fan_w = 40;
+	fan_screwhole = 32/2;
+	fan_rad = 36/2;
 
 	ductwall = 2.5;
 
-	cutoff = wall+ductwall+e3d_fin_rad*1.45;
+	cutoff = 35;
 
 	translate([0,0,height/2]) rotate([90,0,0])
 	difference(){
@@ -89,8 +89,16 @@ module fan_duct(){
 
 		for(i=[-1,1]) translate([i*extruder_sep/2,0,extruder_sep/2+wall]) rotate([90,0,0]) cylinder(r=e3d_fin_rad, h=height+ductwall*2, center=true);
 
-		//cutoff the top
-		translate([0,0,50+cutoff]) cube([100,100,100], center=true);
+		//cutout for clipping on
+                for(i=[0,1]) mirror([i,0,0]) translate([extruder_sep/2,-height/2-.1,extruder_sep/2+wall]){
+                     rotate([0,-90+cutoff,0]) difference(){
+                        cube([extruder_sep,height+1, extruder_sep]);
+                        rotate([-90,0,0]) translate([e3d_fin_rad+ductwall/4,0,-.1]) cylinder(r=ductwall/4, h=height+3, $fn=16);
+                    }
+                }
+                    
+                
+		//translate([0,0,50+cutoff]) cube([100,100,100], center=true);
 		//cutoff the center
 		translate([0,0,50+wall]) cube([extruder_sep,100,100], center=true);
 

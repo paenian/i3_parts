@@ -9,6 +9,8 @@ bearing_inner_r = bearing_inner_d/2;
 
 bolt_d = 5;
 bolt_r = bolt_d/2+slop;
+bolt_head_r = 10/2;
+nut_r = 9/2+slop;
 
 //sized for m8 and 608
 //bearing_w = 7+slop;
@@ -34,7 +36,7 @@ module spool_roller(){
 			for(i=[-separation/2, separation/2]) translate([i,0,0]) {
 				translate([0,0,wall]) bearing_mount();
 				
-				cylinder(r1=bearing_r+wall*1.75, r2=bearing_r+wall+wall, h=2);
+				cylinder(r1=bearing_r+wall*1.5, r2=bearing_r+wall+wall, h=2);
 
 				translate([0,0,1.95]) cylinder(r1=bearing_r+wall+wall, r2=(bearing_w+wall+wall+wall)/2, h=wall+wall+slop-1.95);
 			}
@@ -58,6 +60,10 @@ module bearing_mount(){
 		}
 
 		cap_cylinder(r=bolt_r, h=100, center=true);
+		
+		translate([0,0,-wall*1.5-bearing_w/2-wall/2]) cap_cylinder(r=bolt_head_r, h=wall);
+		translate([0,0,wall*1.5+bearing_w/2-wall/2]) cylinder(r1=nut_r, r2=nut_r+slop, h=wall, $fn=6);
+		
 	}
 }
 

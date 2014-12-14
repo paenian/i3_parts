@@ -88,11 +88,11 @@ tensioner_rad = 3;
 tensioner_cap_rad = 4.5;
 
 //mirror([1,0,0])		//I use this to make a left and right version for dualstrusion :-)
-extruder(bowden_tap, none, m5);
+//extruder(bowden_tap, none, m5);
 //translate([motor_r*2+wall, 0, 0]) mirror([1,0,0]) extruder(bowden_tap, none, m3);
 //translate([motor_r*2+wall, motor_r*2+wall, 0]) extruder(groovemount, graber, m3);
 //translate([0, motor_r*2+wall, 0]) extruder(groovemount, none, m5);
-//extruder_mount(screws=1, flip=1, fan_mount=0, mount_screw_rad=m5_rad, angle=15, height=18, offset=-2.5);
+extruder_mount(screws=1, flip=1, fan_mount=0, mount_screw_rad=632_rad, angle=0, height=18, offset=2);
 
 
 
@@ -219,11 +219,11 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 		translate([0,motor_w/2,height/2]) cube([wall,motor_w,height+1],center=true);
 
 		//clamp holes
-		render() translate([0,motor_w/2+wall+mount_screw_rad+wall,height/2]) rotate([0,90,0]) clamp(height=height, 0, mount_screw_rad, 1);
+		render() translate([0,motor_w/2+wall+mount_screw_rad+wall,height/2]) rotate([0,90,0]) clamp(height=height, 0, mount_screw_rad, 0);
 		
 		//mounting holes
 		translate([-motor_w/2-wall*2-.05,0,height/2]) rotate([0,0,angle]) {
-			rotate([0,90,0]) rotate([0,0,-90]) translate([0,0,offset*2]) cap_cylinder(r=mount_screw_rad, h=motor_r*4);
+			rotate([0,90,0]) rotate([0,0,-90]) translate([0,0,offset*2]) cap_cylinder(r=mount_screw_rad, h=200, center=true);
 		
 			translate([wall,0,0]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad*2, h=wall*3);
 		}

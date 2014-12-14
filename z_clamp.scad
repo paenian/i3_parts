@@ -19,7 +19,7 @@ lm8uu_dia = 15;
 lm8uu_rad = lm8uu_dia/2+slop;
 lm8uu_len = 24+slop;
 
-m5_inset = -.25;  //for clamping
+m5_inset = -.5;  //for clamping
 
 wall = 3;
 width = 12;
@@ -28,7 +28,8 @@ len = 8.5;
 
 $fn=32;
 
-!bearing_clamp();
+bearing_clamp();
+%translate([0,0,m5_inset*2]) mirror([0,0,1]) bearing_clamp();
 
 module bearing_clamp(){
 	difference(){
@@ -43,7 +44,7 @@ module bearing_clamp(){
 		}
 
 		for(i=[-1,1]){
-				rotate([-90,0,0]) translate([0,-m5_inset,i*(wall/2+len/2)]) cap_cylinder(r=m5_rad, h=len+1, center=true);
+				#rotate([-90,0,0]) translate([0,-m5_inset,i*(wall/2+len/2)]) cap_cylinder(r=m5_rad, h=len+1, center=true);
 
 				for(j=[-1,1]) translate([j*hole_sep,i*(len-m3_rad-wall/2),-.05]) {	
 					cylinder(r=m3_rad, h=wall+.1);
