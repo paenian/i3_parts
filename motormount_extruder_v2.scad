@@ -17,6 +17,8 @@
 slop = .2;
 wall = 3;
 
+layer_height=.15;
+
 $fn=32;
 
 ////////////standard variables.  Shouldn't need to change 'em.  Except maybe slop.
@@ -47,7 +49,7 @@ m5_cap_rad = 8/2+slop;
 632_cap_height = 2+slop;
 632_nut_height = 5;
 
-bowden_tap_rad = 9.5/2;
+bowden_tap_rad = 9.4/2;
 bowden_tube_rad = 2.1;
 
 
@@ -57,7 +59,7 @@ bowden_tube_rad = 2.1;
 motor_mount_h = wall;  //this is the thickness of the motor mount plate
 
 filament_rad = 1.25;	 //1.25 for 1.75mm filament, 2.25 for 3mm
-filament_height = 12; //distance from motor to center of filament.  Adjust to suit.
+filament_height = 14; //distance from motor to center of filament.  Adjust to suit.
 
 //these are for the drive gear, aka hobbed pulley
 gear_dia = 13;
@@ -87,12 +89,12 @@ m5 = 1;
 tensioner_rad = 3;
 tensioner_cap_rad = 4.5;
 
-//mirror([1,0,0])		//I use this to make a left and right version for dualstrusion :-)
-//extruder(bowden_tap, none, m5);
+mirror([1,0,0])		//I use this to make a left and right version for dualstrusion :-)
+extruder(bowden_tap, none, m5);
 //translate([motor_r*2+wall, 0, 0]) mirror([1,0,0]) extruder(bowden_tap, none, m3);
 //translate([motor_r*2+wall, motor_r*2+wall, 0]) extruder(groovemount, graber, m3);
 //translate([0, motor_r*2+wall, 0]) extruder(groovemount, none, m5);
-extruder_mount(screws=1, flip=1, fan_mount=0, mount_screw_rad=632_rad, angle=0, height=18, offset=2);
+//extruder_mount(screws=1, flip=1, fan_mount=0, mount_screw_rad=632_rad, angle=0, height=18, offset=2);
 
 
 
@@ -389,16 +391,16 @@ module idler(idler_dia = 16, idler_thick = 6, idler_flat_rad = 4, idler_nut_rad 
 	//translate([5,0,0]) //uncomment to check idler path
 	translate([eff_gear_rad+idler_rad+idler_offset,0,0]){
 		rotate([0,0,30]) translate([0,0,-wall/2]) cylinder(r1=idler_nut_rad+.5, r2 = idler_nut_rad, h=idler_nut_height+wall/2, $fn=6);
-		translate([0,0,idler_nut_height+.2]) cylinder(r=idler_bolt_rad, h=height);
+		translate([0,0,idler_nut_height+layer_height]) cylinder(r=idler_bolt_rad, h=height);
 		
 		difference(){
 			hull(){
-				%translate([0,0,filament_height+1]) cylinder(r=idler_rad, h=idler_thick+2, center=true);//idler actual
+				%translate([0,0,filament_height]) cylinder(r=idler_rad, h=idler_thick, center=true);//idler actual
 				translate([0,0,filament_height+1]) cylinder(r=idler_rad+.75, h=idler_thick+4, center=true);
 				translate([-idler_offset,0,filament_height+1]) cylinder(r=idler_rad+.75, h=idler_thick+4, center=true);
 			}
 		
-			translate([0,0,filament_height-idler_thick/2-.5]) cylinder(r1=idler_rad+.75, r2=idler_flat_rad, h=1, center=true);
+			translate([0,0,filament_height-idler_thick/2-.5]) cylinder(r1=idler_rad+.75, r2=idler_flat_rad, h=1.5, center=true);
 		}
 	}
 
@@ -427,17 +429,18 @@ module idler(idler_dia = 16, idler_thick = 6, idler_flat_rad = 4, idler_nut_rad 
 }
 
 module bowden_tap(solid=1){
-	thick = 5;
+	thick = 6;
 	translate([0,0,-5]){
 		if(solid==1){
 			hull(){
-				cylinder(r=bowden_tap_rad+thick, h=12, $fn=6);
+				cylinder(r=bowden_tap_rad+thick, h=14, $fn=6);
 				translate([0,(bowden_tap_rad+thick),0]) cylinder(r=bowden_tap_rad+thick, h=thick, $fn=6);
 			}
 		
 		}else{
 			//slit
-			translate([0,-10,thick/2-.1]) cube([bowden_tap_rad*2,20,thick], center=true);
+			translate([0,-10,thick/2+1-.01]) cube([bowden_tap_rad*2,20,thick+2], center=true);
+			cap_cylinder(bowden_tap_rad+.5, thick+2);
 			//for pass-through; bowden tube goes in a bit
 			translate([0,0,-thick]) cap_cylinder(bowden_tube_rad, 10);
 			//tap this to hold the bowden.
