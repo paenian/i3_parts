@@ -9,7 +9,7 @@ m3_cap_thick = 1.65+slop/2;
 m3_cap_hex_rad = (2/cos(30))/2;
 
 m3_nut_dia = 6.35;
-m3_nut_rad = m3_nut_dia/2+slop;
+m3_nut_rad = m3_nut_dia/2+slop/2;
 m3_nut_thick = 2.4;
 
 m5_dia = 5;
@@ -19,7 +19,7 @@ lm8uu_dia = 15;
 lm8uu_rad = lm8uu_dia/2+slop;
 lm8uu_len = 24+slop;
 
-m5_inset = -.5;  //for clamping
+m5_inset = -.25;  //for clamping
 
 wall = 3;
 width = 12;
@@ -32,6 +32,7 @@ bearing_clamp();
 //%translate([0,0,m5_inset*2]) mirror([0,0,1]) bearing_clamp();
 
 module bearing_clamp(){
+        inset = .25;
 	difference(){
 		union(){
 			rotate([-90,0,0]) translate([0,-m5_inset,0]) cap_cylinder(r=m5_rad+wall, h=len, center=true);
@@ -44,14 +45,19 @@ module bearing_clamp(){
 		}
 
 		for(i=[-1,1]){
-				#rotate([-90,0,0]) translate([0,-m5_inset,i*(wall/2+len/2)]) cap_cylinder(r=m5_rad, h=len+1, center=true);
+				rotate([-90,0,0]) translate([0,-m5_inset,i*(wall/2+len/2)]) cap_cylinder(r=m5_rad, h=len+1, center=true);
 
 				for(j=[-1,1]) translate([j*hole_sep,i*(len-m3_rad-wall/2),-.05]) {	
-					cylinder(r=m3_rad, h=wall+.1);
 					if((i+j)==0){
-						translate([0,0,wall/2]) cylinder(r=m3_cap_rad, h=lm8uu_dia);
+						translate([inset*i,0,wall/2]) {
+                                                    cylinder(r=m3_cap_rad, h=lm8uu_dia);
+                                                    cylinder(r=m3_rad, h=wall*3, center=true);
+                                            }
 					}else{
-						translate([0,0,wall/2]) rotate([0,0,30]) cylinder(r=m3_nut_rad, h=lm8uu_dia, $fn=6);
+						translate([-inset*i,0,wall/2]) {
+                                                    rotate([0,0,30]) cylinder(r1=m3_nut_rad, r2=m3_nut_rad+.5, h=lm8uu_dia, $fn=6);
+                                                    cylinder(r=m3_rad, h=wall*3, center=true);
+                                                }
 					}
 				}
 		}
