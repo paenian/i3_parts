@@ -1,6 +1,6 @@
 
 
-dual_box(01);
+dual_box(-1);
 
 $fn=64;
 

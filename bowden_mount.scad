@@ -76,7 +76,7 @@ module fan_duct(clip_height = 40, wire_offset = 4){
 
 	ductwall = 3.5;
 
-	cutoff = 35;
+	cutoff = 40;
     
         unclip_height = 40-clip_height;
 
