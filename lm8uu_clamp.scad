@@ -1,4 +1,4 @@
-slop = .25;
+slop = .2;
 
 m3_dia = 3;
 m3_rad = m3_dia/2+slop;
@@ -12,6 +12,8 @@ m3_nut_dia = 6.5;
 m3_nut_rad = m3_nut_dia/2+slop;
 m3_nut_thick = 2.4;
 
+m3_clamp_len = 1;
+echo("Screw Len", (m3_clamp_len+m3_nut_thick+6.4));
 
 lm8uu_dia = 15;
 lm8uu_rad = lm8uu_dia/2+slop;
@@ -25,16 +27,16 @@ hole_sep = 20;
 
 $fn=32;
 
-bearing_clamp();
+!bearing_clamp();
 
-!nut_trap();
+*nut_trap();
 
 module bearing_clamp(){
 	difference(){
 		hull(){
 			rotate([-90,0,0]) translate([0,lm8uu_inset-lm8uu_rad,0]) cylinder(r=lm8uu_rad+wall, h=width, center=true);
 
-			for(i=[0,1]) mirror([i,0,0]) translate([hole_sep/2,0,0]) cylinder(r=m3_rad+wall, h=wall);
+			for(i=[0,1]) mirror([i,0,0]) translate([hole_sep/2,0,0]) cylinder(r=m3_rad+wall, h=m3_clamp_len);
 		}
 
 		//bearing
@@ -43,10 +45,17 @@ module bearing_clamp(){
 			cap_cylinder(r=lm8uu_rad, h=lm8uu_len, center=true);
 		}
 
-		//screwholes
+		%translate([0,0,-lm8uu_inset+lm8uu_rad]) rotate([-90,0,0]) cylinder(r=lm8uu_rad, h=lm8uu_len, center=true);
+
+		//nutholes
 		for(i=[0,1]) mirror([i,0,0]) translate([hole_sep/2,0,-.1]) {
-			cylinder(r=m3_rad-.05, h=wall+.1);
-			translate([0,0,wall/2]) cylinder(r=m3_cap_rad, h=lm8uu_dia);
+			translate([0,0,m3_clamp_len]) hull(){
+				rotate([0,0,30]) cylinder(r1=m3_nut_rad-.05, r2=m3_nut_rad+.25, h=m3_nut_thick+slop*2+wall, $fn=6);
+				%rotate([0,0,30]) cylinder(r=m3_nut_rad-.05, h=m3_nut_thick, $fn=6);
+				//translate([5,0,0]) cylinder(r=m3_nut_rad+.25, h=m3_nut_thick+slop*3, $fn=6);
+			}
+			
+			cylinder(r=m3_rad, h=m3_clamp_len+m3_nut_thick);
 		}
 
 		translate([0,0,-50]) cube([100,100,100], center=true); 
