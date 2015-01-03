@@ -23,8 +23,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="2684.2541"
-     inkscape:cy="1047.0267"
+     inkscape:cx="1093.9214"
+     inkscape:cy="547.14036"
      inkscape:document-units="mm"
      inkscape:current-layer="g16447"
      showgrid="false"
@@ -85,7 +85,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -32338,7 +32338,7 @@
       </g>
       <g
          id="g17503"
-         transform="translate(-4,6)">
+         transform="translate(-233.1678,-431.7739)">
         <path
            inkscape:connector-curvature="0"
            style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
@@ -32458,7 +32458,7 @@
       </g>
       <g
          id="g17528"
-         transform="translate(-254.57099,-15.986156)">
+         transform="translate(-5.403,-453.7551)">
         <path
            inkscape:connector-curvature="0"
            style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
@@ -32577,7 +32577,7 @@
            id="path11935-7-8" />
       </g>
       <g
-         transform="translate(-4.003168,-445.77381)"
+         transform="translate(-233.1646,19.9999)"
          id="g17503-1">
         <path
            inkscape:connector-curvature="0"
@@ -32697,7 +32697,7 @@
            id="path11935-7-7" />
       </g>
       <g
-         transform="translate(-129.79055,-445.76635)"
+         transform="translate(-107.3773,19.9925)"
          id="g17503-1-9">
         <path
            inkscape:connector-curvature="0"
@@ -33904,6 +33904,26 @@
       <path
          id="path10977-2-2-9-7"
          d="m 5449.8835,-40.624754 44.8892,0"
+         style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
+         inkscape:connector-curvature="0" />
+      <path
+         id="path10971-6-8-8"
+         d="m 4079.313,469.60078 9.3368,2.98698"
+         style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
+         inkscape:connector-curvature="0" />
+      <path
+         id="path10973-1-2-8"
+         d="m 4092.9908,426.84615 -13.6778,42.75463"
+         style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
+         inkscape:connector-curvature="0" />
+      <path
+         id="path10975-5-7-1"
+         d="m 4102.3276,429.83313 -9.3368,-2.98698"
+         style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
+         inkscape:connector-curvature="0" />
+      <path
+         id="path10977-2-2-1"
+         d="m 4088.6498,472.58776 13.6778,-42.75463"
          style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
          inkscape:connector-curvature="0" />
     </g>
