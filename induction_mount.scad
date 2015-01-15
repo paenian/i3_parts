@@ -44,11 +44,6 @@ wall = 4;
 //rotate([0,-90,0]) 
 induction_mount2();
 
-
-
-
-
-
 module induction_mount2(){
 	height = 13;
 	notch_h = 6;
