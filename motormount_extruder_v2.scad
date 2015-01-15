@@ -89,12 +89,14 @@ m5 = 1;
 tensioner_rad = 3;
 tensioner_cap_rad = 4.5;
 
-mirror([1,0,0])		//I use this to make a left and right version for dualstrusion :-)
-extruder(bowden_tap, none, m5);
+//mirror([1,0,0])		//I use this to make a left and right version for dualstrusion :-)
+//extruder(bowden_tap, none, m5);
 //translate([motor_r*2+wall, 0, 0]) mirror([1,0,0]) extruder(bowden_tap, none, m3);
 //translate([motor_r*2+wall, motor_r*2+wall, 0]) extruder(groovemount, graber, m3);
-//translate([0, motor_r*2+wall, 0]) extruder(groovemount, none, m5);
-//extruder_mount(screws=1, flip=1, fan_mount=0, mount_screw_rad=632_rad, angle=0, height=18, offset=2);
+
+//**********BUILD GROUP 6 SPECS***********//
+translate([0, motor_r*2+wall, 0]) extruder(groovemount, none, m5, motor_mount_h=5.5);
+//extruder_mount(screws=2, flip=1, fan_mount=1, mount_screw_rad=632_rad, angle=0, height=16, offset=0);
 
 
 
@@ -153,15 +155,15 @@ module fan_shroud(length = 20, hotend_offset = 20, hotend_rad = 10){
 }
 
 //attaches the motor with one or two screws.
-module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad, angle=0, height=15, offset=0){
+module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad, angle=0, height=15, offset=0, motor_offset=1){
 	echo(height);
 	wall=4;
-	lower_hole_sep = 30;
-	lower_hole_rad = 5+slop;
+	lower_hole_sep = 47.5;
+	lower_hole_rad = 6+slop;
 	lower_hole_height = 7.5;
 	lower_hole_depth = 6;
 
-	hole_sep=47.5;
+	hole_sep=30;
 	fan_hole_sep = 32;
 	fan_offset= 5;
 	
@@ -179,11 +181,11 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 
 			//mount base
 			hull(){
-				translate([-motor_w/2+.05,0,height/2]) cube([1,motor_w,height], center=true);
-				translate([-motor_w/2-wall-wall/2+.05+1+offset,0,height/2]) rotate([0,0,angle]) cube([wall+2,motor_w,height], center=true);
+				//translate([-motor_w/2+.05,0,height/2]) cube([.1,motor_w,height], center=true);
+				#translate([-motor_w/2-wall-wall/2+.05+1+offset,0,height/2]) rotate([0,0,angle]) cube([wall+1,motor_w,height], center=true);
 
 				if(screws == 2){
-					translate([-motor_w/2-wall-wall,0,632_cap_rad+wall/2+hole_sep]) rotate([0,0,angle]) rotate([0,90,0]) cylinder(r=632_cap_rad+wall-.75, h=wall+2);
+					translate([-motor_w/2-wall-wall,0,height/2+hole_sep]) rotate([0,0,angle]) rotate([0,90,0]) cylinder(r=632_cap_rad+wall-.75, h=wall+1);
 				}
 			}
 
@@ -191,18 +193,14 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 			if(screws == 2){
 				difference(){
 					hull(){
-						*intersection(){
-							translate([-motor_w/2-wall/2+.05+.5,0,height/2]) cube([wall+1,motor_r*2,height], center=true);
-							scale([scale_size,scale_size,1]) cylinder(r=motor_r+slop, h=height);
-						}
-
 						translate([-motor_w/2-wall/2+.05+1,0,height/2]) cube([wall+2,motor_w,height], center=true);
 
-						translate([-motor_w/2-wall,0,height+wall*3]) rotate([0,90,0]) cylinder(r=632_cap_rad+wall-.75, h=wall+2);
+						translate([-motor_w/2-wall,0,height/2+hole_sep]) rotate([0,90,0]) cylinder(r=632_cap_rad+wall-.75, h=wall+2);
 					}
 
 					hull(){
-						translate([-motor_w/2-wall+1+wall,0,height+wall*2]) rotate([90,0,0]) scale([1,2,1]) cylinder(r=wall, h=motor_w+wall*2, center=true, $fn=90);
+						translate([-motor_w/2-wall+1+wall,0,height+wall]) rotate([90,0,0]) scale([1,1,1]) cylinder(r=wall, h=motor_w+wall*2, center=true, $fn=90);
+                                                translate([-motor_w/2-wall+10+wall,0,height+wall]) rotate([90,0,0]) scale([1,1,1]) cylinder(r=wall, h=motor_w+wall*2, center=true, $fn=90);
 						translate([-motor_w/2-wall+1+wall,0,height+wall*2+hole_sep]) rotate([90,0,0]) cylinder(r=wall, h=motor_w+wall, center=true);
 					}
 				}
@@ -224,16 +222,19 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 		render() translate([0,motor_w/2+wall+mount_screw_rad+wall,height/2]) rotate([0,90,0]) clamp(height=height, 0, mount_screw_rad, 0);
 		
 		//mounting holes
-		translate([-motor_w/2-wall*2-.05,0,height/2]) rotate([0,0,angle]) {
+		#translate([-motor_w/2-wall*2-.05,0,height/2]) rotate([0,0,angle]) {
 			rotate([0,90,0]) rotate([0,0,-90]) translate([0,0,offset*2]) cap_cylinder(r=mount_screw_rad, h=200, center=true);
 		
-			translate([wall,0,0]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad*2, h=wall*3);
+			translate([wall/2,0,0]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad*2, h=wall*3);
 		}
 	
 
 		if(screws == 2) {
-			translate([0,0,hole_sep]) translate([-motor_w/2-wall*2-.05,0,mount_screw_rad*2+wall/2]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad, h=wall*2);
-			translate([0,0,hole_sep]) translate([-motor_w/2-632_cap_height,0,mount_screw_rad*2+wall/2]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad*2, h=632_cap_height+.1);
+			translate([-motor_w/2-wall*2-.05,0,height/2+hole_sep]) rotate([0,0,angle]) {
+                            rotate([0,90,0]) rotate([0,0,-90]) translate([0,0,offset*2]) cap_cylinder(r=mount_screw_rad, h=200, center=true);
+		
+                            translate([wall/2,0,0]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad*2, h=wall*3);
+		}
 		
 			//make the screwholes, and avoid the other screws
 			translate([-motor_w/2-wall-wall,0,632_cap_rad+wall/2+hole_sep/2])
@@ -280,10 +281,10 @@ module extruder(type=0, mount = 0, idler = 0){
 	difference(){
 		union(){
 			base(solid=1, h=motor_mount_h);
-			body(solid=1, type=type, mount=mount, idler=idler);
+			body(solid=1, type=type, mount=mount, idler=idler, motor_mount_h=motor_mount_h);
 		}
 
-		base(solid=0, h=motor_mount_h);
+		base(solid=0, h=motor_mount_h-.25);
 		body(solid=0, type=type, mount=mount, idler=idler);
 	}
 }
@@ -497,20 +498,23 @@ module groovemount(solid=1){
 	
 	screw_baserad = screw_inset/cos(180/4)-1.5;
 	
-	//cube([screw_offset*2-screw_inset*2, width, width], center=true);
-
 	motor_angle=0;
 	
-	
 	if(solid==1){
-		minkowski(){
-			translate([0,0,-wall*2-mink]) rotate([0,0,180/16]) cylinder(r=(wall+rad-mink+1)/cos(180/16), h=inset+wall*1, $fn=16);
-			sphere(r=mink, $fn=18);
-		}
+                hull(){
+                    minkowski(){
+                            translate([0,0,-wall*2-mink]) rotate([0,0,180/16]) cylinder(r=(wall+rad-mink+1)/cos(180/16), h=inset+wall*1, $fn=16);
+                            sphere(r=mink, $fn=18);
+                    }
+                    
+                    #translate([0,filament_height,0]) rotate([90,0,0])  cylinder(r=4, h=.1, center=true);
+                }
 		
 		//bolts to hold hotend in
-		//#for(i=[0,1]) mirror([i,0,0]) translate([screw_offset,-screw_height/2,inset-wall-screw_inset]) rotate([90,0,0]) scale([1.25,1,1]) rotate([0,0,45]) cylinder(r1=screw_baserad, r2=screw_inset/cos(180/4), h=screw_height, center=true, $fn=4);
-		translate([0,(-rad-wall*2)/2,-wall+groove]) cube([(rad+wall)*2, rad+wall*2, m3_cap_rad*2+wall/2], center=true);
+                minkowski(){
+                    translate([0,(-rad-wall*2)/2,-wall+groove]) cube([(rad+wall+1)*2-mink*2, rad+wall*2-mink*2, groove+2-mink*2], center=true);
+                    sphere(r=mink, $fn=18);
+                }
 		
 		//translate([0,0,wall/2]) mount_plate(1, motor_angle);
 	}else{

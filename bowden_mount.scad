@@ -48,9 +48,9 @@ nut_mount = wall+nut_height/2;	//thickness behind cone
 arm_sep = 54;
 
 
-bowden_mount();
+//bowden_mount();
 //translate([0,25,0]) nut_trap();
-!translate([0,50,0]) fan_duct(clip_height=29); 
+translate([0,50,0]) fan_duct(clip_height=25); 
 
 $fn=32;
 
@@ -145,7 +145,7 @@ module bowden_mount(){
 			//mount supports
 			hull(){
 				for(i=[0,1]) mirror([i,0,0]) translate([hole_sep/2,-hotend_rad-wall,attach_height]) rotate([-90,0,0]) cylinder(r=632_rad+wall, h=wall);
-				#for(i=[0,1]) mirror([i,0,0]) translate([hole_sep/3,-hotend_rad-wall,632_rad+wall]) rotate([-90,0,0]) rotate([0,0,-180/5/2]) cylinder(r=(632_rad+wall)/cos(180/5), h=wall, $fn=5);
+				for(i=[0,1]) mirror([i,0,0]) translate([hole_sep/3,-hotend_rad-wall,632_rad+wall]) rotate([-90,0,0]) rotate([0,0,-180/5/2]) cylinder(r=(632_rad+wall)/cos(180/5), h=wall, $fn=5);
 			}
 
 			//fillet
@@ -162,7 +162,7 @@ module bowden_mount(){
 			//translate([0,0,wall-632_cap_height]) cap_cylinder(r=632_cap_rad, h=wall+1);
 	
 			//hollows for other screws on mount
-			translate([lower_hole_sep/2-hole_sep/2, lower_hole_height, 0]) cylinder(r=lower_hole_rad, h=wall+1);
+			translate([lower_hole_sep/2-hole_sep/2, -lower_hole_height, 0]) cap_cylinder(r=lower_hole_rad, h=wall+1);
 		}
 
 	}
