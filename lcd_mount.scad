@@ -25,12 +25,11 @@ switch = 4;
 shaft = 6.0+slop;
 
 $fn=32;
-for(i=[0:360/7:350]) rotate([0,0,i]) translate([12,0,0]) 
-	spacer();
+//for(i=[0:360/7:350]) rotate([0,0,i]) translate([12,0,0]) 
+//	spacer();
 
 stop_button();
-
-translate([24,24,0]) knob();
+translate([24,0,0]) knob();
 
 module knob(){
 	thick = 13;
@@ -61,7 +60,7 @@ module stop_button(){
 	rad = dia/2-slop;
 	base_rad = rad+wall/2;
 	union(){
-		cylinder(r=base_rad, h=3);
+		cylinder(r=base_rad, h=1.5);
 		cylinder(r=rad, h=height-switch+6);
 	}
 }

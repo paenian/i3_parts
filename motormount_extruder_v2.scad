@@ -95,8 +95,8 @@ tensioner_cap_rad = 4.5;
 //translate([motor_r*2+wall, motor_r*2+wall, 0]) extruder(groovemount, graber, m3);
 
 //**********BUILD GROUP 6 SPECS***********//
-translate([0, motor_r*2+wall, 0]) extruder(groovemount, none, m5, motor_mount_h=5.5);
-//extruder_mount(screws=2, flip=1, fan_mount=1, mount_screw_rad=632_rad, angle=0, height=16, offset=0);
+//translate([0, motor_r*2+wall, 0]) extruder(groovemount, none, m5, motor_mount_h=5.5);
+extruder_mount(screws=2, flip=1, fan_mount=1, mount_screw_rad=632_rad, angle=0, height=16, offset=0);
 
 
 
@@ -160,7 +160,7 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 	wall=4;
 	lower_hole_sep = 47.5;
 	lower_hole_rad = 6+slop;
-	lower_hole_height = 7.5;
+	lower_hole_height = -7.5;
 	lower_hole_depth = 6;
 
 	hole_sep=30;
@@ -182,7 +182,7 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 			//mount base
 			hull(){
 				//translate([-motor_w/2+.05,0,height/2]) cube([.1,motor_w,height], center=true);
-				#translate([-motor_w/2-wall-wall/2+.05+1+offset,0,height/2]) rotate([0,0,angle]) cube([wall+1,motor_w,height], center=true);
+				translate([-motor_w/2-wall-wall/2+.05+1+offset,0,height/2]) rotate([0,0,angle]) cube([wall+1,motor_w,height], center=true);
 
 				if(screws == 2){
 					translate([-motor_w/2-wall-wall,0,height/2+hole_sep]) rotate([0,0,angle]) rotate([0,90,0]) cylinder(r=632_cap_rad+wall-.75, h=wall+1);
@@ -237,7 +237,7 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 		}
 		
 			//make the screwholes, and avoid the other screws
-			translate([-motor_w/2-wall-wall,0,632_cap_rad+wall/2+hole_sep/2])
+			#translate([-motor_w/2-wall-wall,0,height/2+hole_sep/2])
 			for(i=[-1,1]) rotate([0,90,0]) rotate([0,0,-90]) {
 				mirror([flip,0,0]) translate([lower_hole_height, lower_hole_sep/2*i, -.25]) cap_cylinder(r=lower_hole_rad, h=lower_hole_depth+.5, point=1);
 			}
