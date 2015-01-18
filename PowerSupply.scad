@@ -1,16 +1,17 @@
 // Box size
 boxwidth = 50;
 boxlength = 111;
-boxheight = 45;
+boxheight = 50;
 boxwall = 2;
 facewall = 3;
 
 // Plug outlet hole
 
 plugholesep = 40;
-plugholerad = 2.6;
+plugholerad = 2.4;
+plugnut_rad = 5.7;
 plugwidth= 28.5;
-pluglength = 47;
+pluglength = 48.5;
 plugheight = 6;
 plugbevel = 6;
 
@@ -61,8 +62,8 @@ module bevelbox(width,length,height,bevel)
 
 	for(i=[-1,1]) translate([length/2+1,width/2+i*plugholesep/2,-.1]) {
 		cylinder(r=plugholerad, h=height+1);
-		translate([0,0,offsetz]) cylinder(r=m5nut_rad, h=height, $fn=6);
-		translate([0,0,height+offsetz-.05]) cylinder(r1=m5nut_rad, r2=m5nut_rad-2, h=height, $fn=6);
+		translate([0,0,offsetz]) rotate([0,0,45]) cylinder(r=plugnut_rad, h=height, $fn=4);
+		translate([0,0,height+offsetz-.05]) rotate([0,0,45]) cylinder(r1=plugnut_rad, r2=plugnut_rad-2, h=height, $fn=4);
 	}
 }
 
