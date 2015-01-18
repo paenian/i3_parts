@@ -70,9 +70,22 @@ module bevelbox(width,length,height,bevel)
 module casing(w,l,h,t)
 {
 	walls = t*2;
+        minrad = 2;
+        outer_minrad = 3;
 	difference () {
-		cube ([w,l,h]);
-		translate ([t,t,facewall]) cube ([w-walls,l-walls,h]);
+                //cube ([w,l,h]);
+                minkowski(){
+                    translate([outer_minrad,outer_minrad,0]) cube ([w-outer_minrad*2,l-outer_minrad*2,h-outer_minrad/2]);
+                    intersection(){
+                        cylinder(r=outer_minrad,h=outer_minrad/2);
+                        sphere(r=outer_minrad);
+                    }
+                }
+                //translate ([t,t,facewall]) cube ([w-walls,l-walls,h]);
+                minkowski(){
+                    translate ([t+minrad,t+minrad,facewall+minrad]) cube ([w-walls-minrad*2,l-walls-minrad*2,h-minrad*2]);
+                    sphere(r=minrad);
+                }
 	}
 }
 
