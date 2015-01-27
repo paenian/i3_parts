@@ -43,7 +43,9 @@ m5_cap_rad = 8/2+slop;
 //english sizes - 6-32 - for graber i3 clamp
 632_dia = 3.5;
 632_rad = 632_dia/2+slop;
+bolt_rad = 632_rad;
 632_nut_rad = 8.25/cos(45)/2;
+nut_rad = 632_nut_rad;
 632_cap_dia = 6.5;
 632_cap_rad = 632_cap_dia/2+slop;
 632_cap_height = 2+slop;
@@ -95,8 +97,12 @@ tensioner_cap_rad = 4.5;
 //translate([motor_r*2+wall, motor_r*2+wall, 0]) extruder(groovemount, graber, m3);
 
 //**********BUILD GROUP 6 SPECS***********//
-//translate([0, motor_r*2+wall, 0]) extruder(groovemount, none, m5, motor_mount_h=5.5);
-extruder_mount(screws=2, flip=1, fan_mount=1, mount_screw_rad=632_rad, angle=0, height=16, offset=0);
+ind_rad = 18/2+slop*2;
+ind_height = 12;
+
+translate([0, 0, 0]) extruder(groovemount, none, m5, motor_mount_h=5.5, e3d=1);
+//extruder_mount(screws=2, flip=1, fan_mount=1, mount_screw_rad=632_rad, angle=0, height=16, offset=0);
+translate([filament_offset, 33, 0]) rotate([0,0,180]) grooveclamp(induction=1);
 
 
 
@@ -281,11 +287,11 @@ module extruder(type=0, mount = 0, idler = 0){
 	difference(){
 		union(){
 			base(solid=1, h=motor_mount_h);
-			body(solid=1, type=type, mount=mount, idler=idler, motor_mount_h=motor_mount_h);
+			body(solid=1, type=type, mount=mount, idler=idler, motor_mount_h=motor_mount_h, e3d=e3d);
 		}
 
 		base(solid=0, h=motor_mount_h-.25);
-		body(solid=0, type=type, mount=mount, idler=idler);
+		body(solid=0, type=type, mount=mount, idler=idler, e3d=e3d);
 	}
 }
 
@@ -317,7 +323,7 @@ module body(solid = 0, type=0, mount=0, idler=0){
 			if(type == 1)
 				bowden_clamp(1);
 			if(type == 2)
-				groovemount(1);
+				groovemount(1,e3d=e3d);
 			if(mount == 1)
 				graber_i3_mount(1);
 			if(mount == 2)
@@ -359,7 +365,7 @@ module body(solid = 0, type=0, mount=0, idler=0){
 			if(type == 1)
 				bowden_clamp(0);
 			if(type == 2)
-				groovemount(0);
+				groovemount(0,e3d=e3d);
 			if(mount == 1)
 				graber_i3_mount(0);
 			if(mount == 2)
@@ -482,7 +488,140 @@ module bowden_clamp(solid=1){
 	}
 }
 
-module groovemount(solid=1){
+module hotend_mount(solid = 1, induction = 0){
+    fudge=15;
+    ind_offset = -30;
+    if(induction==1){
+        translate([0,ind_offset,-wall]) mirror([0,1,0]) extruder_mount(solid, m_height=ind_height,  hotend_rad=ind_rad);
+        if(solid==1) rotate([0,0,180]) translate([0,rad+wall+1.5,-wall]) cylinder(r=8+1, h=inset);
+    }
+    
+    for(i=[180,90-fudge,270+fudge]) rotate([0,0,i]) translate([0,rad+wall+1.5,-wall]){
+        if(solid==1){
+            cylinder(r=632_nut_rad, h=inset);
+        }
+        if(solid==0){
+            translate([0,0,-wall]) rotate([0,0,-i]) cap_cylinder(r=632_rad, h=inset+wall+.1);
+            translate([0,0,inset]) rotate([0,0,-i]) cap_cylinder(r=632_cap_rad, h=inset+wall*2);
+            translate([0,0,-632_nut_height])  hull() {
+                echo(inset);
+                rotate([0,0,45]) cylinder(r=632_nut_rad, h=632_nut_height, $fn=4);
+                translate([0,wall,0])  rotate([0,0,45]) cylinder(r=632_nut_rad, h=632_nut_height, $fn=4);
+            }
+
+        }
+    }
+}
+
+module extruder_mount(solid = 1, m_height = 10, fillet = 8, tap_height=0, width=20){
+        wall=5;
+        m_thickness = wall*2+1+1;
+	gap = 2;
+	tap_dia = 9.1;
+	tap_rad = tap_dia/2;
+
+	if(solid){		
+		//clamp material
+		if(m_height > nut_rad*2){
+			cylinder(r=(hotend_rad+wall)/cos(30), h=m_height, $fn=6);
+			translate([hotend_rad+bolt_rad+1,gap,m_height/2]) rotate([-90,0,0]) cylinder(r=m_height/2/cos(30), h=wall+1, $fn=6);
+			translate([hotend_rad+bolt_rad+1,-wall-1,m_height/2]) rotate([-90,0,0]) cylinder(r=m_height/2/cos(30), h=wall+1, $fn=6);
+		}
+	}else{
+		union(){
+			//hotend hole
+			translate([0,0,-.05]) cylinder(r=hotend_rad/cos(180/18)+.1, h=m_height+40, $fn=36);
+
+			//bolt slots
+			if(m_height > nut_rad*2){
+				render() translate([hotend_rad+bolt_rad+1,-m_thickness-.05,m_height/2]) rotate([-90,0,0]) cap_cylinder(r=632_rad, h=m_thickness+10);
+				translate([hotend_rad+bolt_rad+1,-wall*2-1,m_height/2]) rotate([-90,0,0]) cylinder(r=632_nut_rad, h=wall, $fn=4);
+
+				//mount tightener
+				translate([hotend_rad+bolt_rad+1,wall+gap+1,m_height/2]) rotate([-90,0,0]) cylinder(r=632_cap_rad, h=10);
+				translate([0,0,-.05]) cube([wall*5, gap, m_height+.1]);
+			}
+		}
+	}
+}
+
+module grooveclamp(solid=1, induction=0){
+    dia = 16;
+    groove_dia = 12;
+    rad = dia/2+slop;
+    groove_rad = groove_dia/2+slop;
+    height = 4.25;
+    inset = height;
+    difference(){
+        union(){
+            hull(){
+                translate([0,0,wall]) hotend_mount(1, rad=rad, inset=inset);
+            }
+            if(induction==1){
+                translate([0,0,wall]) hotend_mount(1, rad=rad, inset=inset, induction=induction);
+            }
+        }
+        
+        #translate([0,0,wall]) hotend_mount(0, rad=rad, inset=inset, induction=induction);
+        
+        %translate([0,0,-.1]) cylinder(r=22/2+slop, h=.2);
+        
+        //hotend cutout
+        translate([0,0,-.1]) {
+            cylinder(r=groove_rad, h=inset+1);
+            translate([0,6,0]) hull(){
+                cylinder(r=groove_rad, h=inset+1);
+                translate([0,10,0]) cylinder(r=groove_rad, h=inset+1);
+            }
+        }
+    }
+}
+
+module groovemount(solid=1, e3d=0){
+	dia = 16;
+	rad = dia/2+slop;
+	mink = 1;
+	inset = 4;
+	groove = 7;
+
+	screw_inset = 4.2;
+	screw_offset = rad-.5;
+	screw_height = rad+m3_nut_height+wall;
+	
+
+	width = filament_height*2+wall/2+mink/2;
+	
+	screw_baserad = screw_inset/cos(180/4)-1.5;
+	
+	motor_angle=0;
+	
+	if(solid==1){
+                hull(){
+                    minkowski(){
+                            translate([0,0,-wall*2-mink]) rotate([0,0,180/16]) cylinder(r=(wall+rad-mink+1)/cos(180/16), h=inset+wall*1, $fn=16);
+                            sphere(r=mink, $fn=18);
+                    }
+                    
+                    //three hotend mounting lugs
+                    hotend_mount(1, rad=rad, inset=inset);
+                }
+	}else{
+		translate([0,0,-wall]) cap_cylinder(rad, inset+.1, $fn=90);
+            
+                
+                if(e3d==1){  //tube insets for e3d
+                    translate([0,0,-wall-1]) cap_cylinder(r=4.1, h=1.2);
+                    translate([0,0,-wall-wall]) cap_cylinder(r=bowden_tube_rad, h=wall+1);
+                }
+		//backstop
+		translate([0,0,-wall]) cylinder(r=rad+slop*2, h=slop*2);
+                
+                //three hotend mounting lugs
+                hotend_mount(0, rad=rad, inset=inset);
+	}
+}
+
+module groovescrewmount(solid=1){
 	dia = 16;
 	rad = dia/2+slop;
 	mink = 1;
@@ -507,7 +646,7 @@ module groovemount(solid=1){
                             sphere(r=mink, $fn=18);
                     }
                     
-                    #translate([0,filament_height,0]) rotate([90,0,0])  cylinder(r=4, h=.1, center=true);
+                    translate([0,filament_height,0]) rotate([90,0,0])  cylinder(r=4, h=.1, center=true);
                 }
 		
 		//bolts to hold hotend in
@@ -527,7 +666,7 @@ module groovemount(solid=1){
 			translate([0,0,m3_nut_height+.3]) cylinder(r=m3_rad, h=rad);
 			translate([0,0,m3_nut_height+wall/2+.3]) cylinder(r=m3_cap_rad, h=rad);
 			hull(){
-				#rotate([0,0,30]) cylinder(r=m3_nut_rad+slop, h=m3_nut_height+slop*2, $fn=6);
+				rotate([0,0,30]) cylinder(r=m3_nut_rad+slop, h=m3_nut_height+slop*2, $fn=6);
 				translate([0,wall*3,0]) rotate([0,0,30]) cylinder(r=m3_nut_rad+slop, h=m3_nut_height+slop*2, $fn=6);
 			}
 		}

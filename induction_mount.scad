@@ -36,8 +36,8 @@ ind_x_offset = 5;
 
 
 screw_y_sep = 66;
-screw_rad = 4/2+slop;
-screw_cap_rad = 7/2+slop;
+screw_rad = 4/2+slop*2;
+screw_cap_rad = 7/2+slop*2;
 nut_rad = 8.9/2+slop;
 
 wall = 4;
@@ -46,7 +46,7 @@ induction_mount2();
 
 module induction_mount2(){
 	height = 13;
-	notch_h = 6;
+	notch_h = 6-1.5;
 	notch = 2;
 	offset = 6;
 	difference(){
@@ -65,7 +65,7 @@ module induction_mount2(){
 			rotate([-90,0,0]) translate([0,0,notch+2]) cap_cylinder(r=screw_cap_rad, h=wall*2);
 			
 			//this makes the protrusion into the bearing slot
-			#translate([0,0,height/2-notch_h]) cube([hotend_rad*2+wall*2,notch*2,height], center=true);
+			translate([0,0,height/2-notch_h]) cube([hotend_rad*2+wall*2,notch*2,height], center=true);
 		}		
 	}
 }
