@@ -102,7 +102,7 @@ ind_height = 12;
 
 translate([0, 0, 0]) extruder(groovemount, none, m5, motor_mount_h=5.5, e3d=1);
 //extruder_mount(screws=2, flip=1, fan_mount=1, mount_screw_rad=632_rad, angle=0, height=16, offset=0);
-translate([filament_offset, 33, 0]) rotate([0,0,180]) grooveclamp(induction=1);
+translate([filament_offset, 33, 0]) rotate([0,0,180]) grooveclamp(induction=0);
 
 
 
