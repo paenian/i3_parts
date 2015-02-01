@@ -2,7 +2,23 @@ A collection of parts that I use for my Graber i3 printers.  Original lasercut b
 <br><br>
 Now featuring dual-strusion, including some parts I am using to convert my old Prusa v2 into a dual-extruder bowden machine.
 <br><br>
-
+<h4>Bill of Materails uploaded!</h4>
+The full BOM is up: <pre>Paul's Prusa i3 kit - BOM.pdf</pre>
+It includes everything I could think of.
+<br><br>
+<h5>Tools</h5>
+<ul>
+<li>Metric Ball-end hex keys</li>
+<li>Crescent Wrench</li>
+<li>Soldering iron</li>
+<li>Knife/scissors/wire strippers</li>
+<li>Small Flathead screwdriver</li>
+<li>Tweezers - preferably offset</li>
+<li>Phillips screwdriver</li>
+<li>Flush cutters (recommended)</li>
+<li>Multimeter (recommended)</li>
+</ul>
+<br><br>
 <h5>Major changes</h5>
 <ul>
 <li>Moved the LCD for better cable management</li>
