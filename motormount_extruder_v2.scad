@@ -64,11 +64,11 @@ filament_rad = 1.25;	 //1.25 for 1.75mm filament, 2.25 for 3mm
 filament_height = 14; //distance from motor to center of filament.  Adjust to suit.
 
 //these are for the drive gear, aka hobbed pulley
-gear_dia = 13;
+gear_dia = 11;  //13 for Mark 7, 11 for Mark 8
 gear_rad = gear_dia/2+slop;
 
 //the eff gear rad is the radius of the hobbed part of your gear, 
-eff_gear_rad = 11/2;
+eff_gear_rad = 6.8/2; //11/2 for mark 7, 7/2 for Mark 8
 idler_offset = filament_rad*4/3;  //adjust to increase/decrease tension
 
 //hotend attachment types
@@ -102,7 +102,7 @@ ind_height = 12;
 
 translate([0, 0, 0]) extruder(groovemount, none, m5, motor_mount_h=5.5, e3d=1);
 //extruder_mount(screws=2, flip=1, fan_mount=1, mount_screw_rad=632_rad, angle=0, height=16, offset=0);
-translate([filament_offset, 33, 0]) rotate([0,0,180]) grooveclamp(induction=0);
+//translate([filament_offset, 33, 0]) rotate([0,0,180]) grooveclamp(induction=0);
 
 
 
@@ -356,7 +356,7 @@ module body(solid = 0, type=0, mount=0, idler=0){
 		}
 
 		//cone to guide/unguide filament
-		translate([filament_offset,0,filament_height]) for(i=[0,1]) mirror([0,i,0]) translate([0,-wall-1,0]) rotate([90,0,0]) rotate([0,0,180/8]) cylinder(r1=wall*1, r2=filament_rad, h=2, $fn=8);
+		translate([filament_offset,-1,filament_height]) for(i=[0,1]) mirror([0,i,0]) translate([0,-wall-1,0]) rotate([90,0,0]) rotate([0,0,180/8]) cylinder(r1=filament_rad*2, r2=filament_rad, h=2, $fn=8);
 
 		//hotend attachment
 		render() translate([filament_offset,motor_w/2,filament_height]) rotate([-90,0,0]){

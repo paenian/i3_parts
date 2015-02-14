@@ -39,18 +39,23 @@ module holder(){
 }
 
 module round_clip(rad=8, height=10, wall=3, angle=45, support=0, clamp=0, solid=0){
-	translate([0,0,wall+rad])
+	translate([0,0,wall/2+rad])
 	rotate([0,90,0])
 	if(solid == 1){
-		union(){
+                difference(){
+                    union(){
 			translate([0,0,height/2]) rotate([0,0,30]) cylinder(r=(wall/2+rad)/cos(30), h=height*2, center=true);
 
 			if(clamp==1){
 				for(i=[-1,1]) rotate([0,0,i*angle/2]) translate([-rad-wall/2,0,0]) rotate([0,0,-i*angle/2]) rotate([i*90,0,0]) hull(){
-					translate([wall/2, 0, 0]) cylinder(r1=wall+m3_nut_rad, r2=wall/2+m3_nut_rad, h=m3_nut_height+.1, $fn=6, center=true);
+					translate([wall, 0, 0]) cylinder(r1=wall+m3_nut_rad, r2=wall/2+m3_nut_rad, h=m3_nut_height+.1, $fn=6, center=true);
 					translate([-m8_rad, 0, 0]) cylinder(r1=wall+m3_nut_rad, r2=wall/2+m3_nut_rad, h=m3_nut_height+.1, $fn=6, center=true);
 				}
 			}
+                    }
+                    
+                    //flatten the back
+                    translate([25+wall/2+rad,0,0]) cube([50,50,50], center=true);
 		}
 	}else{
 		//hollow
