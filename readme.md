@@ -6,6 +6,8 @@ Now featuring dual-strusion, including some parts I am using to convert my old P
 The full BOM is up: <pre>Paul's Prusa i3 kit - BOM.pdf</pre>
 It includes everything I could think of.
 <br><br>
+Build Manual: <a href="https://github.com/paenian/i3_parts/wiki">https://github.com/paenian/i3_parts/wiki</a>
+<br><br>
 <h5>Tools</h5>
 <ul>
 <li>Metric Ball-end hex keys</li>
@@ -32,13 +34,13 @@ It includes everything I could think of.
 <h5>Lasercut Settings</h5>
 <pre>
 color - - - speed - - - power - - - corner power
-Red - - - - 100 - - - -30 - - - - - -25
-Green - - - 25 - - - - 30 - - - - - -25
-Black - - - 10 - - - - 100 - - - - - 75
-Blue - - - -10 - - - - 100 - - - - - 75
-Magenta - - 10 - - - - 100 - - - - - 75
-Teal - - - -10 - - - - 100 - - - - - 75
-Yellow - - -10 - - - - 100 - - - - - 75
+Red - - - - 100 - - - -30 - - - - - 25
+Green - - - 25 - - - - 30 - - - - - 25
+Black - - - 12 - - - - 75 - - - - - 50
+Blue - - - -12 - - - - 75 - - - - - 50
+Magenta - - 12 - - - - 75 - - - - - 50
+Teal - - - -12 - - - - 75 - - - - - 50
+Yellow - - -12 - - - - 75 - - - - - 50
 </pre>
 <br>
 Paul
