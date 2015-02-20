@@ -8,7 +8,7 @@ m3_cap_rad = m3_cap_dia/2+slop;
 m3_cap_thick = 1.65+slop/2;
 m3_cap_hex_rad = (2/cos(30))/2;
 
-m3_nut_dia = 6.35;
+m3_nut_dia = 6.45;
 m3_nut_rad = m3_nut_dia/2+slop/2;
 m3_nut_thick = 2.4;
 
@@ -55,7 +55,7 @@ module bearing_clamp(){
                                             }
 					}else{
 						translate([-inset*i,0,wall/2]) {
-                                                    rotate([0,0,30]) cylinder(r1=m3_nut_rad, r2=m3_nut_rad+.5, h=lm8uu_dia, $fn=6);
+                                                    rotate([0,0,30]) cylinder(r1=m3_nut_rad, r2=m3_nut_rad+1, h=lm8uu_dia, $fn=6);
                                                     cylinder(r=m3_rad, h=wall*3, center=true);
                                                 }
 					}

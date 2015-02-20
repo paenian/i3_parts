@@ -581,7 +581,7 @@ module groovemount(solid=1, e3d=0){
 	dia = 16;
 	rad = dia/2+slop;
 	mink = 1;
-	inset = 4;
+	inset = 3;
 	groove = 7;
 
 	screw_inset = 4.2;

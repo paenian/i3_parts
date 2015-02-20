@@ -3,7 +3,7 @@ $fn=36;
 holder();
 
 angle = 130;
-wall = 3;
+wall = 3.5;
 slop = .2;
 height = 8;
 hole_height = 2.75;
