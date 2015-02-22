@@ -583,6 +583,9 @@ module groovemount(solid=1, e3d=0){
 	mink = 1;
 	inset = 3;
 	groove = 7;
+    
+        frad = 1.5;
+        flen = 9.3;
 
 	screw_inset = 4.2;
 	screw_offset = rad-.5;
@@ -596,12 +599,19 @@ module groovemount(solid=1, e3d=0){
 	motor_angle=0;
 	
 	if(solid==1){
+                //fillet
+                translate([0,-wall-.1,-wall*2-2]) rotate([0,90,0]) difference(){
+                    cylinder(r=frad, h=flen, $fn=4, center=true);
+                    translate([frad,frad,0]) cylinder(r=frad, h=flen+1, $fn=32, center=true);
+                    translate([frad,-frad,0]) cylinder(r=frad, h=flen+1, $fn=32, center=true);
+                }
                 hull(){
                     minkowski(){
                             translate([0,0,-wall*2-mink]) rotate([0,0,180/16]) cylinder(r=(wall+rad-mink+1)/cos(180/16), h=inset+wall*1, $fn=16);
                             sphere(r=mink, $fn=18);
                     }
                     
+                       
                     //three hotend mounting lugs
                     hotend_mount(1, rad=rad, inset=inset);
                 }
@@ -889,8 +899,8 @@ module motor_mount(h=wall){
 				translate([31/2-slop,31/2-slop,0]) cylinder(r=m3_rad, h=20, $fn=18, center=true);
 			}
 			translate([0,0,h]) hull(){
-				translate([31/2+slop,31/2+slop,0]) cylinder(r=m3_cap_rad, h=height*2, $fn=18);
-				translate([31/2-slop,31/2-slop,0]) cylinder(r=m3_cap_rad, h=height, $fn=18);
+				translate([31/2+slop,31/2+slop,-.25]) cylinder(r=m3_cap_rad, h=height*2, $fn=18);
+				translate([31/2-slop,31/2-slop,-.25]) cylinder(r=m3_cap_rad, h=height, $fn=18);
 			}
 		}
 	}
