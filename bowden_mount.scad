@@ -31,17 +31,19 @@ m3_nut_rad = 6/cos(30)/2;
 m3_nut_height = 3;
 m3_rad = 1.8;
 m3_cap_rad = 3.25;
+m3_cap_height = 2;
 
 632_dia = 3.5;
 632_rad = 632_dia/2+slop;
 632_nut_rad = 8.25/cos(45)/2;
+632_locknut_rad = 8.95/2;
 632_cap_dia = 6.5;
 632_cap_rad = 632_cap_dia/2+slop;
 632_cap_height = 2+slop;
 632_nut_height = 5;
 
 //the radius of the induction sensor
-ind_rad = 18/2+slop*2;
+ind_rad = 18/2+slop*1;
 ind_offset = -30;
 ind_height = 12;
 
@@ -63,10 +65,11 @@ bowden_mount();
 //translate([0,50,0]) fan_duct_induction(clip_height=35, e3d_fin_rad = 26/2); //v5
 //translate([0,50,0]) fan_duct_induction(clip_height=25, e3d_fin_rad = 23/2); //v6
 
+translate([0,-50, 0])
+!cyclops_mount();
 
 
 $fn=32;
-
 
 module nut_trap(){
 	difference(){
@@ -230,6 +233,96 @@ module fan_duct(clip_height = 40, wire_offset = 4){
 	}
 }
 
+//mounting holes for the cyclops
+module cyclops_holes(solid=0, jut=0){
+    hole_sep = 9;
+    hole_zsep = 10;
+    ind_jut = 2;
+    
+    for(i=[0,1]) mirror([i,0,0]){
+        translate([hole_sep/2,-wall,hole_zsep]) rotate([-90,0,0]){
+            if(solid>=0){
+                cylinder(r=m3_rad+wall, h=wall);
+                if(jut==1){
+                    translate([0,0,wall-.1]) cylinder(r1=m3_rad+wall, r2=m3_rad+wall/2, h=ind_jut+.1);
+                }
+            }
+            if(solid<=0) translate([0,0,-.1]) {
+                cap_cylinder(r=m3_rad, h=wall*2);
+                cap_cylinder(r=m3_cap_rad, h=m3_cap_height);
+            }
+        }
+    }
+    
+    translate([0,-wall,0]) rotate([-90,0,0]){
+        if(solid>=0){
+            cylinder(r=m3_rad+wall, h=wall);
+            if(jut==1){
+                translate([0,0,wall-.1]) cylinder(r1=m3_rad+wall, r2=m3_rad+wall/2, h=ind_jut+.1);
+            }
+        }
+        if(solid<=0) translate([0,0,-.1]) {
+            %translate([0,-5,9+wall+ind_jut+.1]) cube([30,30,18], center=true);
+            %translate([0,-5,6+wall+ind_jut+.1]) rotate([90,0,0]) cylinder(r=1, h=50, center=true);
+            cap_cylinder(r=m3_rad, h=wall*2);
+            cap_cylinder(r=m3_cap_rad, h=m3_cap_height);
+        }
+    }
+}
+
+module i3_holes(solid=0){
+    attach_height=1;
+    for(i=[0,1]) mirror([i,0,0]){
+        translate([hole_sep/2,-wall,attach_height]) rotate([-90,0,0]){
+            if(solid>=0)
+                cylinder(r=632_rad+wall, h=wall);
+            
+            if(solid<=0) translate([0,0,-.1]) {
+                cap_cylinder(r=632_rad, h=wall*2);
+                translate([(lower_hole_sep-hole_sep)/2,lower_hole_height,0]) cylinder(r=632_locknut_rad, h=wall*2, $fn=6);
+                //translate([0,0,wall-632_cap_height]) 
+                translate([0,0,1.5]) 
+                cylinder(r1=632_locknut_rad, r2=632_locknut_rad+.5, h=632_cap_height+wall, $fn=6);
+            }
+        }
+    }
+}
+
+module cyclops_mount(induction=1){
+    mount_height = 20;
+    e3d_mount_height = wall;
+    mount_sep = 15;
+    e3d_mount_offset=0;
+    ind_offset=(17-18)/2;
+    wall=4;
+    
+    difference(){
+        union(){
+            hull(){
+                for(i=[0,1]) mirror([i,0,0])
+                    translate([mount_sep,0,e3d_mount_height]) cyclops_holes(1, wall=wall);
+                translate([0,0,mount_height]) i3_holes(1, wall=wall);
+            }
+            if(induction==1){
+                translate([-mount_sep,ind_rad+ind_offset,0]) rotate([0,0,90]) extruder_mount(1, m_height=ind_height, hotend_rad=ind_rad, wall=wall);
+            }
+            
+            translate([mount_sep,0,e3d_mount_height]) cyclops_holes(1, jut=1, wall=wall);
+        }
+        
+        translate([mount_sep,0,e3d_mount_height]) cyclops_holes(-1, wall=wall);
+        translate([0,0,mount_height]) i3_holes(-1, wall=wall);
+        if(induction==1){
+            translate([-mount_sep,ind_rad+ind_offset,0]) rotate([0,0,90]) extruder_mount(0, m_height=ind_height, hotend_rad=ind_rad, wall=wall);
+        }
+        
+        //cut off back and base
+        translate([0,-50-wall,0]) cube([100,100,100], center=true);
+        translate([0,0,-50]) cube([100,100,100], center=true);
+    }
+    
+}
+
 module bowden_mount(height=14, induction = 1){
         extruder_sep = e3d_fin_rad*2;
         attach_height = height+3;
@@ -273,7 +366,7 @@ module bowden_mount(height=14, induction = 1){
 
 
 module extruder_mount(solid = 1, m_height = 10, fillet = 8, tap_height=0, width=20){
-	gap = 2;
+	gap = 3;
 	tap_dia = 9.1;
 	tap_rad = tap_dia/2;
 
@@ -291,11 +384,11 @@ module extruder_mount(solid = 1, m_height = 10, fillet = 8, tap_height=0, width=
 
 			//bolt slots
 			if(m_height > nut_rad*2){
-				render() translate([hotend_rad+bolt_rad+1,-m_thickness-.05,m_height/2]) rotate([-90,0,0]) cap_cylinder(r=632_rad, h=m_thickness+10);
-				translate([hotend_rad+bolt_rad+1,-wall*2-1,m_height/2]) rotate([-90,0,0]) cylinder(r=632_nut_rad, h=wall, $fn=4);
+				render() translate([hotend_rad+bolt_rad+2,-m_thickness-.05,m_height/2]) rotate([-90,0,0]) cap_cylinder(r=632_rad, h=m_thickness+10);
+				translate([hotend_rad+bolt_rad+2,-wall*2,m_height/2]) rotate([-90,0,0]) cylinder(r=632_nut_rad, h=wall, $fn=4);
 
 				//mount tightener
-				translate([hotend_rad+bolt_rad+1,wall+gap+1,m_height/2]) rotate([-90,0,0]) cylinder(r=632_cap_rad, h=10);
+				translate([hotend_rad+bolt_rad+2,wall+gap-1,m_height/2]) rotate([-90,0,0]) cylinder(r=632_cap_rad, h=10);
 				translate([0,0,-.05]) cube([wall*5, gap, m_height+.1]);
 			}
 		}
