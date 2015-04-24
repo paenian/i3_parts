@@ -51,7 +51,7 @@ nut_rad = 632_nut_rad;
 632_cap_height = 2+slop;
 632_nut_height = 5;
 
-bowden_tap_rad = 9.4/2;
+bowden_tap_rad = 9.2/2;
 bowden_tube_rad = 2.1;
 
 
@@ -92,7 +92,7 @@ tensioner_rad = 3;
 tensioner_cap_rad = 4.5;
 
 //mirror([1,0,0])		//I use this to make a left and right version for dualstrusion :-)
-//extruder(bowden_tap, none, m5);
+extruder(bowden_tap, none, m5);
 //translate([motor_r*2+wall, 0, 0]) mirror([1,0,0]) extruder(bowden_tap, none, m3);
 //translate([motor_r*2+wall, motor_r*2+wall, 0]) extruder(groovemount, graber, m3);
 
@@ -100,7 +100,7 @@ tensioner_cap_rad = 4.5;
 ind_rad = 18/2+slop*2;
 ind_height = 12;
 
-translate([0, 0, 0]) extruder(groovemount, none, m5, motor_mount_h=5.5, e3d=1);
+//translate([0, 0, 0]) extruder(groovemount, none, m5, motor_mount_h=4.5, e3d=1);
 //extruder_mount(screws=2, flip=1, fan_mount=1, mount_screw_rad=632_rad, angle=0, height=16, offset=0);
 //translate([filament_offset, 33, 0]) rotate([0,0,180]) grooveclamp(induction=0);
 
@@ -283,14 +283,14 @@ module clamp(solid = 1, mount_screw_rad = 632_rad, m5=0){
 	}
 }
 
-module extruder(type=0, mount = 0, idler = 0){
+module extruder(type=0, mount = 0, idler = 0, e3d=0){
 	difference(){
 		union(){
 			base(solid=1, h=motor_mount_h);
 			body(solid=1, type=type, mount=mount, idler=idler, motor_mount_h=motor_mount_h, e3d=e3d);
 		}
 
-		base(solid=0, h=motor_mount_h-.25);
+		base(solid=0, h=motor_mount_h-.5);
 		body(solid=0, type=type, mount=mount, idler=idler, e3d=e3d);
 	}
 }
@@ -397,7 +397,7 @@ module idler(idler_dia = 16, idler_thick = 6, idler_flat_rad = 4, idler_nut_rad 
 	//idler mounting
 	//translate([5,0,0]) //uncomment to check idler path
 	translate([eff_gear_rad+idler_rad+idler_offset,0,0]){
-		rotate([0,0,30]) translate([0,0,-wall/2]) cylinder(r1=idler_nut_rad+.5, r2 = idler_nut_rad, h=idler_nut_height+wall/2, $fn=6);
+		rotate([0,0,30]) translate([0,0,-wall/2]) cylinder(r1=idler_nut_rad+.5, r2 = idler_nut_rad, h=idler_nut_height+wall, $fn=6);
 		translate([0,0,idler_nut_height+layer_height]) cylinder(r=idler_bolt_rad, h=height);
 		
 		difference(){
@@ -437,21 +437,26 @@ module idler(idler_dia = 16, idler_thick = 6, idler_flat_rad = 4, idler_nut_rad 
 
 module bowden_tap(solid=1){
 	thick = 6;
+        inset=2;
 	translate([0,0,-5]){
 		if(solid==1){
 			hull(){
-				cylinder(r=bowden_tap_rad+thick, h=14, $fn=6);
-				translate([0,(bowden_tap_rad+thick),0]) cylinder(r=bowden_tap_rad+thick, h=thick, $fn=6);
+				cylinder(r=bowden_tap_rad+thick, h=14, $fn=36);
+				translate([0,(bowden_tap_rad+thick),-inset]) cylinder(r=bowden_tap_rad+thick, h=thick+inset, $fn=36);
 			}
 		
 		}else{
 			//slit
 			translate([0,-10,thick/2+1-.01]) cube([bowden_tap_rad*2,20,thick+2], center=true);
-			cap_cylinder(bowden_tap_rad+.5, thick+2);
+                        translate([0,-10-wall-.1,-thick/2+1-.01]) cube([bowden_tap_rad*2,20,thick+2], center=true);
+                        cylinder(r1=bowden_tap_rad, r2=bowden_tap_rad+.5, h=.5);
+			translate([0,0,.5]) cap_cylinder(bowden_tap_rad+.5, thick+1.5);
 			//for pass-through; bowden tube goes in a bit
 			translate([0,0,-thick]) cap_cylinder(bowden_tube_rad, 10);
 			//tap this to hold the bowden.
 			cap_cylinder(bowden_tap_rad, 15);
+                        //crop the top
+                        translate([0,-25-wall-bowden_tap_rad,0]) cube([50,50,50],center=true);
 		}
 	}
 }

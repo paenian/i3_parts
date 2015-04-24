@@ -271,25 +271,47 @@ module cyclops_holes(solid=0, jut=0){
 }
 
 module i3_holes(solid=0){
-    attach_height=1;
+    attach_height=-2.5;
+    
+    //lower hole
+    translate([0,-wall,lower_hole]) rotate([-90,0,0]) {
+        *if(solid>=0){
+            cylinder(r=632_rad+wall, h=wall);
+        }
+        if(solid<=0) translate([0,0,-.1]) {
+            //cap_cylinder(r=632_rad, h=wall*2);
+            //translate([0,0,1.5]) cylinder(r1=632_locknut_rad, r2=632_locknut_rad+.75, h=632_cap_height+wall+2, $fn=6);
+            
+            *translate([0,lower_hole-10,0]) minkowski(){
+                rotate([0,0,-30]) cylinder(r=20, h=wall, $fn=3);
+                cylinder(r=4, h=1);
+            }
+        }
+    }
+        
+    
     for(i=[0,1]) mirror([i,0,0]){
         translate([hole_sep/2,-wall,attach_height]) rotate([-90,0,0]){
             if(solid>=0)
-                cylinder(r=632_rad+wall, h=wall);
+                cylinder(r=m3_rad+wall, h=wall);
+                
             
-            if(solid<=0) translate([0,0,-.1]) {
-                cap_cylinder(r=632_rad, h=wall*2);
-                translate([(lower_hole_sep-hole_sep)/2,lower_hole_height,0]) cylinder(r=632_locknut_rad, h=wall*2, $fn=6);
+           if(solid<=0) translate([0,0,-.1]) {
+                cap_cylinder(r=m3_rad, h=wall*2);
+                translate([0,0,wall-.75]) cylinder(r1=m3_cap_rad, r2=m3_cap_rad+.5, h=632_cap_height+wall);
+               
+                *translate([(lower_hole_sep-hole_sep)/2,lower_hole_height,0]) cap_cylinder(r=632_rad, h=wall*2);
+                
+                *translate([(lower_hole_sep-hole_sep)/2,lower_hole_height,1.5]) cylinder(r=632_locknut_rad, h=wall*2, $fn=6);
                 //translate([0,0,wall-632_cap_height]) 
-                translate([0,0,1.5]) 
-                cylinder(r1=632_locknut_rad, r2=632_locknut_rad+.5, h=632_cap_height+wall, $fn=6);
+                
             }
         }
     }
 }
 
 module cyclops_mount(induction=1){
-    mount_height = 20;
+    mount_height = 30;
     e3d_mount_height = wall;
     mount_sep = 15;
     e3d_mount_offset=0;
