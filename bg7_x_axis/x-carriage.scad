@@ -22,6 +22,8 @@ bushing_zip = 1;
 bushing_screw = 0;
 bushing_clamp = bushing_zip;
 
+belt_move = 50;
+
 
 //Use 30 for single extruder, 50 for wades, 80 for dual extruders (moved to config file)
 //carriage_l_base = 80;
@@ -53,7 +55,7 @@ module x_carriage(){
                     translate([-8, -1, 0]) cube_fillet([xaxis_rod_distance + 16, 6, bushing_carriage_len + 3], radius=2);
                 }
 
-                translate([45/2,0,0]){
+                translate([belt_move/2,0,0]){
 
                     //fill the space where the belt is, as it will be substracted at later point and we want it stiff here.
                     //belt smooth side
@@ -65,8 +67,8 @@ module x_carriage(){
                             translate([-13, -10, 0]) cube([8, 10, carriage_l]);
                         }
                         translate([-3.5, 0, 67 + carriage_hole_to_side]) cube([13, 10, 8], center = true);
-                        translate([-3.5, 0, 40 + carriage_hole_to_side]) cube([13, 10, 8], center = true);
-                        translate([-3.5, 0, 15 + carriage_hole_to_side]) cube([13, 10, 8], center = true);
+                        translate([-3.5, 0, 40 + carriage_hole_to_side]) cube([13, 11, 8], center = true);
+                        translate([-3.5, 0, 15 + carriage_hole_to_side]) cube([13, 11, 8], center = true);
                         if (carriage_l_base == 30) {
                             //more space for belt ends, as there is only one cutout
                             translate([-3.5, 0, 15 + carriage_hole_to_side]) cube([13, 10, 14], center = true);
@@ -105,7 +107,7 @@ module x_carriage(){
                 }
             }
             //belt insert
-            translate([-8.5 + 45 / 2, 0, 0]) mirror([1, 0, 0]) {
+            translate([-8.5 + belt_move / 2, 0, 0]) mirror([1, 0, 0]) {
                 belt(carriage_l, 5);
                 %belt(carriage_l);
             }
