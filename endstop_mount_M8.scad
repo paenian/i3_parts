@@ -5,8 +5,8 @@ holder();
 angle = 130;
 wall = 3.5;
 slop = .2;
-height = 8;
-hole_height = 2.75;
+height = 7.25;
+hole_height = height-2.5;
 hole_sep = 19.25;
 
 m8_dia = 8;
@@ -17,21 +17,27 @@ m3_nut_height = 3;
 m3_rad = 1.8;
 m3_cap_rad = 3.25;
 
+ bar_offset = -1;
+
 module holder(){
+        width = hole_sep;
 	difference(){
 		union(){
-			translate([0,0,height/2]) rotate([0,90,0]) round_clip(rad = m8_rad, height = height, wall = wall, angle=angle, support = 0, clamp=1, solid = 1);
-			translate([wall/2,0,height/2]) cube([wall,hole_sep+m3_rad*2+wall*2.5,height],center=true);
+			translate([0,bar_offset,height/2]) rotate([0,90,0]) round_clip(rad = m8_rad, height = height, wall = wall, angle=angle, support = 0, clamp=1, solid = 1);
+			translate([wall/2,0,height/2]) cube([wall,width,height],center=true);
 
-			for(i=[-1,1]) translate([wall/2,hole_sep/2*i,hole_height]) rotate([0,90,0]) rotate([0,0,0]) cylinder(r1=wall+m3_nut_rad, r2=wall/2+m3_nut_rad, h=m3_nut_height+.1, $fn=6);
+			for(i=[-1,1]) translate([0,hole_sep/2*i,hole_height]) rotate([0,90,0]) rotate([0,0,0]) cylinder(r1=wall/2+m3_nut_rad, r2=wall/2+m3_nut_rad, h=m3_nut_height+wall/2+.25, $fn=6);
 		}
 
-		for(i=[-1,1]) translate([wall,hole_sep/2*i,hole_height]) rotate([0,90,0]) {
-			cylinder(r=m3_nut_rad, h=m3_nut_height+.5, $fn=6);
+		for(i=[-1,1]) translate([wall-.5,hole_sep/2*i,hole_height]) rotate([0,90,0]) {
+			hull(){
+                            cylinder(r=m3_nut_rad, h=m3_nut_height, $fn=6);
+                            translate([-5,0,0]) cylinder(r=m3_nut_rad+.2, h=m3_nut_height, $fn=6);
+                        }
 			rotate([0,0,-90]) cap_cylinder(r=m3_rad, h=height*2, center=true);
 		}
 
-		translate([0,0,height/2]) rotate([0,90,0]) round_clip(rad = m8_rad, height = height, wall = wall, angle=angle, support = 0, clamp=1, solid = 0);
+		translate([0,bar_offset,height/2]) rotate([0,90,0]) round_clip(rad = m8_rad, height = height, wall = wall, angle=angle, support = 0, clamp=1, solid = 0);
 
 		//clean top and bot
 		for(i=[-1,1]) translate([0,0,25*i+height/2+height/2*i]) cube([50,50,50], center=true);
@@ -48,8 +54,8 @@ module round_clip(rad=8, height=10, wall=3, angle=45, support=0, clamp=0, solid=
 
 			if(clamp==1){
 				for(i=[-1,1]) rotate([0,0,i*angle/2]) translate([-rad-wall/2,0,0]) rotate([0,0,-i*angle/2]) rotate([i*90,0,0]) hull(){
-					translate([wall, 0, 0]) cylinder(r1=wall+m3_nut_rad, r2=wall/2+m3_nut_rad, h=m3_nut_height+.1, $fn=6, center=true);
-					translate([-m8_rad, 0, 0]) cylinder(r1=wall+m3_nut_rad, r2=wall/2+m3_nut_rad, h=m3_nut_height+.1, $fn=6, center=true);
+					translate([wall/2, 0, 0]) cylinder(r1=wall+m3_nut_rad, r2=wall/2+m3_nut_rad, h=m3_nut_height+.1, $fn=6, center=true);
+					#translate([-m8_rad+wall/2, 0, 0]) cylinder(r1=wall/2+m3_nut_rad, r2=wall/2+m3_nut_rad, h=m3_nut_height+.1, $fn=6, center=true);
 				}
 			}
                     }
@@ -88,9 +94,9 @@ module round_clip(rad=8, height=10, wall=3, angle=45, support=0, clamp=0, solid=
 		}
 
 		if(clamp == 1){
-			rotate([0,0,1*angle/2]) translate([-rad-wall/2,0,0]) rotate([0,0,-1*angle/2]) rotate([i*90,0,0]) rotate([90,0,0]) translate([-m8_rad, 0, -m8_rad*4]) cylinder(r=m3_rad, h=m8_rad*6);
-			rotate([0,0,1*angle/2]) translate([-rad-wall/2,0,0]) rotate([0,0,-1*angle/2]) rotate([i*90,0,0]) rotate([90,0,0]) translate([-m8_rad, 0, 0]) cylinder(r=m3_cap_rad, h=wall);
-			rotate([0,0,-1*angle/2]) translate([-rad-wall/2,0,0]) rotate([0,0,1*angle/2]) rotate([i*90,0,0]) rotate([90,0,0]) translate([-m8_rad, 0, -wall]) cylinder(r=m3_nut_rad, h=wall, $fn=6);
+			rotate([0,0,1*angle/2]) translate([-rad-wall/2,0,0]) rotate([0,0,-1*angle/2]) rotate([i*90,0,0]) rotate([90,0,0]) translate([-m8_rad+wall/2, 0, -m8_rad*4]) cylinder(r=m3_rad, h=m8_rad*6);
+			rotate([0,0,1*angle/2]) translate([-rad-wall/2,0,0]) rotate([0,0,-1*angle/2]) rotate([i*90,0,0]) rotate([90,0,0]) translate([-m8_rad+wall/2, 0, 0]) cylinder(r=m3_cap_rad, h=wall);
+			rotate([0,0,-1*angle/2]) translate([-rad-wall/2,0,0]) rotate([0,0,1*angle/2]) rotate([i*90,0,0]) rotate([90,0,0]) translate([-m8_rad+wall/2, 0, -wall]) cylinder(r=m3_nut_rad, h=wall, $fn=6);
 		}
 	}
 }
