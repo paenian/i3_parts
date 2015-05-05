@@ -105,7 +105,8 @@ module idlermount(len=45, narrow_len=0, narrow_width=0, rod=threaded_rod_diamete
                     rotate([0, 90, 0]) idler_assy(idler_bearing);
                     translate([0, 10, 0]) cube([idler_width + 1, 20, idler_height + 2], center=true);
                 }
-                for(i=[0,1]) mirror([i,0,0]) rotate([0,90,0]) translate([0,0,2.6]) cylinder(r1=3.5, r2=8, h=(idler_width+1-5)/2);
+                for(i=[0,1]) mirror([i,0,0]) rotate([0,90,0]) translate([0,0,2.5+.5]) cylinder(r1=3.5, r2=7, h=(idler_width+1-5)/2);
+                echo((idler_width+1-5)/2);
             }
             
             echo(1+idler_width);
