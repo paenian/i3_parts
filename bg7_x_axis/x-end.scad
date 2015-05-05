@@ -128,7 +128,7 @@ module x_tensioner(len=68, idler_height=max(idler_bearing[0], 16)) {
     idlermount(len=len, rod=m3_diameter / 2 + 0.5, idler_height=idler_height, narrow_len=47, narrow_width=idler_width +1.5 + 2 - single_wall_width);
 }
 
-module y_tensioner(len=50, idler_height=max(idler_bearing[0], 16)) {
+module y_tensioner(len=40, idler_height=max(idler_bearing[0], 16)) {
     idlermount(len=len, horizontal=0, oval_height=(idler_width+1)/2);
 }
 

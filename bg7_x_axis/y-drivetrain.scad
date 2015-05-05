@@ -85,7 +85,7 @@ module idlermount(len=45, narrow_len=0, narrow_width=0, rod=threaded_rod_diamete
             translate([-12, -12, idler_height / 2]) rotate([90, 0, 90]) oval(r=oval_height, l=12, h=50);
         }
         if(horizontal==0){
-            translate([0, 0, -idler_height / 2]) rotate([0, 0, 90]) oval(r=oval_height, l=36, h=50);
+            translate([0, -18+len/4, -idler_height / 2]) rotate([0, 0, 90]) oval(r=oval_height, l=len/2, h=50);
         }
         translate([0, -16 - single_wall_width*2, idler_height / 2]) {
             // nut for tensioning screw
@@ -99,17 +99,25 @@ module idlermount(len=45, narrow_len=0, narrow_width=0, rod=threaded_rod_diamete
         // tensioning screw goes here
         translate([0, -19, idler_height / 2]) rotate([90, 90, 0]) cylinder(r=m3_diameter / 2, h=15, $fn=small_hole_segments, center=true);
         // bearing goes there
-        translate([0, len + idler_bearing[2] - 35, idler_height / 2]) {
-            rotate([0, 90, 0]) idler_assy(idler_bearing);
-            echo(10+idler_width);
+        translate([0, len + idler_bearing[2] - 35, idler_height / 2]){
+            difference(){
+                union(){
+                    rotate([0, 90, 0]) idler_assy(idler_bearing);
+                    translate([0, 10, 0]) cube([idler_width + 1, 20, idler_height + 2], center=true);
+                }
+                for(i=[0,1]) mirror([i,0,0]) rotate([0,90,0]) translate([0,0,2.6]) cylinder(r1=3.5, r2=8, h=(idler_width+1-5)/2);
+            }
+            
+            echo(1+idler_width);
             translate([(10 + idler_width)/2-2,0,0]) rotate([0,90,0]) cylinder(r1=m5_nut_diameter_horizontal/2, r2=m5_nut_diameter_horizontal/2+.5, h=10, $fn=6);
+            translate([(10 + idler_width)/2-2,0,0]) rotate([0,90,0]) cylinder(r=m5_diameter/2, h=50,center=true);
             mirror([1,0,0]) translate([(10 + idler_width)/2-2,0,0]) rotate([0,90,0]) cylinder(r1=m5_nut_diameter_horizontal/2, r2=m5_nut_diameter_horizontal/2+.5, h=10);
-            translate([0, 10, 0]) cube([idler_width + 1, 20, idler_height + 2], center=true);
         }
 
     }
 }
 
+!idlermount(len=40, horizontal=0, oval_height=(idler_width+1)/2);
 
 //motorholder();
 translate([32, 25, 0])  idlermount(len=50, horizontal=0, oval_height=(idler_width+1)/2);
