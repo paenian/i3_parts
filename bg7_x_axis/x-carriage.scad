@@ -119,7 +119,7 @@ module extruder_hole(){
 
 module y_hole(length=10){
     rotate([90, 0, 0]) cylinder(r=1.8, h=length, center=false,$fn=small_hole_segments);
-    #translate([0, -length+5, 0]) rotate([90, 0, 0]) hull(){
+    translate([0, -length+5, 0]) rotate([90, 0, 0]) hull(){
         cylinder(r=3.4, h=3, $fn=6, center=true);
         translate([10,0,0]) cylinder(r=3.4, h=3, $fn=6, center=true);
     }
@@ -141,5 +141,5 @@ module y_belt_mount(length=carriage_l, drop=15){
     }
 }
 
-y_belt_mount(length = 35);
+y_belt_mount(length = 35, drop=17);
 //x_carriage();
