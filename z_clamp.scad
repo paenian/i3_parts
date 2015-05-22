@@ -19,17 +19,54 @@ lm8uu_dia = 15;
 lm8uu_rad = lm8uu_dia/2+slop;
 lm8uu_len = 24+slop;
 
-m5_inset = -.25;  //for clamping
-
-wall = 3;
-width = 12;
+wall = 4;
 hole_sep = m5_rad+m3_rad+wall/2;
 len = 8.5;
 
-$fn=32;
+$fn=64;
 
-bearing_clamp();
-//%translate([0,0,m5_inset*2]) mirror([0,0,1]) bearing_clamp();
+coupler();
+
+module coupler(height=25){
+    rad = m5_rad+wall;
+    gap = wall/2;
+    hinge_rad = gap+wall/2;
+    width = rad+5;
+    echo(width+hinge_rad*2);
+    difference(){
+        union(){
+            cylinder(r=rad, h=height);
+            hull(){
+                for(i=[-width/2, width/2]) translate([i,0,0]) cylinder(r=hinge_rad, h=height);
+            }
+        }
+        
+        //hinge cutout
+        hull(){
+            for(i=[-width/2, width]) translate([i,0,-.1]) cylinder(r=gap/2, h=height+1);
+        }
+        
+        //rod hole
+        translate([0,0,-.01]) difference(){
+            cylinder(r=m5_rad, h=height+1);
+            translate([0,0,height/2]) difference(){
+                cylinder(r=m5_rad+1, h=gap, center=true);
+                cube([30,gap*2,gap+1], center=true);
+            }
+        }
+        
+        //clamp screws
+        for(i=[m3_nut_rad+1, height-(m3_nut_rad+1)]) translate([m5_rad+m3_rad+1,0,i]) rotate([90,0,0]) {
+            cylinder(r=m3_rad, h=10, center=true);
+            translate([0,0,gap/2+wall/2]) rotate([0,0,30]) cylinder(r1=m3_nut_rad, r2=m3_nut_rad+.5, h=m3_nut_thick*2, $fn=6);
+            mirror([0,0,1]) translate([0,0,gap/2+wall/2]) rotate([0,0,30]) cylinder(r1=m3_cap_rad, r2=m3_cap_rad+.5, h=m3_nut_thick*2);
+        }
+        
+        //cutout to make top/bottom more independent
+        scale([1,1,1]) translate([rad+wall,0,height/2])  rotate([90,0,0]) cylinder(r=rad+1, h=30, center=true, $fn=4);
+    }
+}
+
 
 module bearing_clamp(){
         inset = .25;
