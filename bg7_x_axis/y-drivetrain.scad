@@ -66,7 +66,7 @@ module oval(r=4, l=14, h=2){
 
 module idlermount(len=45, narrow_len=0, narrow_width=0, rod=threaded_rod_diameter_horizontal / 2, idler_height=16, horizontal=1, oval_height=1, fillet=1){
     
-    oval_height = max(oval_height, m3_nut_diameter_horizontal / 2+.5);
+    oval_height = max(oval_height, 2.2);
     
     difference(){
         union(){
@@ -87,11 +87,11 @@ module idlermount(len=45, narrow_len=0, narrow_width=0, rod=threaded_rod_diamete
         if(horizontal==0){
             translate([0, -18+len/4, -idler_height / 2]) rotate([0, 0, 90]) oval(r=oval_height, l=len/2, h=50);
         }
-        translate([0, -16 - single_wall_width*2, idler_height / 2]) {
+        translate([0, -18 - single_wall_width*2, idler_height / 2]) {
             // nut for tensioning screw
            hull(){
-                rotate([90, 0, 0]) cylinder(r2=m3_nut_diameter_horizontal / 2, r1=m3_nut_diameter_horizontal / 2+.5, h=3.8, $fn=6);
-                //translate([20,1,0]) rotate([90, 0, 0]) cylinder(r2=m3_nut_diameter_horizontal / 2, r1=m3_nut_diameter_horizontal / 2+.5, h=3.8+1, $fn=6);
+                rotate([90, 0, 0]) rotate([0,0,30]) cylinder(r=m3_nut_diameter_horizontal / 2, h=3.1, $fn=6);
+                translate([0,.5,20]) rotate([90, 0, 0]) rotate([0,0,30]) cylinder(r=m3_nut_diameter_horizontal / 2+1, h=3.1+1, $fn=6);
             }
             
         }
@@ -99,7 +99,7 @@ module idlermount(len=45, narrow_len=0, narrow_width=0, rod=threaded_rod_diamete
         // tensioning screw goes here
         translate([0, -19, idler_height / 2]) rotate([90, 90, 0]) cylinder(r=m3_diameter / 2, h=15, $fn=small_hole_segments, center=true);
         // bearing goes there
-        translate([0, len + idler_bearing[2] - 35, idler_height / 2]){
+        translate([0, len + idler_bearing[2] - 35, idler_height/2]){
             difference(){
                 union(){
                     rotate([0, 90, 0]) idler_assy(idler_bearing);
@@ -110,23 +110,23 @@ module idlermount(len=45, narrow_len=0, narrow_width=0, rod=threaded_rod_diamete
             }
             
             echo(1+idler_width);
-            translate([(10 + idler_width)/2-2,0,0]) rotate([0,90,0]) cylinder(r1=m5_nut_diameter_horizontal/2, r2=m5_nut_diameter_horizontal/2+.5, h=10, $fn=6);
+            translate([(10 + idler_width)/2-3.5,0,0]) rotate([0,90,0]) cylinder(r1=m5_nut_diameter_horizontal/2, r2=m5_nut_diameter_horizontal/2+.5, h=10, $fn=6);
             translate([(10 + idler_width)/2-2,0,0]) rotate([0,90,0]) cylinder(r=m5_diameter/2, h=50,center=true);
-            mirror([1,0,0]) translate([(10 + idler_width)/2-2,0,0]) rotate([0,90,0]) cylinder(r1=m5_nut_diameter_horizontal/2, r2=m5_nut_diameter_horizontal/2+.5, h=10);
+            mirror([1,0,0]) translate([(10 + idler_width)/2-3.5,0,0]) rotate([0,90,0]) cylinder(r1=m5_nut_diameter_horizontal/2+.5, r2=m5_nut_diameter_horizontal/2+1, h=10);
         }
 
     }
 }
 
-!idlermount(len=40, horizontal=0, oval_height=(idler_width+1)/2);
+idlermount(len=40, horizontal=0, oval_height=(idler_width+1)/2);
 
 //motorholder();
-translate([32, 25, 0])  idlermount(len=50, horizontal=0, oval_height=(idler_width+1)/2);
+*translate([32, 25, 0])  idlermount(len=50, horizontal=0, oval_height=(idler_width+1)/2);
 
-idlermount(len=68, rod=m3_diameter / 2 + 0.5, idler_height=16, narrow_len=47, narrow_width=idler_width +1.5 + 2 - single_wall_width, horizontal=1);
+translate([40,0,0]) idlermount(len=68, rod=m3_diameter / 2 + 0.5, idler_height=16, narrow_len=47, narrow_width=idler_width +1.5 + 2 - single_wall_width, horizontal=1);
 
 
-if (idler_bearing[3] == 1) {
+*if (idler_bearing[3] == 1) {
     translate([0, -12 - idler_bearing[0] / 2, 0]) {
         render() bearing_assy();
     }

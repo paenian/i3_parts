@@ -32,7 +32,7 @@ carriage_l_adjusted = max(adjust_bushing_len(bushing_xy, carriage_l_base, layer_
 //For bearings 30mm long or shorter enforce double len
 carriage_l_real = max((bushing_xy[2] > 30 ? carriage_l_adjusted : (2 * bushing_xy[2] + 6)), carriage_l_adjusted);
 // if the carriage was extended, we want to increase carriage_hole_to_side
-carriage_hole_to_side = max(3, ((carriage_l_real - carriage_l_base) / 2));
+carriage_hole_to_side = max(4, ((carriage_l_real - carriage_l_base) / 2));
 echo(carriage_hole_to_side);
 carriage_l = carriage_l_base + 2 * carriage_hole_to_side;
 
@@ -72,6 +72,7 @@ module belt_clamp(length = carriage_l, width=11){
 }
 
 module x_carriage(){
+    ext_offset=35;
     mirror([1,0,0]) {
         difference() {
             union() {
@@ -88,6 +89,9 @@ module x_carriage(){
                 }
 
                 belt_clamp();
+                
+                //extra screwhole for extruder
+                translate([22+ext_offset-6, -11.5, 0]) cube_fillet([12, 12, 10], vertical = [2, 2, 0, 0], top = [2, 0, 2, 2]);
             }
             //Ensure upper bearing can be inserted cleanly
             rotate([0, 0, 90]) {
@@ -99,14 +103,16 @@ module x_carriage(){
             }
             
             // extruder mounts
-            translate([20, -2, carriage_hole_to_side]) extruder_hole();
-            translate([20, -2, carriage_hole_to_side + 30]) extruder_hole();
+            translate([22, -2, carriage_hole_to_side]) extruder_hole();
+            translate([22, -2, carriage_hole_to_side + 30]) extruder_hole();
+            
+            translate([22+ext_offset, -5, carriage_hole_to_side]) extruder_hole();
             
             if (carriage_l >= 50 + 2 * carriage_hole_to_side) {
-                translate([20, -2, carriage_hole_to_side + 30 + 20]) extruder_hole();
+                translate([22, -2, carriage_hole_to_side + 30 + 20]) extruder_hole();
             }
             if (carriage_l >= 80 + 2 * carriage_hole_to_side) {
-                translate([20, -2, carriage_hole_to_side + 30 + 20 + 30]) extruder_hole();
+                translate([22, -2, carriage_hole_to_side + 30 + 20 + 30]) extruder_hole();
             }
         }
     }
@@ -141,5 +147,5 @@ module y_belt_mount(length=carriage_l, drop=15){
     }
 }
 
-y_belt_mount(length = 35, drop=17);
-//x_carriage();
+//y_belt_mount(length = 35, drop=17);
+rotate([0,180,0]) mirror([0,0,1]) x_carriage();

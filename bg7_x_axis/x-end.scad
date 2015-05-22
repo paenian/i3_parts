@@ -57,7 +57,7 @@ module x_end_motor(){
                 // belt hole
                     translate([-30, 11, -0.25]) cube_fillet([11, 36, 22], vertical=0, top=[0, 1, 0, 1], bottom=[0, 1, 0, 1], center = true, $fn=4);
                 //motor mounting holes
-                translate([-29.5+1, 0, 0]) rotate([0, 0, 0])  rotate([0, 90, 0]) nema17(places=[1, 1, 0, 1], holes=true, shadow=5.5, $fn=small_hole_segments, h=20);
+                translate([-29.5, 0, 0]) rotate([0, 0, 0])  rotate([0, 90, 0]) nema17(places=[1, 1, 0, 1], holes=true, shadow=5.5, $fn=small_hole_segments, h=20);
             }
         }
         //smooth rod caps
@@ -89,11 +89,11 @@ module x_end_base(vfillet=[3, 3, 3, 3], thru=true, len=40, offset=0){
         //smooth rods
         translate([-10 - bushing_xy[0], offset, 0]) {
             if(thru == true){
-                translate([0, -11, 6]) rotate([-90, 0, 0]) pushfit_rod(bushing_xy[0] * 2 + 0.2, 50);
-                translate([0, -11, xaxis_rod_distance+6]) rotate([-90, 0, 0]) pushfit_rod(bushing_xy[0] * 2 + 0.2, 50);
+                translate([0, -11, 6]) rotate([-90, 0, 0]) pushfit_rod(bushing_xy[0] * 2 + 0.3, 50);
+                translate([0, -11, xaxis_rod_distance+6]) rotate([-90, 0, 0]) pushfit_rod(bushing_xy[0] * 2 + 0.3, 50);
             } else {
-                translate([0, -7, 6]) rotate([-90, 0, 0]) pushfit_rod(bushing_xy[0] * 2 + 0.2, 50);
-                translate([0, -7, xaxis_rod_distance+6]) rotate([-90, 0, 0]) pushfit_rod(bushing_xy[0] * 2 + 0.2, 50);
+                translate([0, -7, 6]) rotate([-90, 0, 0]) pushfit_rod(bushing_xy[0] * 2 + 0.3, 50);
+                translate([0, -7, xaxis_rod_distance+6]) rotate([-90, 0, 0]) pushfit_rod(bushing_xy[0] * 2 + 0.3, 50);
             }
         }
         translate([0, 0, 5 - bushing_xy[0]]) {  // m5 nut insert
@@ -101,7 +101,7 @@ module x_end_base(vfillet=[3, 3, 3, 3], thru=true, len=40, offset=0){
                 //rod
                 translate([0, 0, -1]) cylinder(h=(4.1 / 2 + 5), r=3, $fn=32);
                 //nut
-                translate([0, 0, 9]) rotate([0,0,-10]) cylinder(r1=m5_nut_diameter_horizontal/2, r2=m5_nut_diameter_horizontal/2+.5, h=14.1, center = true, $fn=6);
+                translate([0, 0, 9]) rotate([0,0,-10]) cylinder(r1=m5_nut_diameter_horizontal/2+.1, r2=m5_nut_diameter_horizontal/2+.1+.4, h=14.1, center = true, $fn=6);
 
             }
         }
@@ -132,17 +132,22 @@ module y_tensioner(len=40, idler_height=max(idler_bearing[0], 16)) {
     idlermount(len=len, horizontal=0, oval_height=(idler_width+1)/2);
 }
 
-translate([22, -40, 4 - bushing_xy[0]]) x_tensioner();
-!translate([22, -40, 4 - bushing_xy[0]]) y_tensioner();
-translate([0, -60, 0]) mirror([0, 0, 0]) x_end_idler(thru=true);
+*translate([8, 0, 4 - bushing_xy[0]]) x_tensioner();
+*translate([-9, 0, 4 - bushing_xy[0]]) y_tensioner();
+*translate([0, -60, 0]) mirror([0, 0, 0]) x_end_idler(thru=true);
 translate([-50, 0, 0]) mirror([0, 0, 0]) translate([50, 0, 0])
     x_end_motor();
 
 module pushfit_rod(diameter, length){
-    cylinder(h = length, r=diameter/2, $fn=30);
-    translate([0, -diameter/4, length/2]) cube_fillet([diameter, diameter/2, length], vertical = [0, 0, 1, 1], center = true, $fn=4);
+    %cylinder(h = length, r=diameter/2, $fn=30);
+    intersection(){
+        cylinder(h = length, r=diameter/2, $fn=30);
+        translate([0, diameter/4, length/2]) cube([diameter , diameter, length], center = true);
+    }
+    
+    translate([0, -diameter/4+layer_height, length/2]) cube_fillet([diameter, diameter/2, length], vertical = [0, 0, 1, 1], center = true, fn=4);
 
-    translate([0, -diameter/2-1.2, length/2]) cube([diameter - 1, 1, length], center = true);
+    translate([0, -diameter/2-1.2+layer_height, length/2]) cube([diameter - 1, 1, length], center = true);
 }
 
 

@@ -32,7 +32,7 @@ m3_nut_diameter = 5.6;
 m3_nut_diameter_horizontal = 6.3;
 m3_washer_diameter = 6.9;
 
-m5_nut_diameter_horizontal = 9.2;
+m5_nut_diameter_horizontal = 9.2+.4;
 m5_diameter = 5.6;
 
 // Motors
