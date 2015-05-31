@@ -429,7 +429,7 @@ module extruder_mount(solid = 1, m_height = 10, fillet = 8, tap_height=0, width=
 				translate([hotend_rad+bolt_rad+2,-wall*2,m_height/2]) rotate([-90,0,0]) cylinder(r=632_nut_rad, h=wall, $fn=4);
 
 				//mount tightener
-				translate([hotend_rad+bolt_rad+2,wall+gap-1,m_height/2]) rotate([-90,0,0]) cylinder(r=632_cap_rad, h=10);
+				translate([hotend_rad+bolt_rad+2,wall+gap-1,m_height/2]) rotate([-90,0,0]) cap_cylinder(r=632_cap_rad+.5, h=10);
 				translate([0,0,-.05]) cube([wall*5, gap, m_height+.1]);
 			}
 		}
