@@ -68,7 +68,7 @@ echo("Nozzle Sep = ", e3d_fin_rad*2);
 //translate([0,-50, 0])
 //!cyclops_mount();
 
-inline_mount();
+inline_mount(left_inset=4.1);
 
 $fn=32;
 
@@ -321,25 +321,47 @@ module cyclops_mount(induction=1){
     
 }
 
-module inline_mount(height=14){
+$fn=32;
+module inline_mount(height=14, left_inset=0, wall=5){
     extruder_sep = e3d_fin_rad*2;
     attach_height = height+3;
-    
+
+	echo(e3d_fin_rad);
+	echo(hotend_rad);
+   
+	 x_offset=(30-extruder_sep)/2;
+	 y_offset=left_inset*3/4;
+     
     difference(){
-        union(){
-            translate([0,e3d_fin_rad-hotend_rad,0]) rotate([0,0,180]) extruder_mount(1,height,0,0);
-            translate([extruder_sep,e3d_fin_rad-hotend_rad,0]) rotate([0,0,90]) extruder_mount(1,height,0,0);
-            translate([50,e3d_fin_rad-hotend_rad,0]) rotate([0,0,0]) extruder_mount(1,height,0,0, hotend_rad=ind_rad);
+		  union(){
+			  translate([-wall/2,wall,0]) hull(){
+			  	cylinder(r=wall, h=height);
+				translate([30+wall,0,0]) cylinder(r=wall, h=height);
+			  }
+
+		  	  translate([x_offset,y_offset,0]){
+				translate([0,e3d_fin_rad,0]) mirror([1,0,0]) rotate([0,0,60]) extruder_mount(1,height,0,0, wall=wall);
+				translate([extruder_sep,e3d_fin_rad,0]) rotate([0,0,60]) extruder_mount(1,height,0,0, wall=wall);
+			  }
         }
-        translate([0,e3d_fin_rad-hotend_rad,0]) rotate([0,0,180]) extruder_mount(0,height,0,0);
-        translate([extruder_sep,e3d_fin_rad-hotend_rad,0]) rotate([0,0,90]) extruder_mount(0,height,0,0);
-        translate([50,e3d_fin_rad-hotend_rad,0]) rotate([0,0,0]) extruder_mount(0,height,0,0, hotend_rad=ind_rad);
+		  
+        translate([x_offset,y_offset,0]) {
+			translate([0,e3d_fin_rad,0]) mirror([1,0,0]) rotate([0,0,60]) extruder_mount(0,height,0,0);
+        	translate([extruder_sep,e3d_fin_rad,0]) rotate([0,0,60]) extruder_mount(0,height,0,0);
+		  }
         
-        //mounting holes
-        for(i=[0,50]) translate([i,0,height/2]) rotate([90,0,0]) {
-            #cap_cylinder(r=m3_rad, h=50);
+        //mounting holeds
+        for(i=[0,30]) translate([i,e3d_fin_rad,height/2]) rotate([90,0,0]) {
+            cap_cylinder(r=m3_rad, h=50);
+				translate([0,0,-y_offset]) cap_cylinder(r=m3_cap_rad, h=hotend_rad+wall/2);
         }
-    }
+	
+		  //flatten the back
+		  translate([0,-50,0]) cube([100,100,100], center=true);
+    		
+		  //cut into the left side - to avoid the induction sensor mount
+		  translate([extruder_sep/2+50+x_offset,-50+left_inset,0]) cube([100,100,100], center=true);
+	}
 }
 
 module bowden_mount(height=14, induction = 1){
