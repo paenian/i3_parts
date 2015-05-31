@@ -578,7 +578,7 @@ module grooveclamp(solid=1, induction=0){
             }
         }
         
-        #translate([0,0,wall]) hotend_mount(0, rad=rad, inset=inset, induction=induction);
+        translate([0,0,wall]) hotend_mount(0, rad=rad, inset=inset, induction=induction);
         
         %translate([0,0,-.1]) cylinder(r=22/2+slop, h=.2);
         
@@ -667,7 +667,6 @@ module groovemount2(solid=1,e3d=1){
                 sphere(r=mink, $fn=18);
             }
             
-            //nut traps to clamp to
             minkowski(){
                 translate([0,-(-rad-wall*2)/2,-wall+groove/2]) cube([(rad+wall+1)*2-mink*2, rad+wall*2, groove+2-mink*2], center=true);
                 sphere(r=mink, $fn=18);
@@ -687,7 +686,12 @@ module groovemount2(solid=1,e3d=1){
                translate([0,-3,0]) cap_cylinder(r=4+slop, h=wall);
            }
            
-           translate([0,0,-inset]) cap_cylinder(r=12/2+slop*2, h=13, $fn=90);
+           //the groove
+           translate([0,0,-inset]) hull(){
+               cap_cylinder(r=12/2+slop*3, h=13, $fn=90);
+               translate([0,-3,0]) cap_cylinder(r=12/2+slop*3, h=13, $fn=90);
+           }
+           
            translate([0,0,-inset]) difference(){
                cap_cylinder(r=rad, h=13, $fn=90);
                translate([0,0,4.25]) cylinder(r=rad+1, h=6-slop*3);
@@ -698,7 +702,7 @@ module groovemount2(solid=1,e3d=1){
         translate([0,0,-inset]) cylinder(r=rad+slop*2, h=slop*2);
         
         //clamp cutout
-        translate([0,-rad-1,-inset+20]) cube([rad*2+wall*3+20,rad*2,40+12], center=true);
+        translate([0,-rad-1.5,-inset+20]) cube([rad*2+wall*3+20,rad*2,40+12], center=true);
         
         //hotend screwholes/nut traps
         *for(i=[0,1]) mirror([i,0,0]) translate([screw_offset,0,-wall+groove]) rotate([90,0,0]){

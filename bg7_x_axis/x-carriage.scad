@@ -22,7 +22,7 @@ bushing_zip = 1;
 bushing_screw = 0;
 bushing_clamp = bushing_zip;
 
-belt_move = 50;
+belt_move = 43;
 
 
 //Use 30 for single extruder, 50 for wades, 80 for dual extruders (moved to config file)
@@ -53,8 +53,8 @@ module belt_clamp(length = carriage_l, width=11){
                             translate([-13, -10, 0]) cube([8, 10, length]);
                         }
                         translate([-3.5, 0, 67 + carriage_hole_to_side]) cube([13, 10, 8], center = true);
-                        translate([-3.5, 0, 40 + carriage_hole_to_side]) cube([13, 11, 10], center = true);
-                        translate([-3.5, 0, 15 + carriage_hole_to_side]) cube([13, 11, 10], center = true);
+                        translate([-3.5, 0, 38 + carriage_hole_to_side]) cube([13, 11, 10], center = true);
+                        translate([-3.5, 0, 12 + carriage_hole_to_side]) cube([13, 11, 10], center = true);
                         if (carriage_l_base == 30) {
                             //more space for belt ends, as there is only one cutout
                             translate([-3.5, 0, 15 + carriage_hole_to_side]) cube([13, 10, 14], center = true);
@@ -91,7 +91,7 @@ module x_carriage(){
                 belt_clamp();
                 
                 //extra screwhole for extruder
-                translate([22+ext_offset-6, -11.5, 0]) cube_fillet([12, 12, 10], vertical = [2, 2, 0, 0], top = [2, 0, 2, 2]);
+                translate([20+ext_offset-3, -11.5, 0]) cube_fillet([10, 18.5, 10], vertical = [2, 2, 0, 0], top = [2, 0, 0, 2]);
             }
             //Ensure upper bearing can be inserted cleanly
             rotate([0, 0, 90]) {
@@ -103,16 +103,16 @@ module x_carriage(){
             }
             
             // extruder mounts
-            translate([22, -2, carriage_hole_to_side]) extruder_hole();
-            translate([22, -2, carriage_hole_to_side + 30]) extruder_hole();
-            
-            translate([22+ext_offset, -5, carriage_hole_to_side]) extruder_hole();
+            translate([21, -2, carriage_hole_to_side]) rotate([0,30,0]) extruder_hole();
+            translate([21, -2, carriage_hole_to_side + 30]) rotate([0,30,0]) extruder_hole();
+           
+            translate([21+ext_offset, 0, carriage_hole_to_side]) rotate([0,30,0]) extruder_hole();
             
             if (carriage_l >= 50 + 2 * carriage_hole_to_side) {
-                translate([22, -2, carriage_hole_to_side + 30 + 20]) extruder_hole();
+                translate([21, -2, carriage_hole_to_side + 30 + 20]) rotate([0,30,0]) extruder_hole();
             }
             if (carriage_l >= 80 + 2 * carriage_hole_to_side) {
-                translate([22, -2, carriage_hole_to_side + 30 + 20 + 30]) extruder_hole();
+                translate([21, -2, carriage_hole_to_side + 30 + 20 + 30]) rotate([0,30,0]) extruder_hole();
             }
         }
     }

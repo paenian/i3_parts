@@ -42,7 +42,45 @@ nut_rad = 8.9/2+slop;
 
 wall = 4;
 //rotate([0,-90,0]) 
-induction_mount2();
+//induction_mount3();
+
+//this is for the big sensor
+induction_mount3(ind_rad = 18/2+slop, height=12);
+
+
+
+module induction_mount3(drop=30, height=10, ind_rad = 12/2+slop){
+    screw_sep=20;
+    y_offset = ind_rad;
+    fillet=4;
+    difference(){
+        union(){
+            hull(){
+                for(i=[-screw_sep/2, screw_sep/2]) translate([i, 0, drop])
+                    rotate([-90,0,0]) cylinder(r=m3_cap_rad+wall/2, h=wall);
+                #for(i=[-ind_rad+wall/2, ind_rad-wall/2]) translate([i+y_offset, wall/2, 0])
+                    cylinder(r=wall/2, h=wall);
+            }
+            translate([y_offset,14,0]) extruder_mount(1, m_height=height,  hotend_rad=ind_rad);
+            
+            //fillet
+            translate([y_offset,wall,height]) rotate([0,90,0]) cylinder(r=fillet, h=ind_rad+wall,center=true);
+        }
+        translate([y_offset,14,0]) extruder_mount(0, m_height=height, hotend_rad=ind_rad);
+        
+        //mounting holes
+        for(i=[-screw_sep/2, screw_sep/2]) translate([i, -.1, drop]) rotate([-90,0,0]) {
+            cap_cylinder(r=m3_rad, h=wall+1);
+            translate([0,0,wall-1]) cap_cylinder(r=m3_cap_rad, h=wall+1);
+        }
+        
+        //slope the bottom in
+        translate([y_offset,14,-.05]) cylinder(r1=hotend_rad/cos(180/18)+.5, r2=hotend_rad/cos(180/18), h=1, $fn=36);
+        
+        //fillet
+        translate([y_offset,wall+fillet,height+fillet]) rotate([0,90,0]) cylinder(r=fillet, h=ind_rad*2+.1,center=true);
+    }
+}
 
 module induction_mount2(){
 	height = 13;
@@ -105,7 +143,7 @@ module induction_mount(){
 }
 
 module extruder_mount(solid = 1, m_height = 10, m_thickness=50, fillet = 8, tap_height=0, width=20){
-	gap = 2;
+	gap = 3;
 	tap_dia = 9.1;
 	tap_rad = tap_dia/2;
 	

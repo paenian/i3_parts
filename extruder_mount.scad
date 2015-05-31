@@ -24,11 +24,12 @@ motor_r = 52/2;
 
 mount_sep = 35;  //needs to match ext_offset from x-carriage.scad
 
+$fn=60;
 
-extruder_mount(mount_screw_rad=m3_rad);
+extruder_mount(offset=-3, mount_screw_rad=m3_rad, fan_mount=1);
 
 //attaches the motor with one or two screws.
-module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad, angle=0, height=15, offset=0, motor_offset=1){
+module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad, angle=0, height=15, offset=-1, motor_offset=1){
 	echo(height);
 	wall=4;
 	lower_hole_sep = 47.5;
@@ -40,7 +41,7 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 	fan_hole_sep = 32;
 	fan_offset= 5;
 	
-	scale_slop = 1.025;
+	scale_slop = 1.02;
 	scale_size = (motor_w+wall+wall)/motor_w;
 	difference(){
 		union(){
@@ -54,7 +55,7 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 
 			//mount base
 			hull(){
-				//translate([-motor_w/2+.05,0,height/2]) cube([.1,motor_w,height], center=true);
+				scale([scale_size,scale_size,1]) motor_base(h=height);
 				translate([-motor_w/2-wall-wall/2+.05+1+offset,0,height/2]) rotate([0,0,angle]) cube([wall+1,motor_w,height], center=true);
 
 				if(screws == 2){
@@ -96,7 +97,7 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 		
 		//mounting holes
         for(i=[-mount_sep/2, mount_sep/2])
-            #translate([-motor_w/2-wall*2-.05,i,height/2]) rotate([0,0,angle]) {
+            #translate([-motor_w/2-wall*2+.5+offset,i,height/2]) rotate([0,0,angle]) {
                 rotate([0,90,0]) rotate([0,0,-90]) translate([0,0,offset*2]) cap_cylinder(r=mount_screw_rad, h=200, center=true);
 		
                 translate([wall/2,0,0]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad*2, h=wall*3);
@@ -119,7 +120,7 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 
 		if(fan_mount==1){
 			for(i=[-1,1]) translate([fan_hole_sep/2*i, -motor_w/2-wall-fan_offset, -.1]) {
-				translate([0,0,wall]) cylinder(r1=m3_nut_rad+.1, r2=m3_nut_rad+.4, h=wall*2, $fn=6);
+				translate([0,0,wall]) cylinder(r1=m3_nut_rad+.1, r2=m3_nut_rad+.5, h=wall*2, $fn=6);
 				cylinder(r=m3_rad, h=wall*3);
 			}
 		}
@@ -142,12 +143,12 @@ module clamp(solid = 1, mount_screw_rad = 632_rad, m5=0){
 		if(m5 == 1){
 			mirror([0,0,1]) translate([0,0,wall*1.5]) rotate([0,0,-90]) cylinder(r1=m5_nut_rad, r2=m5_nut_rad+1, h=len, $fn=6);
 		}else{
-			mirror([0,0,1]) translate([0,0,wall*1.5]) rotate([0,0,-90]) cylinder(r=632_nut_rad, h=len, $fn=4);
+			mirror([0,0,1]) translate([0,0,wall*1.5]) rotate([0,0,-90]) cylinder(r1=632_nut_rad, r2=632_nut_rad+.5, h=len, $fn=4);
 		}
 		
 
 		//screw is on the outside
-		translate([0,0,wall*1.5]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad*2, h=len);
+		translate([0,0,wall*1.5]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad*2.25, h=len);
 	}
 }
 
