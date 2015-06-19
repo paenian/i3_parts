@@ -45,13 +45,13 @@ wall = 4;
 //induction_mount3();
 
 //this is for the big sensor
-induction_mount3(ind_rad = 18/2+slop, height=12);
+induction_mount3(ind_rad = 18/2+slop, height=12, offset=7);
 
 
 
-module induction_mount3(drop=30, height=10, ind_rad = 12/2+slop){
+module induction_mount3(drop=30, height=10, ind_rad = 12/2+slop, offset = 0){
     screw_sep=20;
-    y_offset = ind_rad;
+    y_offset = ind_rad+offset;
     fillet=4;
     difference(){
         union(){
