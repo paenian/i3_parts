@@ -42,10 +42,10 @@ nut_rad = 8.9/2+slop;
 
 wall = 4;
 //rotate([0,-90,0]) 
-//induction_mount3();
+induction_mount3(offset=4);
 
 //this is for the big sensor
-induction_mount3(ind_rad = 18/2+slop, height=12, offset=7);
+//induction_mount3(ind_rad = 18/2+slop, height=12, offset=7);
 
 
 

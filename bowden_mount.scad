@@ -1,7 +1,7 @@
 hole_sep = 30;
 hole_sep_2 = 20;
 slop = .1;
-lower_hole_sep = 30;
+lower_hole_sep = 50;
 lower_hole_rad = 5.5+slop;
 lower_hole_height = -7.5;
 
@@ -37,7 +37,7 @@ m3_cap_height = 2;
 632_dia = 3.5;
 632_rad = 632_dia/2+slop;
 632_nut_rad = 8.25/cos(45)/2;
-632_cap_dia = 6.5;
+632_cap_dia = 7;
 632_cap_rad = 632_cap_dia/2+slop;
 632_cap_height = 2+slop;
 632_nut_height = 5;
@@ -61,12 +61,12 @@ extruder_sep = e3d_fin_rad*2;
 
 //bowden_mount();
 //translate([0,25,0]) nut_trap();
-translate([0,50,0]) fan_duct(clip_height=25); 
+//translate([0,50,0]) fan_duct(clip_height=25); 
 //translate([0,50,0]) fan_duct_induction(clip_height=35, e3d_fin_rad = 26/2); //v5
 //translate([0,50,0]) fan_duct_induction(clip_height=25, e3d_fin_rad = 23/2); //v6
 
 //translate([0,-50, 0])
-//!cyclops_mount();
+mirror([1,0,0]) cyclops_mount();
 
 //inline_mount(left_inset=4.1);
 
@@ -289,7 +289,7 @@ module i3_holes(solid=0){
 }
 
 module cyclops_mount(induction=1){
-    mount_height = 20;
+    mount_height = 20+5;
     e3d_mount_height = wall;
     e3d_mount_offset = 15;
     ind_offset=(16-18)/2;
