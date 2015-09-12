@@ -55,13 +55,15 @@ module holder_switch(){
     thick = 7;
     wire = 5;
     
+    switch_height=8;
+    
     difference(){
         union(){
             //rod clamp
             translate([0,0,height/2]) rotate([0,90,0]) round_clip(rad = m8_rad, height = height, wall = wall, angle=angle, support = 0, clamp=1, solid = 1);
             
             //endstop holder
-            translate([-thick/2,0,height/2]) cube([thick+wall*2, width+wall*2,height], center=true);
+            translate([-thick/2,0,switch_height/2+wall/2]) cube([thick+wall*2, width+wall*2,switch_height+wall], center=true);
         }
         
         //hollow out the rod
@@ -70,17 +72,17 @@ module holder_switch(){
         difference(){
             union(){
                 //endstop
-                translate([-thick/2,0,height/2+wall]) cube([thick, width,height], center=true);
+                translate([-thick/2,0,switch_height/2+wall]) cube([thick, width,switch_height+wall], center=true);
                 //wire pass
-                translate([-thick/2-(thick-wire)/2,0,height/2-.1]) cube([wire, width,height], center=true);
+                translate([-thick/2-(thick-wire)/2,0,switch_height/2-.1]) cube([wire, width,switch_height], center=true);
             }
             
             //retainer bump
-            translate([-thick-wall/4,0,height*3/4]) scale([1,1,2]) sphere(r=wall/2);
+            translate([-thick-wall/5,0,switch_height*3/4]) scale([1,1,2]) sphere(r=wall/2);
         }
         
         //flatten bottom
-        for(i=[-1,1]) translate([0,0,25*i+height/2+height/2*i]) cube([50,50,50], center=true);
+        for(i=[-1,-1]) translate([0,0,25*i+height/2+height/2*i]) cube([50,50,50], center=true);
     }
 }
 
@@ -114,7 +116,7 @@ module round_clip(rad=8, height=10, wall=3, angle=45, support=0, clamp=0, solid=
 
 			if(clamp==1){
 				for(i=[-1,1]) rotate([0,0,i*angle/2]) translate([-rad-wall/2,0,0]) rotate([0,0,-i*angle/2]) rotate([i*90,0,0]) hull(){
-					translate([wall/2, 0, 0]) cylinder(r1=wall+m3_nut_rad, r2=wall/2+m3_nut_rad, h=m3_nut_height+.1, $fn=6, center=true);
+					translate([wall*3, 0, 0]) cylinder(r1=wall+m3_nut_rad, r2=wall/2+m3_nut_rad, h=m3_nut_height+.1, $fn=6, center=true);
 					translate([-m8_rad, 0, 0]) cylinder(r1=wall+m3_nut_rad, r2=wall/2+m3_nut_rad, h=m3_nut_height+.1, $fn=6, center=true);
 				}
 			}
