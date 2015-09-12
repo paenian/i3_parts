@@ -24,8 +24,8 @@ hole_sep = m5_rad+m3_rad+wall/2;
 len = 8.5;
 
 $fn=64;
-bearing_clamp();
-//coupler();
+//bearing_clamp();
+coupler();
 
 module coupler(height=25){
     rad = m5_rad+wall;
@@ -47,23 +47,26 @@ module coupler(height=25){
         }
         
         //rod hole
-        translate([0,0,-.01]) difference(){
+        translate([0,0,-.1]) difference(){
             cylinder(r=m5_rad, h=height+1);
             translate([0,0,height/2]) difference(){
                 cylinder(r=m5_rad+1, h=gap, center=true);
-                cube([30,gap*2,gap+1], center=true);
+                cube([30,gap*1.5,gap+1], center=true);
             }
         }
         
         //clamp screws
-        for(i=[m3_nut_rad+1, height-(m3_nut_rad+1)]) translate([m5_rad+m3_rad+1,0,i]) rotate([90,0,0]) {
+        for(i=[m3_nut_rad+1, height-(m3_nut_rad+1)]) translate([m5_rad+m3_rad,0,i]) rotate([90,0,0]) {
             cylinder(r=m3_rad, h=10, center=true);
-            translate([0,0,gap/2+wall/2]) rotate([0,0,30]) cylinder(r1=m3_nut_rad, r2=m3_nut_rad+.5, h=m3_nut_thick*2, $fn=6);
-            mirror([0,0,1]) translate([0,0,gap/2+wall/2]) rotate([0,0,30]) cylinder(r1=m3_cap_rad, r2=m3_cap_rad+.5, h=m3_nut_thick*2);
+            translate([0,0,hinge_rad-.5]) rotate([0,0,30]) cylinder(r1=m3_nut_rad, r2=m3_nut_rad+.5, h=m3_nut_thick*2, $fn=6);
+            mirror([0,0,1]) translate([0,0,hinge_rad-.5]) rotate([0,0,30]) cylinder(r1=m3_cap_rad, r2=m3_cap_rad+.5, h=m3_nut_thick*2);
         }
         
         //cutout to make top/bottom more independent
-        scale([1,1,1]) translate([rad+wall,0,height/2])  rotate([90,0,0]) cylinder(r=rad+1, h=30, center=true, $fn=4);
+        scale([1,1,1]) translate([rad+wall,0,height/2])  rotate([90,0,0]) minkowski(){
+            cylinder(r=rad, h=30, center=true, $fn=4);
+            cylinder(r=1, h=.1);
+        }
     }
 }
 
