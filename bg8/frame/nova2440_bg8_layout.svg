@@ -15,7 +15,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="nova2440_bg8_layout.svg">
+   sodipodi:docname="nova2440_bg8_layout.dxf">
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -23,17 +23,19 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.5"
-     inkscape:cx="608.7477"
-     inkscape:cy="26.498984"
+     inkscape:zoom="1"
+     inkscape:cx="258.54618"
+     inkscape:cy="501.23144"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1918"
-     inkscape:window-height="1032"
+     inkscape:window-width="2560"
+     inkscape:window-height="1553"
      inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1" />
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:guide-bbox="true" />
   <defs
      id="defs4">
     <symbol
@@ -98,7 +100,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -21302,13 +21304,13 @@
          sodipodi:nodetypes="cc" />
       <path
          id="path6077-2-5-0-6"
-         d="m 1531.559,551.02654 8.1731,0 1.8342,0.2411 1.7091,0.7064 1.4677,1.124 1.1261,1.4647 0.708,1.7058 0.2414,1.8305 0.012,10.6229 -21.5421,0.014 0,-6.3779 -18.0347,0 0,6.3779 -13.9681,0 0,15.5904 13.9681,0 0,6.378 18.0347,0 0,-6.378 21.5647,-0.03 0.01,10.579 -0.2415,1.8304 -0.7079,1.7059 -1.1262,1.4647 -1.4677,1.124 -1.7091,0.7064 -1.8342,0.2411 -8.2181,0"
+         d="m 1531.559,551.02654 8.1731,0 1.8342,0.2411 1.7091,0.7064 1.4677,1.124 1.1261,1.4647 0.708,1.7058 0.2414,1.8305 0.012,10.6229 -27.5421,0.014 0,-6.3779 -18.0347,0 0,6.3779 -7.9681,0 0,15.5904 7.9681,0 0,6.378 18.0347,0 0,-6.378 27.5647,-0.03 0.01,10.579 -0.2415,1.8304 -0.7079,1.7059 -1.1262,1.4647 -1.4677,1.124 -1.7091,0.7064 -1.8342,0.2411 -8.2181,0"
          style="fill:none;stroke:#0000ff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
          inkscape:connector-curvature="0"
          sodipodi:nodetypes="cccccccccccccccccccccccccccc" />
       <path
          id="path6077-2-5-0-6-4"
-         d="m 1461.1003,493.72061 0,-8.1731 0.2411,-1.8342 0.7064,-1.7091 1.124,-1.4677 1.4647,-1.1261 1.7058,-0.708 1.8305,-0.2414 10.6229,-0.012 0.014,21.5421 -6.3779,0 0,18.0347 6.3779,0 0,13.9681 15.5904,0 0,-13.9681 6.378,0 0,-18.0347 -6.378,0 -0.03,-21.5647 10.579,-0.01 1.8304,0.2415 1.7059,0.7079 1.4647,1.1262 1.124,1.4677 0.7064,1.7091 0.2411,1.8342 0,8.2181"
+         d="m 1461.1003,493.72061 0,-8.1731 0.2411,-1.8342 0.7064,-1.7091 1.124,-1.4677 1.4647,-1.1261 1.7058,-0.708 1.8305,-0.2414 10.6229,-0.012 0.014,27.5421 -6.3779,0 0,18.0347 6.3779,0 0,7.9681 15.5904,0 0,-7.9681 6.378,0 0,-18.0347 -6.378,0 -0.03,-27.5647 10.579,-0.01 1.8304,0.2415 1.7059,0.7079 1.4647,1.1262 1.124,1.4677 0.7064,1.7091 0.2411,1.8342 0,8.2181"
          style="fill:none;stroke:#0000ff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none"
          inkscape:connector-curvature="0"
          sodipodi:nodetypes="cccccccccccccccccccccccccccc" />
@@ -23693,7 +23695,7 @@
          inkscape:connector-curvature="0" />
     </g>
     <g
-       transform="matrix(0,-1,1,0,1988.3925,1054.4081)"
+       transform="matrix(0,-1,1,0,799.63977,1054.4081)"
        id="g7988-6-5">
       <path
          sodipodi:nodetypes="cc"

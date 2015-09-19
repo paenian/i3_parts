@@ -49,7 +49,7 @@ induction_mount3(offset=4);
 
 
 
-module induction_mount3(drop=30, height=10, ind_rad = 12/2+slop, offset = 0){
+module induction_mount3(drop=30, height=11, ind_rad = 18/2+slop, offset = 0){
     screw_sep=20;
     y_offset = ind_rad+offset;
     fillet=4;
@@ -58,7 +58,7 @@ module induction_mount3(drop=30, height=10, ind_rad = 12/2+slop, offset = 0){
             hull(){
                 for(i=[-screw_sep/2, screw_sep/2]) translate([i, 0, drop])
                     rotate([-90,0,0]) cylinder(r=m3_cap_rad+wall/2, h=wall);
-                #for(i=[-ind_rad+wall/2, ind_rad-wall/2]) translate([i+y_offset, wall/2, 0])
+                for(i=[-ind_rad+wall/2, ind_rad-wall/2]) translate([i+y_offset, wall/2, 0])
                     cylinder(r=wall/2, h=wall);
             }
             translate([y_offset,14,0]) extruder_mount(1, m_height=height,  hotend_rad=ind_rad);

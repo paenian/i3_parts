@@ -126,9 +126,12 @@ module extruder_hole(){
 module y_hole(length=10){
     translate([1,0,0]){
         translate([0,-4,0]) rotate([90, 0, 0]) cylinder(r=1.8, h=length*2, center=false,$fn=small_hole_segments);
-        translate([0, -length+6, 0]) rotate([90, 0, 0]) hull(){
-            cylinder(r1=4., r2=3.3, h=5, $fn=6, center=true);
-            translate([10,0,0]) cylinder(r1=4., r2=3.3, h=5, $fn=6, center=true);
+        translate([0, -length+6, 0]) rotate([90, 0, 0]){
+            hull(){
+                cylinder(r1=4., r2=3.3, h=5, $fn=6, center=true);
+                translate([10,0,0]) cylinder(r1=4., r2=3.3, h=5, $fn=6, center=true);
+            }
+            translate([0,0,3.5]) cylinder(r1=3.3, r2=3, h=2.1, $fn=6, center=true);
         }
     }
 }
