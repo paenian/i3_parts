@@ -56,7 +56,7 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 			//mount base
 			hull(){
 				scale([scale_size,scale_size,1]) motor_base(h=height);
-				translate([-motor_w/2-wall-wall/2+.05+1+offset,0,height/2]) rotate([0,0,angle]) cube([wall+1,motor_w,height], center=true);
+				translate([-motor_w/2-wall-wall/2+.05+1+offset,0,height/2]) rotate([0,0,angle]) cube([wall+1,motor_w+wall/2,height], center=true);
 
 				if(screws == 2){
 					translate([-motor_w/2-wall-wall,0,height/2+hole_sep]) rotate([0,0,angle]) rotate([0,90,0]) cylinder(r=632_cap_rad+wall-.75, h=wall+1);
@@ -96,7 +96,7 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 		render() translate([0,motor_w/2+wall+mount_screw_rad+wall,height/2]) rotate([0,90,0]) clamp(height=height, 0, mount_screw_rad, 0);
 		
 		//mounting holes
-        for(i=[-mount_sep/2, mount_sep/2])
+        for(i=[-mount_sep/2, 0, mount_sep/2])
             #translate([-motor_w/2-wall*2+.5+offset,i,height/2]) rotate([0,0,angle]) {
                 rotate([0,90,0]) rotate([0,0,-90]) translate([0,0,offset*2]) cap_cylinder(r=mount_screw_rad, h=200, center=true);
 		
@@ -120,7 +120,7 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 
 		if(fan_mount==1){
 			for(i=[-1,1]) translate([fan_hole_sep/2*i, -motor_w/2-wall-fan_offset, -.1]) {
-				translate([0,0,wall]) cylinder(r1=m3_nut_rad+.1, r2=m3_nut_rad+.5, h=wall*2, $fn=6);
+				translate([0,0,wall]) cylinder(r1=m3_nut_rad+.1, r2=m3_nut_rad+.7, h=wall*2, $fn=6);
 				cylinder(r=m3_rad, h=wall*3);
 			}
 		}
