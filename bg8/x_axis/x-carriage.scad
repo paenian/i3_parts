@@ -106,7 +106,7 @@ module x_carriage(){
             translate([21, -2, carriage_hole_to_side]) rotate([0,30,0]) extruder_hole();
             translate([21, -2, carriage_hole_to_side + 30]) rotate([0,30,0]) extruder_hole();
            
-            translate([21+ext_offset, 0, carriage_hole_to_side]) rotate([0,30,0]) extruder_hole();
+            translate([21+ext_offset, -2, carriage_hole_to_side]) rotate([0,30,0]) extruder_hole();
             
             if (carriage_l >= 50 + 2 * carriage_hole_to_side) {
                 translate([21, -2, carriage_hole_to_side + 30 + 20]) rotate([0,30,0]) extruder_hole();
@@ -120,7 +120,7 @@ module x_carriage(){
 
 module extruder_hole(){
     rotate([90, 0, 0]) cylinder(r=1.8, h=32, center=true,$fn=small_hole_segments);
-                translate([0, 7, 0]) rotate([90, 60, 0]) cylinder(r=3.4, h=5, $fn=6, center=true);
+                translate([0, 7, 0]) rotate([90, 60, 0]) cylinder(r1=3.7, r2=3.4, h=5, $fn=6, center=true);
 }
 
 module y_hole(length=10){
@@ -152,5 +152,5 @@ module y_belt_mount(length=carriage_l, drop=15){
     }
 }
 
-y_belt_mount(length = 35, drop=17);
-//rotate([0,180,0]) mirror([0,0,1]) x_carriage();
+//y_belt_mount(length = 35, drop=17);
+rotate([0,180,0]) mirror([0,0,1]) x_carriage();
