@@ -71,7 +71,7 @@ module fan_mount(){
                 cylinder(r1=hot_rad+thickness, r2=hot_rad+thickness*2, h=thickness, $fn=facets);
                 hull(){
                     intersection(){
-                        cylinder(r1=hot_rad+thickness, r2=hot_rad+thickness*2, h=thickness, $fn=6);
+                        #cylinder(r1=hot_rad+thickness, r2=hot_rad+thickness*2-wall, h=thickness, $fn=6);
                         translate([50+hot_rad+wall,0,50+wall]) cube([100,100,100], center=true);
                     }
                     translate([hotend_x+fan_x,hotend_y,fan_z]) rotate([0,90,0]) cylinder(r=fan_hole, h=.3, center=true);
