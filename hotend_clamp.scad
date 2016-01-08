@@ -8,7 +8,7 @@ hotend_clamp();
 hotend_clamp_dual();
 
 translate([0,40,0])
-!hotend_groovemount_dual();
+hotend_groovemount_dual();
 
 $fn=90;
 
