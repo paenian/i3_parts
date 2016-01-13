@@ -92,8 +92,7 @@ m5 = 1;
 tensioner_rad = 3;
 tensioner_cap_rad = 4.5;
 
-//mirror([1,0,0])		//I use this to make a left and right version for dualstrusion :-)
-//extruder(bowden_tap, none, m5);
+
 //translate([motor_r*2+wall, 0, 0]) mirror([1,0,0]) extruder(bowden_tap, none, m3);
 //translate([motor_r*2+wall, motor_r*2+wall, 0]) extruder(groovemount, graber, m3);
 
@@ -110,9 +109,13 @@ tensioner_cap_rad = 4.5;
 ind_rad = 18/2+slop*2;
 ind_height = 12;
 
-extruder(groovemount2, none, m5, motor_mount_h=4.5, e3d=1);
+//extruder(groovemount2, none, m5, motor_mount_h=4.5, e3d=1);
 //extruder_mount(screws=2, flip=1, fan_mount=1, mount_screw_rad=632_rad, angle=0, height=16, offset=0);
 //translate([filament_offset, 33, 0]) rotate([0,0,180]) grooveclamp2(induction=0);
+
+//bowden versions for bg8
+mirror([1,0,0])		//I use this to make a left and right version for dualstrusion :-)
+extruder(bowden_tap, none, m5, motor_mount_h=4.5);
 
 
 //fan_shroud(length = 30, hotend_offset = 32, hotend_rad = 14);
