@@ -84,14 +84,16 @@ module x_carriage(){
                 //This block moves with varying bearing thickness to ensure the front side is flat
                 translate([0, -bushing_foot_len(bushing_xy), 0]) {
                     // main plate
-                    translate([4, -1, 0]) cube_fillet([xaxis_rod_distance + 4, 6, carriage_l], radius=2);
+                    translate([4, -1, 0]) cube_fillet([xaxis_rod_distance + 4+2, 6, carriage_l], radius=2);
                     translate([-8, -1, 0]) cube_fillet([xaxis_rod_distance + 16, 6, bushing_carriage_len + 3], radius=2);
                 }
 
+                translate([21,0,0]) %cube([35,30,30]);
+                
                 belt_clamp();
                 
                 //extra screwhole for extruder
-                translate([20+ext_offset-3, -11.5, 0]) cube_fillet([10, 18.5, 10], vertical = [2, 2, 0, 0], top = [2, 0, 0, 2]);
+                translate([20+ext_offset-3, -11.5, 0]) cube_fillet([10, 18.5, carriage_l], vertical = [2, 2, 0, 2], top = [0, 0, 0, 2]);
             }
             //Ensure upper bearing can be inserted cleanly
             rotate([0, 0, 90]) {
@@ -104,15 +106,19 @@ module x_carriage(){
             
             // extruder mounts
             translate([21, -2, carriage_hole_to_side]) rotate([0,30,0]) extruder_hole();
-            translate([21, -2, carriage_hole_to_side + 30]) rotate([0,30,0]) extruder_hole();
-           
             translate([21+ext_offset, -2, carriage_hole_to_side]) rotate([0,30,0]) extruder_hole();
+            
+            translate([21, -2, carriage_hole_to_side + 30]) rotate([0,30,0]) extruder_hole();
+            translate([21+ext_offset, -2, carriage_hole_to_side + 30]) rotate([0,30,0]) extruder_hole();
+            
             
             if (carriage_l >= 50 + 2 * carriage_hole_to_side) {
                 translate([21, -2, carriage_hole_to_side + 30 + 20]) rotate([0,30,0]) extruder_hole();
+                translate([21+ext_offset, -2, carriage_hole_to_side + 30 + 20]) rotate([0,30,0]) extruder_hole();
             }
             if (carriage_l >= 80 + 2 * carriage_hole_to_side) {
                 translate([21, -2, carriage_hole_to_side + 30 + 20 + 30]) rotate([0,30,0]) extruder_hole();
+                translate([21+ext_offset, -2, carriage_hole_to_side + 30 + 20 + 30]) rotate([0,30,0]) extruder_hole();
             }
         }
     }
@@ -120,7 +126,7 @@ module x_carriage(){
 
 module extruder_hole(){
     rotate([90, 0, 0]) cylinder(r=1.8, h=32, center=true,$fn=small_hole_segments);
-                translate([0, 7, 0]) rotate([90, 60, 0]) cylinder(r1=3.7, r2=3.4, h=5, $fn=6, center=true);
+                translate([0, 7-1, 0]) rotate([90, 60, 0]) cylinder(r1=3.7+.3, r2=3.4, h=10, $fn=6, center=true);
 }
 
 module y_hole(length=10){
