@@ -415,7 +415,7 @@ module bowden_mount(height=14, induction = 1){
 
 module bowden_mount2(height=14, induction = 1, hole_sep=20){
         extruder_sep = e3d_fin_rad*2;
-        attach_height = height*3/4;
+        attach_height = height+10;
         attach_access = -15*-1;
         mount_jut = wall+wall/2; //the distance the mount sticks out past the hotend radius
         
@@ -436,8 +436,8 @@ module bowden_mount2(height=14, induction = 1, hole_sep=20){
 			//mount supports
 			//hull(){
 				for(i=[0,1]) mirror([i,0,0]) translate([hole_sep/2,-hotend_rad-mount_jut,attach_height]) rotate([-90,0,0]) hull(){
-                    cylinder(r=632_rad+wall+1, h=wall*4);
-                    translate([0,wall*2,wall*2]) cylinder(r=632_rad+wall, h=wall*4);
+                    cylinder(r=632_rad+wall*1.5, h=wall*2);
+                    #translate([0,attach_height,0]) cylinder(r=632_rad, h=wall*2);
                 }
 				//for(i=[0,1]) mirror([i,0,0]) translate([hole_sep/3,-hotend_rad-wall,632_rad+wall]) rotate([-90,0,0]) rotate([0,0,-180/5/2]) cylinder(r=(632_rad+wall)/cos(180/5), h=wall, $fn=5);
 			//}
