@@ -29,6 +29,16 @@ x_box_height = 52 + 2 * bushing_xy[0];
 x_box_width = (bushing_xy[0] <= 4) ? 17.5 : bushing_xy[0] * 2 + 9.5;
 bearing_height = max ((bushing_z[2] > 30 ? x_box_height : (2 * bushing_z[2] + 8)), x_box_height);
 echo(idler_width+10-4);
+
+
+*translate([8, 0, 4 - bushing_xy[0]]) x_tensioner();
+*translate([-9, 0, 4 - bushing_xy[0]]) y_tensioner();
+translate([0, -60, 0]) mirror([0, 0, 0]) x_end_idler(thru=true, spring=11.5);
+*translate([-50, 0, 0]) mirror([0, 0, 0]) translate([50, 0, 0])
+    x_end_motor();
+
+m5_nut_height=5;
+
 module x_end_motor(){
 
     mirror([0, 1, 0]) {
@@ -66,7 +76,9 @@ module x_end_motor(){
     }
 }
 
-module x_end_base(vfillet=[3, 3, 3, 3], thru=true, len=40, offset=0){
+module x_end_base(vfillet=[3, 3, 3, 3], thru=true, len=40, offset=0, spring=0){
+    
+    nut_trap_height = 10+spring;
 
     difference(){
         union(){
@@ -76,7 +88,7 @@ module x_end_base(vfillet=[3, 3, 3, 3], thru=true, len=40, offset=0){
                 //rotate([0, 0, 0]) translate([0, -9.5, 0]) 
                 translate([z_delta, 0, 0]) render(convexity = 5) linear(bushing_z, bearing_height);
                 // Nut trap
-                translate([-2, 18, 5]) cube_fillet([20, 14, 10], center = true, vertical=[8, 0, 0, 5]);
+                translate([-2, 18, nut_trap_height/2]) cube_fillet([20, 14, nut_trap_height], center = true, vertical=[8, 0, 0, 5]);
                 //}
             }
         }
@@ -99,9 +111,18 @@ module x_end_base(vfillet=[3, 3, 3, 3], thru=true, len=40, offset=0){
         translate([0, 0, 5 - bushing_xy[0]]) {  // m5 nut insert
             translate([0, 17, 0]) rotate([0, 0, 10]){
                 //rod
-                translate([0, 0, -1]) cylinder(h=(4.1 / 2 + 5), r=3, $fn=32);
+                translate([0, 0, -2]) cylinder(h=(4.1 + nut_trap_height), r=3, $fn=32);
                 //nut
-                translate([0, 0, 9]) rotate([0,0,-10]) cylinder(r1=m5_nut_diameter_horizontal/2+.1, r2=m5_nut_diameter_horizontal/2+.1+.4, h=14.1, center = true, $fn=6);
+                translate([0, 0, nut_trap_height-m5_nut_height]) rotate([0,0,-10]) cylinder(r1=m5_nut_diameter_horizontal/2+.1, r2=m5_nut_diameter_horizontal/2+.1+.4, h=m5_nut_height+.1, $fn=6);
+                
+                //spring under nut
+                translate([0, 0, -2]) rotate([0,0,-10]) difference(){
+                    cylinder(r1=m5_nut_diameter_horizontal/2+.2, r2=m5_nut_diameter_horizontal/2+.2, h=nut_trap_height, $fn=6);
+                    translate([0,5+2.8,nut_trap_height-m5_nut_height]) cube([10,10,2], center=true);
+                    translate([0,-5-2.8,nut_trap_height-m5_nut_height]) cube([10,10,2], center=true);
+                    translate([5+2.8,0,nut_trap_height-m5_nut_height+.25]) cube([10,10,2-.5], center=true);
+                    translate([-5-2.8,0,nut_trap_height-m5_nut_height+.25]) cube([10,10,2-.5], center=true);
+                }
 
             }
         }
@@ -110,9 +131,10 @@ module x_end_base(vfillet=[3, 3, 3, 3], thru=true, len=40, offset=0){
     translate([0, 17, 0]) %cylinder(h = 70, r=2.5+0.2);
 }
 
-module x_end_idler(){
+module x_end_idler(spring=0){
     difference() {
-        x_end_base(len=48 + z_delta / 3, offset=-10 - z_delta / 3);
+        x_end_base(len=48 + z_delta / 3, offset=-10 - z_delta / 3, spring=spring);
+        
         // idler hole
         translate([-20, -15 - z_delta / 2, 30]) {
             rotate([0, 90, 0]) cylinder(r=m3_diameter / 2, h=33, center=true, $fn=small_hole_segments);
@@ -131,12 +153,6 @@ module x_tensioner(len=68, idler_height=max(idler_bearing[0], 16)) {
 module y_tensioner(len=40, idler_height=max(idler_bearing[0], 16)) {
     idlermount(len=len, horizontal=0, oval_height=(idler_width+1)/2);
 }
-
-*translate([8, 0, 4 - bushing_xy[0]]) x_tensioner();
-*translate([-9, 0, 4 - bushing_xy[0]]) y_tensioner();
-translate([0, -60, 0]) mirror([0, 0, 0]) x_end_idler(thru=true);
-*translate([-50, 0, 0]) mirror([0, 0, 0]) translate([50, 0, 0])
-    x_end_motor();
 
 module pushfit_rod(diameter, length){
     %cylinder(h = length, r=diameter/2, $fn=30);
