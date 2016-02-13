@@ -59,7 +59,8 @@ echo("Nozzle Sep = ", e3d_fin_rad*2);
 extruder_sep = e3d_fin_rad*2;
 
 
-bowden_mount2(hole_sep=30);
+//bowden_mount2(hole_sep=30);
+bowden_mount2_inline();
 //translate([0,25,0]) nut_trap();
 //translate([0,50,0]) fan_duct(clip_height=25); 
 //translate([0,50,0]) fan_duct_induction(clip_height=35, e3d_fin_rad = 26/2); //v5
@@ -415,8 +416,10 @@ module bowden_mount(height=14, induction = 1){
 
 module bowden_mount2(height=14, induction = 1, hole_sep=20){
         extruder_sep = e3d_fin_rad*2;
-        attach_height = height/4;
-        attach_access = -15;
+        attach_height = height+10;
+        attach_access = -15*-1;
+        mount_jut = wall+wall/2; //the distance the mount sticks out past the hotend radius
+        
     
     ind_height = 10;
     ind_jut = e3d_fin_rad*2-hotend_rad+ind_rad + 2.5;
@@ -433,7 +436,10 @@ module bowden_mount2(height=14, induction = 1, hole_sep=20){
 
 			//mount supports
 			//hull(){
-				for(i=[0,1]) mirror([i,0,0]) translate([hole_sep/2,-hotend_rad-wall,attach_height]) rotate([-90,0,0]) cylinder(r=632_rad+wall, h=wall*2);
+				for(i=[0,1]) mirror([i,0,0]) translate([hole_sep/2,-hotend_rad-mount_jut,attach_height]) rotate([-90,0,0]) hull(){
+                    cylinder(r=632_rad+wall*1.5, h=wall*2);
+                    #translate([0,attach_height,0]) cylinder(r=632_rad, h=wall*2);
+                }
 				//for(i=[0,1]) mirror([i,0,0]) translate([hole_sep/3,-hotend_rad-wall,632_rad+wall]) rotate([-90,0,0]) rotate([0,0,-180/5/2]) cylinder(r=(632_rad+wall)/cos(180/5), h=wall, $fn=5);
 			//}
             if(induction==1){
@@ -447,17 +453,62 @@ module bowden_mount2(height=14, induction = 1, hole_sep=20){
 		for(i=[0,1]) mirror([i,0,0]) translate([extruder_sep/2,e3d_fin_rad-hotend_rad,0]) rotate([0,0,angle]) extruder_mount(0,height,0,0);
 
 		//holes
-		for(i=[0,1]) mirror([i,0,0]) translate([hole_sep/2,-hotend_rad-wall-.1,attach_height]) rotate([-90,0,0]) {
+		for(i=[0,1]) mirror([i,0,0]) translate([hole_sep/2,-hotend_rad-mount_jut-.1,attach_height]) rotate([-90,0,0]) {
 			cap_cylinder(r=632_rad, h=wall+1);
 			translate([0,0,3]) cap_cylinder(r=632_cap_rad, h=wall*2);
             translate([0,0,5]) rotate([attach_access,0,0]) cap_cylinder(r=632_cap_rad, h=wall*10);
-	
-			//hollows for other screws on mount
-			translate([lower_hole_sep/2-hole_sep/2, -lower_hole_height, 0]) cap_cylinder(r=lower_hole_rad, h=wall+1);
 		}
         
         //clean the bottle
         translate([0,0,-50]) cube([100,100,100], center=true);
+	}
+}
+
+//this is the bowden hotends+induction inline.
+module bowden_mount2_inline(height=14, induction = 1, hole_sep=20){
+        extruder_sep = e3d_fin_rad*2;
+        attach_height = m3_cap_rad;
+        attach_access = -15;
+        mount_jut = wall+wall/2; //the distance the mount sticks out past the hotend radius
+        
+    
+    ind_height = 10;
+    ind_jut = e3d_fin_rad*2-hotend_rad+ind_rad + 2.5;
+    
+    echo("Induction Offset from Extruder 0");
+    echo("X:",extruder_sep/2);
+    echo("Y:",ind_jut-e3d_fin_rad);
+    
+    angle = 70;
+    
+    hole_offsets = [50,0,30];
+    mount_offsets = [extruder_sep+30,30-extruder_sep,30];
+    mount_heights = [ind_height, height, height];
+    mount_rad = [ind_rad, hotend_rad, hotend_rad];
+    
+	difference(){
+		union(){
+			for(i=[0:2]) translate([mount_offsets[i],e3d_fin_rad-hotend_rad+(mount_rad[i]-hotend_rad),0]) rotate([0,0,angle]) extruder_mount(1,mount_heights[i],0,0, hotend_rad = mount_rad[i]);
+
+			//mount supports
+			//hull(){
+				for(i=[0:2]) translate([hole_offsets[i],-hotend_rad-mount_jut,attach_height]) rotate([-90,0,0]) hull(){
+                    cylinder(r=632_rad+wall*1.5, h=wall*2);
+                    translate([0,attach_height,0]) cylinder(r=632_rad, h=wall*2);
+                }
+            }
+                        
+		for(i=[0:2]) translate([mount_offsets[i],e3d_fin_rad-hotend_rad+(mount_rad[i]-hotend_rad),0]) rotate([0,0,angle]) extruder_mount(0,mount_heights[i],0,0, hotend_rad = mount_rad[i]);
+
+		//holes
+		for(i=[0:2]) translate([hole_offsets[i],-hotend_rad-mount_jut-.1,attach_height]) rotate([-90,0,0]) {
+			cap_cylinder(r=632_rad, h=wall+1);
+			translate([0,0,3]) cap_cylinder(r=632_cap_rad, h=wall*2);
+            translate([0,0,5]) rotate([attach_access,0,0]) cap_cylinder(r=632_cap_rad, h=wall*10);
+		}
+        
+        //clean the bottle
+        translate([0,0,-100]) cube([200,200,200], center=true);
 	}
 }
 
@@ -481,7 +532,10 @@ module extruder_mount(solid = 1, m_height = 10, fillet = 8, tap_height=0, width=
 			//bolt slots
 			if(m_height > nut_rad*2){
 				render() translate([hotend_rad+bolt_rad+2,-m_thickness-.05,m_height/2]) rotate([-90,0,0]) cap_cylinder(r=632_rad, h=m_thickness+10);
-				translate([hotend_rad+bolt_rad+2,-wall*2.5,m_height/2]) rotate([-90,0,0]) cylinder(r1=632_nut_rad+.5, r2=632_nut_rad, h=wall*1.5, $fn=4);
+				hull(){
+                    translate([hotend_rad+bolt_rad+2,-wall*2.5,m_height/2]) rotate([-90,0,0]) rotate([0,0,45]) cylinder(r1=632_nut_rad+.5, r2=632_nut_rad, h=wall*1.5, $fn=4);
+                    //translate([hotend_rad+bolt_rad+2+10,-wall*2.5,m_height/2]) rotate([-90,0,0]) rotate([0,0,45]) cylinder(r1=632_nut_rad+.5, r2=632_nut_rad, h=wall*1.5, $fn=4);
+                }
 
 				//mount tightener
 				translate([hotend_rad+bolt_rad+2,wall+gap-1,m_height/2]) rotate([-90,0,0]) cap_cylinder(r=632_cap_rad+.5, h=10);
