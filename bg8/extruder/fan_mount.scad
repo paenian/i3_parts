@@ -131,6 +131,8 @@ module bowden_fan(){
     duct_h = 20+slop;
     duct_offset=40;
     
+    mount_height = 46;
+    
     offset = -20;
     difference(){
         union(){
@@ -149,7 +151,19 @@ module bowden_fan(){
                 translate([duct_offset,duct_jut,duct_h/2+wall]) rotate([0,0,duct_angle]) cube([1,duct_w+wall*2, duct_h+wall*2], center=true);
             }
             
+            //the duct connector
             translate([duct_offset,duct_jut,0]) rotate([0,0,duct_angle]) duct();
+            
+            //mounting lugs
+            for(i=[0,-30,-50]) difference(){
+                translate([i,hot_rad+wall*2,0]) hull(){
+                    translate([16,0,thickness]) rotate([90,0,0]) cylinder(r=m3_cap_rad+wall*2, h=wall, center=true);
+                    translate([0,0,mount_height]) rotate([90,0,0]) cylinder(r=m3_cap_rad+wall, h=wall, center=true);
+                }
+                
+                //mounting holes up top
+                translate([i,hot_rad+wall*2,mount_height]) rotate([90,0,0]) cylinder(r=m3_rad+slop, h=20, center=true);
+            }
         }
         
         //connection to duct airflow
@@ -192,15 +206,32 @@ module duct(){
     duct_h = 20+slop;
     rad = 20;
     
-    translate([0,0,rad+wall+duct_h/2]) rotate([-90,0,0]) intersection(){
-        rotate_extrude(angle = 70, convexity = 2){
-            translate([rad,0,0])
-            difference(){
-                square([duct_h+wall*2, duct_w+wall*2], center=true);
-                square([duct_h, duct_w], center=true);
+    translate([0,0,rad+wall+duct_h/2]) rotate([-90,0,0]) union(){
+        intersection(){
+            rotate_extrude(angle = 70, convexity = 2){
+                translate([rad,0,0])
+                difference(){
+                    square([duct_h+wall*2, duct_w+wall*2], center=true);
+                    square([duct_h, duct_w], center=true);
+                }
             }
+            translate([0,0,-100]) cube([200,200,200]);
         }
-        translate([0,0,-100]) cube([200,200,200]);
+        
+        translate([rad,0,0]) rotate([90,0,0]) translate([0,0,8]) difference(){
+            hull(){
+                translate([0,0,-8]) cube([duct_h+wall*2,duct_w+wall*2,.1], center=true);
+                #translate([duct_h/2+wall/2,0,8]) cube([wall,duct_w+wall*2,.1], center=true);
+            }
+            
+            //hollow center
+            cube([duct_h,duct_w,16.3], center=true);
+            
+            //slot for the clip
+            translate([wall+1,0,(12-16)/2]) cube([duct_h+wall*2,2,12], center=true);
+        }
+        
     }
+    
 }
 
