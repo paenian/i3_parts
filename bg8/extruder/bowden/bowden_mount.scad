@@ -476,13 +476,13 @@ module bowden_mount2_inline(height=14, induction = 1, hole_sep=20){
     ind_jut = e3d_fin_rad*2-hotend_rad+ind_rad + 2.5;
     
     echo("Induction Offset from Extruder 0");
-    echo("X:",extruder_sep/2);
-    echo("Y:",ind_jut-e3d_fin_rad);
+    echo("X:",extruder_sep);
+    echo("Y:",ind_rad-hotend_rad);
     
     angle = 70;
     
     hole_offsets = [50,0,30];
-    mount_offsets = [extruder_sep+30,30-extruder_sep,30];
+    mount_offsets = [extruder_sep+30,30,30-extruder_sep];
     mount_heights = [ind_height, height, height];
     mount_rad = [ind_rad, hotend_rad, hotend_rad];
     
