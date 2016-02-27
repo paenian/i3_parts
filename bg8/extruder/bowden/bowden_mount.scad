@@ -476,8 +476,6 @@ module bowden_mount2_inline(height=14, induction = 1, hole_sep=20){
     ind_height = 10;
     ind_jut = e3d_fin_rad*2-hotend_rad+ind_rad + 2.5;
     
-    
-    
     angle = 70;
     
     hole_offsets = [50,0,30];
