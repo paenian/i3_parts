@@ -414,6 +414,7 @@ module bowden_mount(height=14, induction = 1){
 	}
 }
 
+//this is the current Nova I3 model.
 module bowden_mount2(height=14, induction = 1, hole_sep=20){
         extruder_sep = e3d_fin_rad*2;
         attach_height = height+10;
@@ -475,21 +476,26 @@ module bowden_mount2_inline(height=14, induction = 1, hole_sep=20){
     ind_height = 10;
     ind_jut = e3d_fin_rad*2-hotend_rad+ind_rad + 2.5;
     
-    echo("Induction Offset from Extruder 0");
-    echo("X:",extruder_sep/2);
-    echo("Y:",ind_jut-e3d_fin_rad);
+    
     
     angle = 70;
     
     hole_offsets = [50,0,30];
-    mount_offsets = [extruder_sep+30,30-extruder_sep,30];
+    mount_offsets = [extruder_sep+37,30,30-extruder_sep];
     mount_heights = [ind_height, height, height];
     mount_rad = [ind_rad, hotend_rad, hotend_rad];
+    
+    echo("Induction Offset from Extruder 0");
+    echo("X:",(extruder_sep+37-30));
+    echo("Y:",ind_rad-hotend_rad);
     
 	difference(){
 		union(){
 			for(i=[0:2]) translate([mount_offsets[i],e3d_fin_rad-hotend_rad+(mount_rad[i]-hotend_rad),0]) rotate([0,0,angle]) extruder_mount(1,mount_heights[i],0,0, hotend_rad = mount_rad[i]);
 
+            //Add piece to connect now separated sensor mount
+           translate([52,-12.2,0]) rotate([0,0,70]) cube([14.1,20,10]);
+            
 			//mount supports
 			//hull(){
 				for(i=[0:2]) translate([hole_offsets[i],-hotend_rad-mount_jut,attach_height]) rotate([-90,0,0]) hull(){
