@@ -208,7 +208,7 @@ module duct(){
     
     translate([0,0,rad+wall+duct_h/2]) rotate([-90,0,0]) union(){
         intersection(){
-            rotate_extrude(angle = 70, convexity = 2){
+            rotate_extrude(angle = 90, convexity = 2){
                 translate([rad,0,0])
                 difference(){
                     square([duct_h+wall*2, duct_w+wall*2], center=true);
