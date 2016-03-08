@@ -129,7 +129,7 @@ duct_jut = -5;
 module bowden_fan(){
     duct_w = 15+slop;
     duct_h = 20+slop;
-    duct_offset=40;
+    duct_offset=38;
     
     mount_height = 46;
     
@@ -155,9 +155,9 @@ module bowden_fan(){
             translate([duct_offset,duct_jut,0]) rotate([0,0,duct_angle]) duct();
             
             //mounting lugs
-            for(i=[0,-30,-50]) difference(){
+           for(i=[10,-20,-40]) difference(){
                 translate([i,hot_rad+wall*2,0]) hull(){
-                    translate([16,0,thickness]) rotate([90,0,0]) cylinder(r=m3_cap_rad+wall*2, h=wall, center=true);
+                    translate([5,0,thickness]) rotate([90,0,0]) cylinder(r=m3_cap_rad+wall*2, h=wall, center=true);
                     translate([0,0,mount_height]) rotate([90,0,0]) cylinder(r=m3_cap_rad+wall, h=wall, center=true);
                 }
                 
