@@ -9,7 +9,7 @@ bearing_inner_r = bearing_inner_d/2;
 
 bolt_d = 5;
 bolt_r = bolt_d/2+slop;
-bolt_head_r = 10/2;
+bolt_head_r = 10/2+slop;
 nut_r = 9/2+slop;
 
 //sized for m8 and 608
@@ -59,10 +59,10 @@ module bearing_mount(){
 			}
 		}
 
-		cap_cylinder(r=bolt_r, h=100, center=true);
+		cap_cylinder(r=bolt_r, h=14, center=true);
 		
-		translate([0,0,-wall*1.5-bearing_w/2-wall/2]) cap_cylinder(r=bolt_head_r, h=wall);
-		translate([0,0,wall*1.5+bearing_w/2-wall/2]) cylinder(r1=nut_r, r2=nut_r+slop, h=wall, $fn=6);
+		translate([0,0,-wall*1.5-bearing_w/2-wall/2]) cap_cylinder(r=bolt_head_r, h=wall*1.4);
+		translate([0,0,wall*1.4+bearing_w/2-wall/2]) cylinder(r1=nut_r, r2=nut_r+slop, h=wall*2, $fn=6);
 		
 	}
 }
