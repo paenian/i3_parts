@@ -6,7 +6,7 @@ slop=.2;
 bolt_rad = 632_rad;
 632_nut_rad = 8.25/cos(45)/2;
 nut_rad = 632_nut_rad;
-632_cap_dia = 6.5;
+632_cap_dia = 6.5+.5;
 632_cap_rad = 632_cap_dia/2+slop;
 632_cap_height = 2+slop;
 632_nut_height = 5;
@@ -15,7 +15,7 @@ nut_rad = 632_nut_rad;
 m3_nut_rad = 6.01/2+slop;
 m3_nut_height = 2.4;
 m3_rad = 3/2+slop;
-m3_cap_rad = 3.25;
+m3_cap_rad = 4.25;
 
 
 wall=4;
@@ -26,7 +26,7 @@ mount_sep = 35;  //needs to match ext_offset from x-carriage.scad
 
 $fn=60;
 
-extruder_mount(offset=-3, mount_screw_rad=m3_rad, fan_mount=0);
+extruder_mount(offset=-3, mount_screw_rad=m3_rad, fan_mount=1);
 
 //attaches the motor with one or two screws.
 module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad, angle=0, height=15, offset=-1, motor_offset=1){
@@ -100,7 +100,7 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
             #translate([-motor_w/2-wall*2+.5+offset,i,height/2]) rotate([0,0,angle]) {
                 rotate([0,90,0]) rotate([0,0,-90]) translate([0,0,offset*2]) cap_cylinder(r=mount_screw_rad, h=200, center=true);
 		
-                translate([wall/2,0,0]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad*2, h=wall*3);
+                translate([wall/2,0,0]) rotate([0,90,0]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad*2.5, h=wall*4);
             }
 	
 
@@ -148,7 +148,7 @@ module clamp(solid = 1, mount_screw_rad = 632_rad, m5=0){
 		
 
 		//screw is on the outside
-		translate([0,0,wall*1.5]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad*2.25, h=len);
+		translate([0,0,wall*1.5]) rotate([0,0,-90]) cap_cylinder(r=mount_screw_rad*2.5, h=len);
 	}
 }
 
