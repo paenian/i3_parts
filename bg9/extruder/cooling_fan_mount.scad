@@ -205,17 +205,18 @@ module bowden_fan(){
 module cyclops_fan(){
     duct_w = 15+slop;
     duct_h = 20+slop;
-    duct_offset=38+3;
+    duct_offset=38;
     
-    mount_height = 46-2;
+    mount_height = 46-1.5;
+    mount_offset = 10;
     
-    offset = -20;
+    offset = -11;
     difference(){
         union(){
             //core
             hull(){
                 cylinder(r1=hot_rad+thickness+wall, r2=hot_rad+thickness*2+wall, h=thickness+wall, $fn=facets);
-                //translate([offset,0,0]) cylinder(r1=hot_rad+thickness+wall, r2=hot_rad+thickness*2+wall, h=thickness+wall, $fn=facets);
+                translate([offset,0,0]) cylinder(r1=hot_rad+thickness+wall, r2=hot_rad+thickness*2+wall, h=thickness+wall, $fn=facets);
             }
             
             //connection to duct
@@ -231,7 +232,7 @@ module cyclops_fan(){
             translate([duct_offset,duct_jut,0]) rotate([0,0,duct_angle]) duct();
             
             //mounting lugs
-           for(i=[10,-20]) difference(){
+           for(i=[10-mount_offset,-20-mount_offset]) difference(){
                 translate([i,hot_rad+wall*2,0]) hull(){
                     translate([5,0,thickness]) rotate([90,0,0]) cylinder(r=m3_cap_rad+wall*2, h=wall, center=true);
                     translate([0,0,mount_height]) rotate([90,0,0]) cylinder(r=m3_cap_rad+wall, h=wall, center=true);
@@ -254,7 +255,7 @@ module cyclops_fan(){
         //center cutout
         translate([0,0,-.5]) hull(){
             cylinder(r1=hot_rad+wall, r2=hot_rad+wall*3, h=thickness+wall+1, $fn=facets);
-            translate([2*offset,0,0]) cylinder(r1=hot_rad+wall, r2=hot_rad+wall*3, h=thickness+wall+1, $fn=facets);
+            translate([5*offset,0,0]) cylinder(r1=hot_rad+wall, r2=hot_rad+wall*3, h=thickness+wall+1, $fn=facets);
         }
         
         //air path
@@ -262,13 +263,13 @@ module cyclops_fan(){
             //core
             translate([0,0,-.1]) hull(){
                 cylinder(r1=hot_rad+thickness, r2=hot_rad+thickness*2-wall, h=thickness, $fn=facets);
-                //translate([offset+wall,0,0]) cylinder(r1=hot_rad+thickness, r2=hot_rad+thickness*2-wall, h=thickness, $fn=facets);
+                translate([offset+wall,0,0]) cylinder(r1=hot_rad+thickness, r2=hot_rad+thickness*2-wall, h=thickness, $fn=facets);
             }
             
             //keep the center walls in place
             translate([0,0,-.5]) hull(){
                 cylinder(r1=hot_rad+wall*2, r2=hot_rad+wall*4, h=thickness+wall+1, $fn=facets);
-                translate([2*offset,0,0]) cylinder(r1=hot_rad+wall*2, r2=hot_rad+wall*4, h=thickness+wall+1, $fn=facets);
+                translate([5*offset,0,0]) cylinder(r1=hot_rad+wall*2, r2=hot_rad+wall*4, h=thickness+wall+1, $fn=facets);
             }
             
             //bottom on the near side
