@@ -214,6 +214,19 @@ module i3_holes(solid=0){
             }
         }
     }
+    
+    for(i=[-25,-5,25]){
+        translate([i,-wall,attach_height]) rotate([-90,0,0]){
+            if(solid>=0)
+                cylinder(r=632_rad+wall, h=wall);
+            if(solid<=0) translate([0,0,-.1]) {
+                #cap_cylinder(r=632_rad, h=wall*2);
+                //translate([0,0,wall-632_cap_height]) 
+                translate([0,0,1.5]) 
+                cap_cylinder(r=632_cap_rad, h=632_cap_height+wall);
+            }
+        }
+    }
 }
 
 module cyclops_mount(induction=1){
@@ -221,7 +234,7 @@ module cyclops_mount(induction=1){
     e3d_mount_height = wall+1;
     e3d_mount_offset = 14;
     ind_offset=(16-18)/2;
-    ind_x_offset = 18;
+    ind_x_offset = 21;
     wall=4;
     
     difference(){
