@@ -11,32 +11,32 @@ include <../functions.scad>
 use <../connectors.scad>
 
 //frame vars
-frame_x = 600;
-frame_y = 300;
+frame_x = 400;
+frame_y = 200;
 box_x = 120;
 box_y = 120;
 box_z = 50;
 
-foot_x = 100;
-foot_y = 300;
-foot_offset = 165;
+foot_x = 125;
+foot_y = frame_y-40;
+foot_offset = 50;
 
-outlet_x = 40;
+outlet_x = 44;
 outlet_y = 70;
 outlet_screw_rad = 2;
 outlet_screw_sep = 83.3;
 
-switch_x = 10;
-switch_y = 20;
+switch_x = 12.5;
+switch_y = 18.5;
 
 //soldering iron vars
 iron_rad = m5_rad;
-iron_nut_rad = m5_nut_rad;
-floss_rad = 18;
-cord_rad = 4;
+iron_nut_rad = 9/2;
+floss_rad = 68/2;
+cord_rad = 3;
 
 //render everything
-part=10;
+part=4;
 
 //parts for laser cutting
 if(part == 0)
@@ -88,7 +88,7 @@ module side_plate_projected(){
 
 module top_plate_projected(){
     projection(){
-        top_plate();
+        top_plate_connected();
     }
 }
 
@@ -275,5 +275,5 @@ module iron_holes(hex=false){
 }
 
 module floss_holes(){
-    for(i=[0,1]) mirror([i,0,0]) translate([box_x/2+30+floss_rad*3,frame_y/2-floss_rad*2,0]) cylinder(r=floss_rad, h=mdf_wall*3, center=true);
+    for(i=[0,1]) mirror([i,0,0]) translate([box_x/2+30+60,frame_y/2-floss_rad*3,0]) cylinder(r=floss_rad, h=mdf_wall*3, center=true);
 }
