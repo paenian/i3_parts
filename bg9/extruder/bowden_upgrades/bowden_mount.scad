@@ -234,7 +234,7 @@ module cyclops_mount(induction=1){
     e3d_mount_height = wall+1;
     e3d_mount_offset = 14;
     ind_offset=(16-18)/2;
-    ind_x_offset = 21;
+    ind_x_offset = 21+1;
     wall=4;
     
     difference(){

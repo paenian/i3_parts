@@ -102,28 +102,39 @@ module idlermount(len=45, narrow_len=0, narrow_width=0, rod=threaded_rod_diamete
         translate([0, len + idler_bearing[2] - 35, idler_height/2]){
             difference(){
                 union(){
-                    rotate([0, 90, 0]) idler_assy(idler_bearing);
+                    rotate([0, 90, 0]) idler_assy(idler_bearing, idler_width=idler_width, $fn=32);
                     translate([0, 10, 0]) cube([idler_width + 1, 20, idler_height + 2], center=true);
                 }
-                for(i=[0,1]) mirror([i,0,0]) rotate([0,90,0]) translate([0,0,2.5+.25]) cylinder(r1=3.5, r2=7, h=(idler_width+1-5)/2);
+                //cube([8,15,5],center=true);
+                for(i=[0,1]) mirror([i,0,0]) rotate([0,-90,0]) translate([0,0,idler_width/2-.45]) cylinder(r1=3.25, r2=7, h=1.1);
+                
                 echo((idler_width+1-5)/2);
             }
             
             echo(1+idler_width);
             translate([(10 + idler_width)/2-3.5,0,0]) rotate([0,90,0]) cylinder(r1=m5_nut_diameter_horizontal/2, r2=m5_nut_diameter_horizontal/2+.5, h=10, $fn=6);
-            translate([(10 + idler_width)/2-2,0,0]) rotate([0,90,0]) cylinder(r=m5_diameter/2, h=50,center=true);
+            translate([(10 + idler_width)/2-2,0,0]) rotate([0,90,0]) cylinder(r=m5_diameter/2+.1, h=50,center=true, $fn=32);
             mirror([1,0,0]) translate([(10 + idler_width)/2-3.5,0,0]) rotate([0,90,0]) cylinder(r1=m5_nut_diameter_horizontal/2+.5, r2=m5_nut_diameter_horizontal/2+1, h=10);
         }
 
     }
 }
 
+//the Y tensioner
 idlermount(len=40, horizontal=0, oval_height=(idler_width+1)/2);
+
+//modified Y tensioner, for two flanged bearings
+*idlermount(len=40, horizontal=0, idler_width=9, oval_height=(idler_width+1)/2);
+
 
 //motorholder();
 *translate([32, 25, 0])  idlermount(len=50, horizontal=0, oval_height=(idler_width+1)/2);
 
-//translate([40,0,0]) idlermount(len=68, rod=m3_diameter / 2 + 0.5, idler_height=16, narrow_len=47, narrow_width=idler_width +1.5 + 2 - single_wall_width, horizontal=1);
+//the X tensioner
+translate([40,0,0]) idlermount(len=68, rod=m3_diameter / 2 + 0.5, idler_height=16, narrow_len=47, narrow_width=idler_width +1.5 + 2 - single_wall_width, horizontal=1);
+
+//Modified X tensioner, for two flanged bearings
+*translate([70,0,0]) idlermount(len=68, rod=m3_diameter / 2 + 0.5, idler_height=16, idler_width=9, narrow_len=47, narrow_width=idler_width +1.5 + 2 - single_wall_width, horizontal=1);
 
 
 *if (idler_bearing[3] == 1) {
