@@ -14,9 +14,10 @@ fan_hole = (40-wall-wall)/2;
 mount_drop = 10;
 fan_z = fan_hole+wall;
 
-fan_mount();
+//fan_mount();
+fan_mount_blower();
 //bowden_fan();
-//cyclops_fan();
+//translate([0,60,0]) cyclops_fan();
 
 %cylinder(r=hot_rad, h=20, center=true);
 %translate([-23,0,0]) cylinder(r=hot_rad, h=20, center=true);
@@ -66,7 +67,7 @@ module fan_mount(){
             }
             
             //mounting lugs above fan
-            translate([hotend_x+fan_x,hotend_y,fan_z]) rotate([0,90,0]){
+            #translate([hotend_x+fan_x,hotend_y,fan_z]) rotate([0,90,0]){
                 for(i=[-16, 16]) difference(){
                     hull(){
                         translate([-16-mount_drop,i,-fan_x+3]) cylinder(r=m3_rad+wall, h=wall*2, $fn=16);
@@ -220,7 +221,7 @@ module cyclops_fan(){
             }
             
             //connection to duct
-            hull(){
+            #hull(){
                 intersection(){
                     cylinder(r1=hot_rad+thickness+wall, r2=hot_rad+thickness*2+wall, h=thickness+wall, $fn=facets);
                     translate([hot_rad+wall*2,0,0]) cube([1,200,200], center=true);
@@ -278,6 +279,118 @@ module cyclops_fan(){
     }
 }
 
+module fan_mount_blower(){
+    duct_w = 15+slop;
+    duct_h = 20+slop;
+    //duct_offset=38;
+    
+    duct_jut = 10;
+    duct_angle = 25;
+    fan_x = 15+5+10+10+5;
+    
+    difference(){
+        union(){
+            //core
+            cylinder(r1=hot_rad+thickness+wall, r2=hot_rad+thickness*2+wall, h=thickness+wall, $fn=facets);
+            
+            //rear duct transition
+            hull(){
+                intersection(){
+                    difference(){
+                        cylinder(r1=hot_rad+thickness+wall, r2=hot_rad+thickness*2+wall, h=thickness+wall, $fn=facets);
+                        translate([0,0,-.5]) cylinder(r1=hot_rad+wall, r2=hot_rad+wall+wall, h=thickness+wall+1, $fn=facets);
+                    }
+                    translate([50+hot_rad-6.7,50,50]) cube([100,100,100], center=true);
+                }
+                
+                //this is the duct!
+                translate([fan_x,duct_jut,duct_w/2+wall]) rotate([0,0,duct_angle]) rotate([90,0,0]) cube([1,duct_w+wall*2, duct_h+wall*2], center=true);
+            }
+            
+            //front duct transition
+            hull(){
+                intersection(){
+                    difference(){
+                        cylinder(r1=hot_rad+thickness+wall, r2=hot_rad+thickness*2+wall, h=thickness+wall, $fn=facets);
+                        translate([0,0,-.5]) cylinder(r1=hot_rad+wall, r2=hot_rad+wall+wall, h=thickness+wall+1, $fn=facets);
+                    }
+                    translate([50+hot_rad-6.7,-50,50]) cube([100,100,100], center=true);
+                }
+                //this is the duct!
+                translate([fan_x,duct_jut,duct_w/2+wall]) rotate([0,0,duct_angle]) rotate([90,0,0]) cube([1,duct_w+wall*2, duct_h+wall*2], center=true);
+            }
+            
+            //the duct connector
+            translate([fan_x,duct_jut,0]) rotate([0,0,duct_angle]) translate([0,duct_h/2+wall,duct_w/2+wall]) rotate([90,0,0]) duct_angle(angle=duct_angle);
+            
+            //mounting lugs above fan
+            translate([hotend_x+fan_x,hotend_y,fan_z]) rotate([0,90,0]){
+                for(i=[-16, 16]) difference(){
+                    hull(){
+                        translate([-16-mount_drop,i,-fan_x+3]) cylinder(r=m3_rad+wall, h=wall*2, $fn=16);
+                        translate([0,i,-fan_x+3]) cylinder(r=m3_cap_rad*2, h=wall);
+                    }
+                    translate([-16-mount_drop,i,-fan_x+3-.1]) cylinder(r=m3_rad, h=wall*2+1, $fn=16);
+                }
+            }
+        }
+        
+        //center cutout
+        translate([0,0,-.5]) cylinder(r1=hot_rad+wall, r2=hot_rad+wall+wall, h=thickness+wall+1, $fn=facets);
+                
+        //front cutout
+        translate([-(hot_rad+thickness*2+wall),0,0]) cylinder(r=hot_rad+thickness*2+wall, h=thickness+wall*10, center=true, $fn=facets);
+        
+        //air path
+        translate([0,0,-.1]) difference(){
+            union(){
+                translate([-wall,0,0]) cylinder(r1=hot_rad+thickness, r2=hot_rad+thickness*2-wall, h=thickness, $fn=facets);
+                
+                hull(){
+                    intersection(){
+                        difference(){
+                            translate([-wall,0,0]) cylinder(r1=hot_rad+thickness, r2=hot_rad+thickness*2-wall, h=thickness, $fn=facets);
+                            translate([0,0,-.5]) cylinder(r1=hot_rad+wall*2, r2=hot_rad+wall*3, h=thickness+wall+1, $fn=facets);
+                        }
+                        translate([50+hot_rad-6.7,50,50]) cube([100,100,100], center=true);
+                    }
+                    
+                    //this is the duct!
+                    translate([fan_x,duct_jut,duct_w/2+wall]) rotate([0,0,duct_angle]) rotate([90,0,0]) cube([1.1,duct_w, duct_h], center=true);
+                }
+                
+                hull(){
+                    intersection(){
+                        difference(){
+                            translate([-wall,0,0]) cylinder(r1=hot_rad+thickness, r2=hot_rad+thickness*2-wall, h=thickness, $fn=facets);
+                            translate([0,0,-.5]) cylinder(r1=hot_rad+wall*2, r2=hot_rad+wall*3, h=thickness+wall+1, $fn=facets);
+                        }
+                        translate([50+hot_rad-6.7,-50,50]) cube([100,100,100], center=true);
+                    }
+                    
+                    //this is the duct!
+                    translate([fan_x,duct_jut,duct_w/2+wall]) rotate([0,0,duct_angle]) rotate([90,0,0]) cube([1.1,duct_w, duct_h], center=true);
+                }
+                
+                //translate([hotend_x+fan_x-5,hotend_y,fan_z]) rotate([0,90,0]) cylinder(r=fan_hole, h=wall+1+5);
+            }
+            
+            //cylinder(r1=hot_rad+wall+wall, r2=hot_rad+wall+wall+wall, h=thickness+wall, $fn=facets);
+            difference(){
+                                translate([0,0,-.5]) cylinder(r1=hot_rad+wall+wall, r2=hot_rad+wall+wall+wall, h=thickness+wall+1, $fn=facets);
+                                //this adds some holes to direct air straight into the hotend
+                                for(i=[30:360/6:179]) rotate([0,0,i]) {
+                                    cube([100,8,8],center=true);
+                                }
+                            }
+                            
+            translate([-(hot_rad+thickness*2),0,0]) cylinder(r=hot_rad+thickness*2+wall, h=thickness+wall*10, center=true, $fn=facets);
+            //an extra tongue for strength
+            translate([0,0,0])cube([100,hot_rad*2-wall,wall], center=true);
+        }
+    }
+}
+
 module duct(){
     duct_w = 15+slop;
     duct_h = 20+slop;
@@ -309,6 +422,39 @@ module duct(){
         }
         
     }
+}
+
+module duct_angle(angle=30){
+    duct_w = 15+slop;
+    duct_h = 20+slop;
+    rad = 20;
     
+    translate([0,0,rad+wall+duct_h/2]) rotate([-90,0,0]) union(){
+        intersection(){
+            rotate_extrude(angle = 45, convexity = 2){
+                translate([rad,0,0])
+                difference(){
+                    square([duct_h+wall*2, duct_w+wall*2], center=true);
+                    square([duct_h, duct_w], center=true);
+                }
+            }
+            translate([0,0,-100]) cube([200,200,200]);
+            translate([0,0,-100]) rotate([0,0,90-angle]) cube([200,200,200]);
+        }
+        
+        rotate([0,0,90-angle]) translate([rad,0,0]) rotate([90,0,0]) translate([0,0,8]) difference(){
+            hull(){
+                translate([0,0,-8]) cube([duct_h+wall*2,duct_w+wall*2,.1], center=true);
+                translate([duct_h/2+wall/2,0,8]) cube([wall,duct_w+wall*2,.1], center=true);
+            }
+            
+            //hollow center
+            cube([duct_h,duct_w,16.3], center=true);
+            
+            //slot for the clip
+            translate([wall+1,0,(12-16)/2]) cube([duct_h+wall*2,2,12], center=true);
+        }
+        
+    }
 }
 

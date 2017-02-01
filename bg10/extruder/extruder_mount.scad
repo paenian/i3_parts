@@ -20,7 +20,7 @@ m3_cap_rad = 4.25;
 
 wall=4;
 motor_w = 42;
-motor_r = 52/2;
+motor_r = 52/2+2;
 
 mount_sep = 35;  //needs to match ext_offset from x-carriage.scad
 
@@ -120,7 +120,7 @@ module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad
 
 		if(fan_mount==1){
 			for(i=[-1,1]) translate([fan_hole_sep/2*i, -motor_w/2-wall-fan_offset, -.1]) {
-				translate([0,0,wall]) cylinder(r1=m3_nut_rad+.1, r2=m3_nut_rad+.7, h=wall*2, $fn=6);
+				translate([0,0,wall]) cylinder(r1=m3_nut_rad+.1, r2=m3_nut_rad+1, h=wall*2, $fn=6);
 				cylinder(r=m3_rad, h=wall*3);
 			}
 		}
