@@ -78,8 +78,8 @@ groovemount = 2;
 groovemount2 = 3;
 groovemount_screw = 4;
 
-screw_mount_screw_sep = 23;
-screw_mount_rad = 632_rad+wall;
+screw_mount_screw_sep = 25;
+screw_mount_rad = 632_rad+wall+2;
 
 //extruder attachment types
 none = 0;  //there is no attachment - clamp motor in place.  This is for bowden.
@@ -99,7 +99,7 @@ tensioner_cap_rad = 4.5;
 
 //translate([motor_r*2+wall, 0, 0]) mirror([1,0,0]) extruder(bowden_tap, none, m3);
 //translate([motor_r*2+wall, motor_r*2+wall, 0]) 
-extruder(groovemount_screw, none, m3);
+extruder(groovemount_screw, none, m5);
 translate([0,33,0]) groovemount_screw_clamp();
 
 
@@ -321,7 +321,7 @@ module body(solid = 0, type=0, mount=0, idler=0){
 
 	if(solid==1){
 		intersection(){
-			translate([motor_w/4,0,height/2]) minkowski(){
+			#translate([motor_w/2-width/2-wall,0,height/2]) minkowski(){
 				cube([width,motor_w-rad*2,height], center=true);
 				cylinder(r=rad, h=.1);
 			}
@@ -362,8 +362,13 @@ module body(solid = 0, type=0, mount=0, idler=0){
 			%cylinder(r=eff_gear_rad, h=100, center=true); //idler dia
 			//%cylinder(r=gear_rad, h=100, center=true); //idler dia
 			cylinder(r=gear_rad+slop, h=100, center=true);
+            
+            
 			//#translate([idler_offset,0,0]) cylinder(r=gear_rad+slop, h=100, center=true);
 		}
+        
+        //clearance for the screw on a mk8 drive gear with a slightly too long grub screw
+        #translate([0,0,filament_height-9]) cylinder(r1=gear_rad+3, r2=gear_rad, h=7);
 
 		//filament
 		translate([filament_offset,0,filament_height]) rotate([90,0,0]) rotate([0,0,180/8]) cylinder(r=filament_rad, h=100, center=true, $fn=8);
@@ -422,7 +427,7 @@ module idler(idler_dia = 16, idler_thick = 6, idler_flat_rad = 4, idler_nut_rad 
 	//idler mounting
 	//translate([8,0,0]) //uncomment to check idler path
 	translate([eff_gear_rad+idler_rad+idler_offset,0,0]){
-		rotate([0,0,30]) translate([0,0,-wall/2]) cylinder(r1=idler_nut_rad+.5, r2 = idler_nut_rad, h=idler_nut_height+wall, $fn=6);
+		rotate([0,0,30]) translate([0,0,-wall/2]) cylinder(r1=idler_nut_rad+.75, r2 = idler_nut_rad, h=idler_nut_height+wall, $fn=6);
 		translate([0,0,-wall/2+idler_nut_height+wall+layer_height]) cylinder(r=idler_bolt_rad, h=height);
 		
 		difference(){
@@ -781,7 +786,7 @@ module groovemount_screw(solid=1,e3d=1){
         translate([0,0,-inset+4.25+6/2-slop]){
             for(i=[0,1]) mirror([i,0,0]) translate([screw_mount_screw_sep/2,7,0]) rotate([90,0,0]) {
                 cylinder(r=632_rad, h=20, center=true);
-                translate([0,0,-wall*2]) rotate([0,0,45]) cylinder(r=632_nut_rad, h=20, center=true, $fn=4);
+                translate([0,0,-wall*2.25]) rotate([0,0,45]) cylinder(r=632_nut_rad, h=20, center=true, $fn=4);
                 
                 %translate([0,0,+2]) cylinder(r=632_rad, h=25.4*3/4);
             }
@@ -846,21 +851,21 @@ module groovemount_screw(solid=1,e3d=1){
 }
 
 module groovemount_screw_clamp(){
-    groove_lift = wall;
+    groove_lift = wall-1;
     
     dia = 16;
     rad = dia/2+slop;
     mink = 1;
     inset = 3;
     groove = 9+2;
-    thick = 5;
+    thick = wall*2+1;
     length = 10;
     
     
     difference(){
         hull(){
             //screwhole mounts
-            for(i=[0,1]) mirror([i,0,0]) translate([screw_mount_screw_sep/2,7,0]) cylinder(r=screw_mount_rad, h=wall*2);
+            for(i=[0,1]) mirror([i,0,0]) translate([screw_mount_screw_sep/2,7,0]) cylinder(r=screw_mount_rad, h=thick);
         }
         
         //screwholes

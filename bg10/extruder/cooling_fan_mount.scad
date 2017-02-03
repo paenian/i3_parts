@@ -284,8 +284,9 @@ module fan_mount_blower(){
     duct_h = 20+slop;
     //duct_offset=38;
     
-    duct_jut = 10;
-    duct_angle = 25;
+    duct_jut = -5;
+    duct_angle = -10;
+    duct_extend = 8;
     fan_x = 15+5+10+10+5;
     
     difference(){
@@ -304,7 +305,7 @@ module fan_mount_blower(){
                 }
                 
                 //this is the duct!
-                translate([fan_x,duct_jut,duct_w/2+wall]) rotate([0,0,duct_angle]) rotate([90,0,0]) cube([1,duct_w+wall*2, duct_h+wall*2], center=true);
+                translate([fan_x,duct_jut,duct_h/2+wall]) rotate([0,0,duct_angle]) cube([1,duct_w+wall*2, duct_h+wall*2], center=true);
             }
             
             //front duct transition
@@ -317,18 +318,24 @@ module fan_mount_blower(){
                     translate([50+hot_rad-6.7,-50,50]) cube([100,100,100], center=true);
                 }
                 //this is the duct!
-                translate([fan_x,duct_jut,duct_w/2+wall]) rotate([0,0,duct_angle]) rotate([90,0,0]) cube([1,duct_w+wall*2, duct_h+wall*2], center=true);
+                translate([fan_x,duct_jut,duct_h/2+wall]) rotate([0,0,duct_angle]) cube([1,duct_w+wall*2, duct_h+wall*2], center=true);
             }
             
             //the duct connector
-            translate([fan_x,duct_jut,0]) rotate([0,0,duct_angle]) translate([0,duct_h/2+wall,duct_w/2+wall]) rotate([90,0,0]) duct_angle(angle=duct_angle);
+            translate([fan_x,duct_jut,0]) rotate([0,0,duct_angle]) {
+                translate([duct_extend/2,0,duct_h/2+wall]) difference(){
+                    cube([duct_extend*1.05, duct_w+wall*2, duct_h+wall*2], center=true);
+                    cube([duct_extend*1.1, duct_w, duct_h], center=true);
+                }
+                translate([duct_extend,0,0]) duct_angle(angle=0);
+            }
             
             //mounting lugs above fan
             translate([hotend_x+fan_x,hotend_y,fan_z]) rotate([0,90,0]){
                 for(i=[-16, 16]) difference(){
                     hull(){
                         translate([-16-mount_drop,i,-fan_x+3]) cylinder(r=m3_rad+wall, h=wall*2, $fn=16);
-                        translate([0,i,-fan_x+3]) cylinder(r=m3_cap_rad*2, h=wall);
+                        translate([0,i,-fan_x+3]) cylinder(r=m3_cap_rad*2, h=wall*2);
                     }
                     translate([-16-mount_drop,i,-fan_x+3-.1]) cylinder(r=m3_rad, h=wall*2+1, $fn=16);
                 }
@@ -356,7 +363,7 @@ module fan_mount_blower(){
                     }
                     
                     //this is the duct!
-                    translate([fan_x,duct_jut,duct_w/2+wall]) rotate([0,0,duct_angle]) rotate([90,0,0]) cube([1.1,duct_w, duct_h], center=true);
+                    translate([fan_x,duct_jut,duct_h/2+wall]) rotate([0,0,duct_angle]) cube([1.1,duct_w, duct_h], center=true);
                 }
                 
                 hull(){
@@ -369,7 +376,7 @@ module fan_mount_blower(){
                     }
                     
                     //this is the duct!
-                    translate([fan_x,duct_jut,duct_w/2+wall]) rotate([0,0,duct_angle]) rotate([90,0,0]) cube([1.1,duct_w, duct_h], center=true);
+                    translate([fan_x,duct_jut,duct_h/2+wall]) rotate([0,0,duct_angle]) cube([1.1,duct_w, duct_h], center=true);
                 }
                 
                 //translate([hotend_x+fan_x-5,hotend_y,fan_z]) rotate([0,90,0]) cylinder(r=fan_hole, h=wall+1+5);
