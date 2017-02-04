@@ -17,6 +17,10 @@ module template(){
 				cylinder(r=hole_rad, h=wall/2);
 				translate([x_sep,0,0]) cylinder(r=hole_rad, h=wall/2);	
 			}
+            translate([0,y_sep,0]) hull(){
+				cylinder(r=hole_rad, h=wall/2);
+				translate([x_sep,0,0]) cylinder(r=hole_rad, h=wall/2);	
+			}
 			hull(){
 				cylinder(r=hole_rad, h=wall/2);
 				translate([0,y_sep,0]) cylinder(r=hole_rad, h=wall/2);
@@ -33,13 +37,15 @@ module template(){
 			}
 		
 			cylinder(r=hole_rad+wall/2, h=wall);
-			translate([x_sep,0,0]) cylinder(r=hole_rad+wall/2, h=wall);	
+			translate([x_sep,0,0]) cylinder(r=hole_rad+wall/2, h=wall);
+            translate([x_sep,y_sep,0]) cylinder(r=hole_rad+wall/2, h=wall);
 			translate([0,y_sep,0]) cylinder(r=hole_rad+wall/2, h=wall);
 		}
 		
 		translate([0,0,-.1]){
 			cylinder(r=hole_rad, h=wall+1);
-			translate([x_sep,0,0]) cylinder(r=hole_rad, h=wall+1);	
+			translate([x_sep,0,0]) cylinder(r=hole_rad, h=wall+1);
+            translate([x_sep,y_sep,0]) cylinder(r=hole_rad, h=wall+1);
 			translate([0,y_sep,0]) cylinder(r=hole_rad, h=wall+1);
 		}
 	}
