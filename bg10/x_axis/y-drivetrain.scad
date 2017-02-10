@@ -22,7 +22,7 @@
 include <configuration.scad>
 use <inc/bearing-guide.scad>
 
-idler_width = 12;
+idler_width = 9;
 echo(idler_width);
 
 %cube([19.5,10,10], center=true);
@@ -34,7 +34,7 @@ idlermount(len=68, rod=m3_diameter / 2 + 0.5, idler_height=16, narrow_len=46, na
 
 //bg10 y
 //translate([30,0,0])
-!idlermount(len=40, horizontal=0, oval_height=(idler_width+1)/2, narrow_width = 19, narrow_len = 25);
+*idlermount(len=40, horizontal=0, oval_height=(idler_width+1)/2, narrow_width = 19, narrow_len = 0);
 
 
 
@@ -150,9 +150,9 @@ module idlermount(len=45, narrow_len=0, narrow_width=0, rod=threaded_rod_diamete
             }
             
             echo(1+idler_width);
-            translate([(10 + idler_width)/2-3.5,0,0]) rotate([0,90,0]) cylinder(r1=m5_nut_diameter_horizontal/2, r2=m5_nut_diameter_horizontal/2+.5, h=10, $fn=6);
+            translate([(10 + idler_width)/2-3,0,0]) rotate([0,90,0]) cylinder(r1=m5_nut_diameter_horizontal/2, r2=m5_nut_diameter_horizontal/2+.5, h=10, $fn=6);
             translate([(10 + idler_width)/2-2,0,0]) rotate([0,90,0]) cylinder(r=m5_diameter/2+.1, h=50,center=true, $fn=32);
-            mirror([1,0,0]) translate([(10 + idler_width)/2-3.5,0,0]) rotate([0,90,0]) cylinder(r1=m5_nut_diameter_horizontal/2+.5, r2=m5_nut_diameter_horizontal/2+1, h=10);
+            mirror([1,0,0]) translate([(10 + idler_width)/2-3,0,0]) rotate([0,90,0]) cylinder(r1=m5_nut_diameter_horizontal/2+1, r2=m5_nut_diameter_horizontal/2+1, h=10);
         }
 
     }
