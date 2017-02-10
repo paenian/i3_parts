@@ -2,10 +2,10 @@ $fn=36;
 
 emergency_stop();
 
-stop_rad = 7.5;
+stop_rad = 7.5/2;
 stop_height = 10;
 flange_height = 1;
-flange_rad = stop_rad+3;
+flange_rad = stop_rad+2;
 
 module emergency_stop(){
     union(){
