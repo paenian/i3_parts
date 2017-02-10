@@ -785,10 +785,10 @@ module groovemount_screw(solid=1,e3d=1){
         //screwholes
         translate([0,0,-inset+4.25+6/2-slop]){
             for(i=[0,1]) mirror([i,0,0]) translate([screw_mount_screw_sep/2,7,0]) rotate([90,0,0]) {
-                cylinder(r=632_rad, h=20, center=true);
-                translate([0,0,-wall*2.25]) rotate([0,0,45]) cylinder(r=632_nut_rad, h=20, center=true, $fn=4);
+                translate([0,0,wall*1.25]) cylinder(r=m3_rad, h=20);
+                translate([0,0,-wall*2.25]) rotate([0,0,45]) cylinder(r2=m3_nut_rad, r1=m3_nut_rad+.75, h=20, center=true, $fn=6);
                 
-                %translate([0,0,+2]) cylinder(r=632_rad, h=25.4*3/4);
+                %translate([0,0,+2]) cylinder(r=m3_rad, h=25.4*3/4);
             }
         }
         
@@ -851,7 +851,7 @@ module groovemount_screw(solid=1,e3d=1){
 }
 
 module groovemount_screw_clamp(){
-    groove_lift = wall-1;
+    groove_lift = 1;
     
     dia = 16;
     rad = dia/2+slop;
@@ -869,19 +869,10 @@ module groovemount_screw_clamp(){
         }
         
         //screwholes
-        for(i=[0,1]) mirror([i,0,0]) translate([screw_mount_screw_sep/2,7,-1]) cylinder(r=632_rad, h=wall*4);
+        for(i=[0,1]) mirror([i,0,0]) translate([screw_mount_screw_sep/2,7,-1]) cylinder(r=m3_rad+slop, h=wall*4);
         
        //hotend inset
-       render() translate([0,3,rad+groove_lift]) rotate([-90,0,0]) {
-           //PTFE tube hole
-           translate([0,0,-inset-wall*2]) {
-               cap_cylinder(r=bowden_tube_rad, h=wall*3);
-               translate([0,-3+.75,wall*1.5])
-               hull(){
-                cube([1,wall*2,wall*3], center=true);
-                translate([0,-bowden_tube_rad,0]) cube([bowden_tube_rad*2,wall*2,wall*3], center=true);
-               }
-           }
+       render() translate([0,3,rad+groove_lift]) rotate([-90,0,0]) {           
            //top part
            translate([0,0,-inset-2]) hull(){
                cap_cylinder(r=4+slop, h=wall);
