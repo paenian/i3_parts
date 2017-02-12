@@ -33,15 +33,15 @@ echo(idler_width+10-4);
 
 translate([0, -60, 0]) mirror([0, 0, 0]) x_end_idler(thru=true, spring=11.5);
 !translate([-50, 0, 0]) mirror([0, 0, 0]) translate([50, 0, 0])
-    x_end_motor();
+    x_end_motor(spring=11.5);
 
 m5_nut_height=5;
 
-module x_end_motor(){
+module x_end_motor(spring=0){
 
     mirror([0, 1, 0]) {
 
-        x_end_base([3, 3, min((bushing_xy[0] - 3) * 2, 3), 2], len=42, offset=-5, thru=false);
+        x_end_base([3, 3, min((bushing_xy[0] - 3) * 2, 3), 2], len=42, offset=-5, thru=false, spring=spring );
 
 
         translate([0, -z_delta - 2, 0]) difference(){
