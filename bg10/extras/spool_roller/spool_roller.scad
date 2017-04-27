@@ -27,6 +27,8 @@ top_thick = 6.5;
 //bolt_d = 8;
 //bolt_r = bolt_d/2+slop;
 
+mdf_wall = 6.5;
+
 
 separation = 100;
 wall = 4;
@@ -54,8 +56,8 @@ module spool_roller(){
 }
 
 module top_spool_roller(){
-    base = 4;
-    lift = top_thick+base;
+    base = 5;
+    lift = top_thick+base+2;
     
     mdf_wall = 6.5;
     
@@ -85,14 +87,16 @@ module top_spool_roller(){
         translate([mount_offset,0,0]) 
         difference(){
             union(){
-                translate([0,0,top_thick/2+base]) cube([top_length,30,top_thick+slop], center=true);
+                hull(){
+                    translate([0,0,mdf_wall]) cube([top_length,30,mdf_wall], center=true);
+                }
                 hull(){
                     cube([top_length,30,base*2], center=true);
                     translate([-wall/2,0,-lift]) cube([top_length,30,lift*2], center=true);
                 }
             }
             
-            translate([top_length/2,0,0]) rotate([0,-10,0]) cube([top_thick*2,40,base*2], center=true);
+            translate([top_length/2,0,0]) rotate([0,-5,0]) cube([top_thick,30,mdf_wall+slop*2], center=true);
         }
 	}
 }
