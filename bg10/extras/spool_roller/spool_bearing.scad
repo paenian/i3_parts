@@ -16,10 +16,10 @@ mount_offset = 35;
 
 hole_rad = 6;
 
-translate([70,0,0]) bearing_mount();
+!translate([70,0,0]) bearing_mount();
 
 difference(){
-    !bearing();
+    bearing();
 
     //translate([100,0,0]) cube([200,200,200], center=true);
 
@@ -74,7 +74,7 @@ module bearing(){
     // clearance
     tol=.25;
     number_of_planets=7;
-    number_of_teeth_on_planets=6;
+    number_of_teeth_on_planets=5;
     approximate_number_of_teeth_on_sun=11;
     ring_outer_teeth = 71;
     // pressure angle
