@@ -284,10 +284,10 @@ module fan_mount_blower(){
     duct_h = 20+slop;
     //duct_offset=38;
     
-    duct_jut = -5;
-    duct_angle = -10;
-    duct_extend = 8;
-    fan_x = 15+5+10+10+5;
+    duct_jut = -7;
+    duct_angle = -25;
+    duct_extend = 3;
+    fan_x = 15+5+10+10+5-8;
     
     difference(){
         union(){
@@ -305,7 +305,9 @@ module fan_mount_blower(){
                 }
                 
                 //this is the duct!
-                translate([fan_x,duct_jut,duct_h/2+wall]) rotate([0,0,duct_angle]) cube([1,duct_w+wall*2, duct_h+wall*2], center=true);
+                #translate([fan_x,duct_jut,duct_h/2+wall]) rotate([0,0,duct_angle]) cube([1,duct_w+wall*2, duct_h+wall*2], center=true);
+                
+                %translate([fan_x,duct_jut,duct_h/2+wall]) rotate([0,0,duct_angle]) translate([25,0,0]) cube([50,15,50], center=true);
             }
             
             //front duct transition

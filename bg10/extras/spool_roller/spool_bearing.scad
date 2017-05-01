@@ -5,6 +5,7 @@ outer_rad = 26+wall*2;
 bearing_rad = 26-wall;
 thickness = 12;
 slop = .25;
+gear_slop = .25;
 
 fn = 60;
 
@@ -16,10 +17,10 @@ mount_offset = 35;
 
 hole_rad = 6;
 
-!translate([70,0,0]) bearing_mount();
+translate([70,0,0]) bearing_mount();
 
 difference(){
-    bearing();
+    !bearing();
 
     //translate([100,0,0]) cube([200,200,200], center=true);
 
@@ -72,10 +73,10 @@ module bearing(){
     // thickness
     T=thickness;
     // clearance
-    tol=.25;
-    number_of_planets=7;
-    number_of_teeth_on_planets=5;
-    approximate_number_of_teeth_on_sun=11;
+    tol=gear_slop;
+    number_of_planets=6;
+    number_of_teeth_on_planets=8;
+    approximate_number_of_teeth_on_sun=13;
     ring_outer_teeth = 71;
     // pressure angle
     P=45;//[30:60]
@@ -124,6 +125,8 @@ module bearing(){
                 translate([0,0,T/2-.01+(i+1)*wall]) 
                     cylinder(r=filament_rads[i+1]-wall, h=.1, $fn = 12);
             }
+            
+            //cut out the outer ring
         }
         
 
@@ -143,7 +146,7 @@ module bearing(){
                     herringbone(np,pitch,P,DR,tol,helix_angle,T);
                     
                     //slot to free the gears
-                    cube([1,3.25,100], center=true);
+                    cube([1.25,3.75,100], center=true);
                 }
             }
         }
