@@ -25,8 +25,8 @@ bushing_clamp = bushing_zip;
 belt_move = 43;
 
 
-y_belt_mount(length = 35, drop=17+4);
-//rotate([0,180,0]) mirror([0,0,1]) x_carriage();
+//y_belt_mount(length = 35, drop=17+4);
+rotate([0,180,0]) mirror([0,0,1]) x_carriage();
 
 
 //Use 30 for single extruder, 50 for wades, 80 for dual extruders (moved to config file)
@@ -56,12 +56,15 @@ module belt_clamp(length = carriage_l, width=11){
                             translate([-3-5.5+width/2, -1, length/2]) cube_fillet([width, 16, length], vertical = [2, 2, 0, 0], center = true);
                             translate([-13, -10, 0]) cube([8, 10, length]);
                         }
-                        translate([-3.5, 0, 67 + carriage_hole_to_side]) cube([13, 10, 8], center = true);
-                        translate([-3.5, 0, 38 + carriage_hole_to_side]) cube([13, 11, 10], center = true);
-                        translate([-3.5, 0, 12 + carriage_hole_to_side]) cube([13, 11, 10], center = true);
-                        if (carriage_l_base == 30) {
+                        translate([-3.5, 0, 67 + carriage_hole_to_side]) cube([width+5, 12, 8], center = true);
+                        translate([-3.5, 0, 38 + carriage_hole_to_side]) cube([width+5, 12, 8], center = true);
+                        if(length > 40){
+                            translate([-3.5, 0, 12 + carriage_hole_to_side]) cube([width+5, 12, 8], center = true);
+                        }
+                        
+                        if (length <= 40) {
                             //more space for belt ends, as there is only one cutout
-                            translate([-3.5, 0, 15 + carriage_hole_to_side]) cube([13, 10, 14], center = true);
+                            translate([-3.5, 0, length/2]) cube([width+5, 12, 8], center = true);
                         }
                     }
 
@@ -77,27 +80,35 @@ module belt_clamp(length = carriage_l, width=11){
 
 module x_carriage(){
     ext_offset=35;
+    screwholes_x = [0, 20, 30, 50];
+    screwholes_y = [0,ext_offset,-ext_offset];
     mirror([1,0,0]) {
         difference() {
             union() {
                 //upper bearing
-                rotate([0, 0, 90]) linear(bushing_carriage);
+                rotate([0, 0, 90]) linear(bushing_xy, carriage_l);
                 //lower bearing
                 translate([xaxis_rod_distance,0,0]) rotate([0, 0, 90]) linear(bushing_xy, carriage_l);
 
                 //This block moves with varying bearing thickness to ensure the front side is flat
                 translate([0, -bushing_foot_len(bushing_xy), 0]) {
                     // main plate
-                    translate([4, -1, 0]) cube_fillet([xaxis_rod_distance + 4+2, 6, carriage_l], radius=2);
+                    translate([-13, -1, 0]) cube_fillet([xaxis_rod_distance + 4+2+20, 6, carriage_l], radius=2);
+                    
+                    //extra nub for the bottom bearing
                     translate([-8, -1, 0]) cube_fillet([xaxis_rod_distance + 16, 6, bushing_carriage_len + 3], radius=2);
                 }
 
                 translate([21,0,0]) %cube([35,30,30]);
                 
-                belt_clamp();
+                belt_clamp(width=12);
                 
-                //extra screwhole for extruder
-                translate([20+ext_offset-3, -11.5, 0]) cube_fillet([10, 18.5, carriage_l], vertical = [2, 2, 0, 2], top = [0, 0, 0, 2]);
+                //top screwhole bar
+                translate([20+ext_offset-3.5, -11.5, 0]) cube_fillet([10, 18.5, carriage_l], vertical = [2, 2, 0, 2], top = [0, 0, 0, 2]);
+                
+                //bottom screwhole bar titan aero extruder
+                translate([20-ext_offset-3.5, -11.5, 0]) cube_fillet([10, 18.5, carriage_l], vertical = [2, 2, 0, 2], top = [0, 0, 0, 2]);
+                
             }
             //Ensure upper bearing can be inserted cleanly
             rotate([0, 0, 90]) {
@@ -108,22 +119,11 @@ module x_carriage(){
                 linear_negative(bushing_xy, carriage_l);
             }
             
-            // extruder mounts
-            translate([21, -2, carriage_hole_to_side]) rotate([0,30,0]) extruder_hole();
-            translate([21+ext_offset, -2, carriage_hole_to_side]) rotate([0,30,0]) extruder_hole();
-            
-            translate([21, -2, carriage_hole_to_side + 30]) rotate([0,30,0]) extruder_hole();
-            translate([21+ext_offset, -2, carriage_hole_to_side + 30]) rotate([0,30,0]) extruder_hole();
-            
-            
-            if (carriage_l >= 50 + 2 * carriage_hole_to_side) {
-                translate([21, -2, carriage_hole_to_side + 30 + 20]) rotate([0,30,0]) extruder_hole();
-                translate([21+ext_offset, -2, carriage_hole_to_side + 30 + 20]) rotate([0,30,0]) extruder_hole();
+            // mounting holes
+            for(i=[0:len(screwholes_x)-1]) for(j=[0:len(screwholes_y)-1]) {
+                translate([21+screwholes_y[j], -2, carriage_hole_to_side+screwholes_x[i]]) rotate([0,30,0]) extruder_hole();
             }
-            if (carriage_l >= 80 + 2 * carriage_hole_to_side) {
-                translate([21, -2, carriage_hole_to_side + 30 + 20 + 30]) rotate([0,30,0]) extruder_hole();
-                translate([21+ext_offset, -2, carriage_hole_to_side + 30 + 20 + 30]) rotate([0,30,0]) extruder_hole();
-            }
+            
         }
     }
 }
@@ -154,6 +154,11 @@ module y_belt_mount(length=carriage_l, drop=15){
         }
         translate([16-2, -0, 5]) rotate([0,0,-90]) y_hole(drop);
         translate([16-2, -0, length-5]) rotate([0,0,-90]) y_hole(drop);
+        
+        //zip tie slot
+        for(i=[length*1/5,length*4/5]) translate([12.5,-1,i]) scale([.7,1,1]) rotate_extrude(){
+            translate([10.25,0,0]) square([2,4], center=true);
+        }
         
         //clean up the back
         translate([0,-50-8,0]) cube([100,100,100], center=true);

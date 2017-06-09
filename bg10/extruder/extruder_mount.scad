@@ -26,7 +26,13 @@ mount_sep = 35;  //needs to match ext_offset from x-carriage.scad
 
 $fn=60;
 
-extruder_mount(offset=-3, mount_screw_rad=m3_rad, fan_mount=1);
+//bg10 standard
+//extruder_mount(offset=-3, mount_screw_rad=m3_rad, fan_mount=1);
+
+//aero - bigger offset
+extruder_mount(offset=-3-2, mount_screw_rad=m3_rad, fan_mount=0);
+
+
 
 //attaches the motor with one or two screws.
 module extruder_mount(screws = 1, flip=0, fan_mount=0, mount_screw_rad = 632_rad, angle=0, height=15, offset=-1, motor_offset=1){

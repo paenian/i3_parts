@@ -99,8 +99,20 @@ tensioner_cap_rad = 4.5;
 
 //translate([motor_r*2+wall, 0, 0]) mirror([1,0,0]) extruder(bowden_tap, none, m3);
 //translate([motor_r*2+wall, motor_r*2+wall, 0]) 
-extruder(groovemount_screw, none, m5);
-translate([0,33,0]) groovemount_screw_clamp();
+//extruder(groovemount_screw, none, m5);
+//translate([0,33,0]) groovemount_screw_clamp();
+
+//motor flange for the aero - it needs a 2mm bump
+aero_flange();
+
+module aero_flange(){
+    difference(){
+        base(h=2.25, peg_h=0, num_holes=4);
+        
+        base(solid = -1, num_holes=4);
+    }
+            
+}
 
 
 //**********BUILD GROUP 6 SPECS***********//
@@ -1130,26 +1142,28 @@ module cap_cylinder(r=1, h=1, center=false, point = 0){
 }
 
 //base plate
-module base(solid=1, h=wall){
+module base(solid=1, h=wall, peg_h=wall, num_holes=3){
+    max_angle = num_holes*90-1;
 	if(solid==1){
 		intersection(){
 			motor_base(h);
 			translate([0,0,h]) cube([motor_w,motor_w,h*2], center=true);
 		}
         //pegs for the screws
-        for(i=[0,90,180]){
+        for(i=[0:90:max_angle]){
             rotate([0,0,i]){
-                translate([31/2+slop,31/2+slop,0]) cylinder(r=m3_cap_rad-.1, h=h*2, $fn=18);
-                translate([31/2-slop,31/2-slop,0]) cylinder(r=m3_cap_rad-.1, h=h*2, $fn=18);
+                translate([31/2+slop,31/2+slop,0]) cylinder(r=m3_cap_rad-.1, h=h+peg_h, $fn=18);
+                translate([31/2-slop,31/2-slop,0]) cylinder(r=m3_cap_rad-.1, h=h+peg_h, $fn=18);
 		    }
 		}
 	}else{
-		motor_mount(h);
+		motor_mount(h, num_holes=num_holes);
 	}
 }
 
 //motor cutout and mount
-module motor_mount(h=wall, h2=6.5){
+module motor_mount(h=wall, h2=6.5, num_holes=3){
+    max_angle = num_holes*90-1;
 	ridge_r = 12;
 	ridge_h1 = 2.5;
 	ridge_h2 = 8-ridge_h1; //2.3
@@ -1161,7 +1175,7 @@ module motor_mount(h=wall, h2=6.5){
 		translate([0,0,ridge_h1-.05]) cylinder(r1=ridge_r, r2=gear_rad, h=ridge_h2+.1, $fn=36);
 	}
 
-	for(i=[0,90,180]){
+	for(i=[0:90:max_angle]){
 		rotate([0,0,i]){
 			hull(){
 				translate([31/2+slop,31/2+slop,0]) cylinder(r=m3_rad, h=20, $fn=18, center=true);
