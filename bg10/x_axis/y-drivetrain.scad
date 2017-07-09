@@ -30,11 +30,19 @@ echo(idler_width);
 
 //bg10 x 
 //translate([0,50,0])
-idlermount(len=68, rod=m3_diameter / 2 + 0.5, idler_height=16, narrow_len=46, narrow_width=10, horizontal=1);
+*idlermount(len=68, rod=m3_diameter / 2 + 0.5, idler_height=16, narrow_len=46, narrow_width=10, horizontal=1);
+
+//bg10 x  (for metal, toothed double-flanced bearings)
+translate([0,50,0])
+idlermount(len=68, rod=m3_diameter / 2 + 0.5, idler_height=16.5, idler_width=10, narrow_len=46, narrow_width=10, horizontal=1);
 
 //bg10 y
 //translate([30,0,0])
 *idlermount(len=40, horizontal=0, oval_height=(idler_width+1)/2, narrow_width = 19, narrow_len = 0);
+
+//bg10 y (for metal, toothed double-flanged bearings)
+translate([30,0,0])
+idlermount(len=40, horizontal=0, idler_width=10, idler_height=16.5, oval_height=(idler_width+1)/2, narrow_width = 19, narrow_len = 0);
 
 
 
