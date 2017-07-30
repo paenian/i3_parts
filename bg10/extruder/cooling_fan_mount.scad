@@ -283,11 +283,20 @@ module fan_mount_blower(){
     duct_w = 15+slop;
     duct_h = 20+slop;
     //duct_offset=38;
-    
-    duct_jut = -7;
-    duct_angle = -25;
-    duct_extend = 3;
-    fan_x = 15+5+10+10+5-8;
+
+// Rakish    
+//    duct_jut = -7;
+//    duct_angle = -25;
+//    duct_extend = 3;
+//    fan_x = 15+5+10+10+5-8;
+//    tongue_width = hot_rad*2-wall;
+
+// Longer, lower angle   
+    duct_jut = -5;
+    duct_angle = -10;
+    duct_extend = 8;
+    fan_x = 8+15+5+10+10+5-8;
+    tongue_width = 10;
     
     difference(){
         union(){
@@ -395,7 +404,7 @@ module fan_mount_blower(){
                             
             translate([-(hot_rad+thickness*2),0,0]) cylinder(r=hot_rad+thickness*2+wall, h=thickness+wall*10, center=true, $fn=facets);
             //an extra tongue for strength
-            translate([0,0,0])cube([100,hot_rad*2-wall,wall], center=true);
+            translate([0,0,0])cube([100,tongue_width,wall], center=true);
         }
     }
 }
