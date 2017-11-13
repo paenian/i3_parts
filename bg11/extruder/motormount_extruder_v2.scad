@@ -54,6 +54,8 @@ nut_rad = 632_nut_rad;
 bowden_tap_rad = 9.2/2;
 bowden_tube_rad = 2.1;
 
+gear_screw_clearance = .5;
+
 
 /////////////////////////////////////////
 //  Only the variables in here should need to be changed.
@@ -328,7 +330,7 @@ module extruder(type=0, mount = 0, idler = 0, e3d=0){
 module body(solid = 0, type=0, mount=0, idler=0){
 	rad = 3;
 	h=50;
-	fillet = 7;
+	fillet = 11;
 
 	width = motor_w/2-rad*2+filament_rad;
 
@@ -342,7 +344,7 @@ module body(solid = 0, type=0, mount=0, idler=0){
 			translate([0,0,h/2]) cube([motor_w, motor_w, h], center=true);
 			cylinder(r=motor_r+slop, h=h, $fn=64);
 		}
-		translate([motor_w/4-width-rad/2-.3, 0, motor_mount_h]) difference(){
+		translate([motor_w/4-width-rad/2+6.1-fillet, 0, motor_mount_h]) difference(){
 			translate([0,-(motor_w-rad*2)/2,0]) cube([fillet, motor_w-fillet, fillet]);
 			translate([0,0,fillet]) rotate([90,0,0]) cylinder(r=fillet, h=motor_w-rad, center=true);
 		}
@@ -381,7 +383,14 @@ module body(solid = 0, type=0, mount=0, idler=0){
 		}
         
         //clearance for the screw on a mk8 drive gear with a slightly too long grub screw
-        #translate([0,0,filament_height-9]) cylinder(r1=gear_rad+3, r2=gear_rad, h=7);
+        //translate([0,0,filament_height-9]) cylinder(r1=gear_rad+3, r2=gear_rad, h=7);
+        translate([0,0,filament_height-5]){
+            cylinder(r=gear_rad+gear_screw_clearance+slop, h=2.05, center=true);
+            for(i=[0,1]) mirror([0,0,i]) translate([0,0,1.5]) cylinder(r1=gear_rad+gear_screw_clearance+slop, r2=gear_rad+slop, h=1.05, center=true);
+        }
+        
+        
+        
 
 		//filament
 		translate([filament_offset,0,filament_height]) rotate([90,0,0]) rotate([0,0,180/8]) cylinder(r=filament_rad, h=100, center=true, $fn=8);
@@ -395,7 +404,7 @@ module body(solid = 0, type=0, mount=0, idler=0){
 		}
 
 		//cone to guide/unguide filament
-		translate([filament_offset,-1,filament_height]) for(i=[0,1]) mirror([0,i,0]) translate([0,-wall-1+2.5,0]) rotate([90,0,0]) rotate([0,0,180/8]) cylinder(r1=filament_rad*2, r2=filament_rad, h=3, $fn=8);
+		translate([filament_offset,-1+.5,filament_height]) for(i=[0,1]) mirror([0,i,0]) translate([0,-wall-1+2.5,0]) rotate([90,0,0]) rotate([0,0,180/8]) cylinder(r1=filament_rad*2.5, r2=filament_rad, h=3, $fn=8);
 
 		//hotend attachment
 		render() translate([filament_offset,motor_w/2,filament_height]) rotate([-90,0,0]){
@@ -768,13 +777,16 @@ module groovemount_screw(solid=1,e3d=1){
     thick = 5;
     length = 10;
     
+    angle = -25;
+    
+    
     
     screw_inset = 4.2;
     screw_offset = rad+1;
     screw_height = rad+m3_nut_height+wall;
 
     if(solid){
-        //body
+        //hotend body
         hull(){
             minkowski(){
                 translate([0,0,-wall*2-mink]) rotate([0,0,180/16]) cylinder(r=(wall+rad-mink+1)/cos(180/16), h=inset+wall+groove, $fn=16);
@@ -787,16 +799,16 @@ module groovemount_screw(solid=1,e3d=1){
             }
            
             translate([0,filament_height,0]) rotate([90,0,0])  cylinder(r=4, h=.1, center=true);
-            }
+        }
             
         //screwhole mounts
-        translate([0,0,-inset+4.25+6/2-slop]) hull(){
+        rotate([0,0,angle]) translate([0,0,-inset+4.25+6/2-slop]) hull(){
             for(i=[0,1]) mirror([i,0,0]) translate([screw_mount_screw_sep/2,7,0]) rotate([90,0,0]) cylinder(r=screw_mount_rad, h=18, center=true);
         }
     }else{
         
         //screwholes
-        translate([0,0,-inset+4.25+6/2-slop]){
+        rotate([0,0,angle]) translate([0,0,-inset+4.25+6/2-slop]){
             for(i=[0,1]) mirror([i,0,0]) translate([screw_mount_screw_sep/2,7,0]) rotate([90,0,0]) {
                 translate([0,0,wall*1.25]) cylinder(r=m3_rad, h=20);
                 translate([0,0,-wall*2.25]) rotate([0,0,45]) cylinder(r2=m3_nut_rad, r1=m3_nut_rad+.75, h=20, center=true, $fn=6);
@@ -806,7 +818,7 @@ module groovemount_screw(solid=1,e3d=1){
         }
         
         //hotend holes
-       render(){
+       render() rotate([0,0,angle]) {
            //PTFE tube hole
            translate([0,0,-inset-wall*2]) {
                cap_cylinder(r=bowden_tube_rad, h=wall*3);
@@ -829,37 +841,22 @@ module groovemount_screw(solid=1,e3d=1){
            }
            
            translate([0,0,-inset]) difference(){
-               #cap_cylinder(r=rad, h=4+groove+.2, $fn=90);
+               cap_cylinder(r=rad, h=4+groove+.2, $fn=90);
                translate([0,0,4.25]) cylinder(r=rad+1, h=6-slop*3);
            }
        }
         
-        //backstop
-        translate([0,0,-inset]) cylinder(r=rad+slop*2, h=slop*2);
-        
-        //clamp cutout
-        translate([0,-rad-1.5,-inset+20]) cube([rad*2+wall*3+20,rad*2,40+12], center=true);
-        
-        //hotend screwholes/nut traps
-        *for(i=[0,1]) mirror([i,0,0]) translate([screw_offset,0,-wall+groove]) rotate([90,0,0]){
-            translate([0,0,0]) cylinder(r=m3_rad, h=rad*3, center=true);
-            translate([0,0,m3_nut_height+.3]) cylinder(r=m3_rad, h=rad);
-            //translate([0,0,m3_nut_height+wall/2+.3]) cylinder(r=m3_cap_rad, h=rad);
-            hull(){
-                rotate([0,0,30]) cylinder(r=m3_nut_rad+slop, h=m3_nut_height+slop*2, $fn=6);
-                translate([0,wall*3,0]) rotate([0,0,30]) cylinder(r=m3_nut_rad+slop, h=m3_nut_height+slop*2, $fn=6);
-           }
-       }
+       //backstop
+       translate([0,0,-inset]) cylinder(r=rad+slop*2, h=slop*2);
        
-       //zip tie slot!  WHAT YOU SAY!?  MORE ZIP TIES!?  I'm outta control, yo.
-       *translate([0,0,1.75]) difference(){
-           cylinder(r=rad+2+.5, h=4.5, $fn=60);
-           translate([0,0,-.05]) cylinder(r=rad+.5, h=5.1, $fn=60);
-       }
-       *translate([0,0,-inset-6]) difference(){
-           cylinder(r=5+2, h=4, $fn=60);
-           translate([0,0,-.05]) cylinder(r=5, h=4.1, $fn=60);
-       }
+       //cutout for the groovemount attachment
+       rotate([0,0,angle]) translate([0,-rad-1.5,6]) cube([60,rad*2,19], center=true);
+        
+       //flat cutout for the filament insert area
+       translate([0,-rad-1.5,-6]) cube([60,rad*2,7], center=true);
+       
+       //cut the carriage side flat
+       translate([30+motor_w/2-filament_offset+.1,0,0]) cube([60,60,120], center=true);
     }
 }
 
@@ -1165,13 +1162,13 @@ module base(solid=1, h=wall, peg_h=wall, num_holes=3){
 //motor cutout and mount
 module motor_mount(h=wall, h2=6.5, num_holes=3){
     max_angle = num_holes*90-1;
-	ridge_r = 12;
-	ridge_h1 = 2.5;
-	ridge_h2 = 8-ridge_h1; //2.3
+	ridge_r = 22/2 + slop;
+	ridge_h1 = 2.1;
+	ridge_h2 = 7-ridge_h1; //2.3
 
 	hull(){
 		for(i=[0,wall/2]) {
-			#translate([i,0,-.05]) cylinder(r=ridge_r, h=ridge_h1+.1, $fn=36);
+			translate([i,0,-.05]) cylinder(r=ridge_r, h=ridge_h1+.1, $fn=36);
 		}
 		translate([0,0,ridge_h1-.05]) cylinder(r1=ridge_r, r2=gear_rad, h=ridge_h2+.1, $fn=36);
 	}
