@@ -34,7 +34,7 @@ separation = 100;
 wall = 4;
 
 spool_roller();
-!top_spool_roller();
+*top_spool_roller();
 
 $fn=32;
 module spool_roller(){

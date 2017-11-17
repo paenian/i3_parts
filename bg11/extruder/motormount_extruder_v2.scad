@@ -27,7 +27,7 @@ motor_r = 52/2;	//this is the rounding on the motor face.
 
 m3_nut_rad = 6.01/2+slop;
 m3_nut_height = 2.4;
-m3_rad = 3/2+slop;
+m3_rad = 3/2+slop*2;
 m3_cap_rad = 3.25;
 
 m4_nut_rad = 7.66/2+slop;
@@ -400,7 +400,7 @@ module body(solid = 0, type=0, mount=0, idler=0){
 		if(idler == m3){
 			idler(idler_dia = 10, idler_thick = 4, idler_flat_rad = 3, idler_nut_rad = m3_nut_rad+.1, idler_nut_height = m3_nut_height+2, idler_bolt_rad = m3_rad);
 		}else{
-			idler(idler_dia = 16, idler_thick = 6, idler_flat_rad = 4, idler_nut_rad = m5_nut_rad, idler_nut_height = m5_nut_height, idler_bolt_rad = m5_rad);
+			idler(idler_dia = 16, idler_thick = 6, idler_flat_rad = 3.5, idler_nut_rad = m5_nut_rad, idler_nut_height = m5_nut_height, idler_bolt_rad = m5_rad);
 		}
 
 		//cone to guide/unguide filament
@@ -449,8 +449,8 @@ module idler(idler_dia = 16, idler_thick = 6, idler_flat_rad = 4, idler_nut_rad 
 	//idler mounting
 	//translate([8,0,0]) //uncomment to check idler path
 	translate([eff_gear_rad+idler_rad+idler_offset,0,0]){
-		rotate([0,0,30]) translate([0,0,-wall/2]) cylinder(r1=idler_nut_rad+.75, r2 = idler_nut_rad, h=idler_nut_height+wall, $fn=6);
-		translate([0,0,-wall/2+idler_nut_height+wall+layer_height]) cylinder(r=idler_bolt_rad, h=height);
+		rotate([0,0,0]) translate([0,0,-wall/2]) cylinder(r1=idler_nut_rad+1, r2 = idler_nut_rad, h=idler_nut_height+wall+1, $fn=6);
+		translate([0,0,-wall/2+idler_nut_height+wall+layer_height+1]) cylinder(r=idler_bolt_rad, h=height);
 		
 		difference(){
 			hull(){
@@ -459,7 +459,7 @@ module idler(idler_dia = 16, idler_thick = 6, idler_flat_rad = 4, idler_nut_rad 
 				translate([-idler_offset/2,0,filament_height+1]) cylinder(r=idler_rad+.75, h=idler_thick+4, center=true);
 			}
 		
-			translate([0,0,filament_height-idler_thick/2-.5]) cylinder(r1=idler_rad+.75, r2=idler_flat_rad, h=2.5, center=true);
+			#translate([0,0,filament_height-idler_thick/2-.5]) cylinder(r1=idler_rad+.75, r2=idler_flat_rad, h=2.5, center=true);
 		}
 	}
 
@@ -777,7 +777,7 @@ module groovemount_screw(solid=1,e3d=1){
     thick = 5;
     length = 10;
     
-    angle = -25;
+    angle = -35;
     
     
     
@@ -811,7 +811,7 @@ module groovemount_screw(solid=1,e3d=1){
         rotate([0,0,angle]) translate([0,0,-inset+4.25+6/2-slop]){
             for(i=[0,1]) mirror([i,0,0]) translate([screw_mount_screw_sep/2,7,0]) rotate([90,0,0]) {
                 translate([0,0,wall*1.25]) cylinder(r=m3_rad, h=20);
-                translate([0,0,-wall*2.25]) rotate([0,0,45]) cylinder(r2=m3_nut_rad, r1=m3_nut_rad+.75, h=20, center=true, $fn=6);
+                translate([0,0,-wall*2.25]) rotate([0,0,30]) cylinder(r2=m3_nut_rad, r1=m3_nut_rad+1.25, h=20, center=true, $fn=6);
                 
                 %translate([0,0,+2]) cylinder(r=m3_rad, h=25.4*3/4);
             }
@@ -837,11 +837,14 @@ module groovemount_screw(solid=1,e3d=1){
            //the groove
            translate([0,0,-inset]) hull(){
                cap_cylinder(r=12/2+slop*3, h=13, $fn=90);
-               translate([0,-3,0]) cap_cylinder(r=12/2+slop*3, h=13, $fn=90);
+               translate([0,-3,0]) cap_cylinder(r=12/2+slop*4, h=13, $fn=90);
            }
            
            translate([0,0,-inset]) difference(){
-               cap_cylinder(r=rad, h=4+groove+.2, $fn=90);
+               hull(){
+                   cap_cylinder(r=rad, h=4+groove+.2, $fn=90);
+                   translate([0,-3,0]) cap_cylinder(r=rad+slop, h=4+groove+.2, $fn=90);
+               }
                translate([0,0,4.25]) cylinder(r=rad+1, h=6-slop*3);
            }
        }
