@@ -103,7 +103,7 @@ tensioner_cap_rad = 4.5;
 //extruder(bowden_tap, none, m3);
 //translate([motor_r*2+wall, motor_r*2+wall, 0]) 
 extruder(groovemount_screw, none, m5);
-translate([0,33,0]) groovemount_screw_clamp();
+translate([0,34,0]) groovemount_screw_clamp();
 
 //motor flange for the aero - it needs a 2mm bump
 //aero_flange();
@@ -772,12 +772,12 @@ module groovemount_screw(solid=1,e3d=1){
     dia = 16;
     rad = dia/2+slop;
     mink = 1;
-    inset = 3;
+    inset = 2;
     groove = 9+2;
     thick = 5;
     length = 10;
     
-    angle = -35;
+    angle = -33;
     
     
     
@@ -853,7 +853,7 @@ module groovemount_screw(solid=1,e3d=1){
        translate([0,0,-inset]) cylinder(r=rad+slop*2, h=slop*2);
        
        //cutout for the groovemount attachment
-       rotate([0,0,angle]) translate([0,-rad-1.5,6]) cube([60,rad*2,19], center=true);
+       rotate([0,0,angle]) translate([0,-rad-1.5,6]) cube([40,rad*2,19], center=true);
         
        //flat cutout for the filament insert area
        translate([0,-rad-1.5,-6]) cube([60,rad*2,7], center=true);
@@ -1165,7 +1165,7 @@ module base(solid=1, h=wall, peg_h=wall, num_holes=3){
 //motor cutout and mount
 module motor_mount(h=wall, h2=6.5, num_holes=3){
     max_angle = num_holes*90-1;
-	ridge_r = 22/2 + slop;
+	ridge_r = 22/2 + slop*2;
 	ridge_h1 = 2.1;
 	ridge_h2 = 7-ridge_h1; //2.3
 

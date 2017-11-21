@@ -1,17 +1,17 @@
 use <bearing.scad>;
 
 wall = 5;
-outer_rad = 26+wall*2;
-bearing_rad = 26-wall;
+outer_rad = 28+wall*2;
+bearing_rad = 28-wall;
 thickness = 12;
 slop = .25;
-gear_slop = .25;
+gear_slop = .2;
 
 fn = 60;
 
 
 //these are the radii of the filament spools, in order.
-filament_rads = [26, 15, 8];
+filament_rads = [28, 15, 8];
 
 mount_offset = 35;
 
@@ -74,7 +74,7 @@ module bearing(){
     T=thickness;
     // clearance
     tol=gear_slop;
-    number_of_planets=6;
+    number_of_planets=5;
     number_of_teeth_on_planets=8;
     approximate_number_of_teeth_on_sun=13;
     ring_outer_teeth = 71;
@@ -146,7 +146,7 @@ module bearing(){
                     herringbone(np,pitch,P,DR,tol,helix_angle,T);
                     
                     //slot to free the gears
-                    cube([1.25,3.75,100], center=true);
+                    cube([1.5,5.5,100], center=true);
                 }
             }
         }
