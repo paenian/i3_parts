@@ -36,22 +36,35 @@ module groovemount_fan_ir_clamp(){
     difference(){
         union(){
             //mount the hotend
-            groovemount_screw_clamp(back_wall = 9);
+            groovemount_screw_clamp(back_wall = 9+5, solid=1);
             
             echo(fan_screw_sep+4+m3_rad*2);
             
             //mount the fan
-            translate([0,-fan_screw_sep/2-m3_rad+.1,0])
-            fan_mount();
+            translate([0,-fan_screw_sep/2-m3_rad+.1+2,0])
+            fan_mount(solid=1, inset = 9+5);
             
             //mount the sensor
-            translate([0,-fan_screw_sep-m3_rad*2-1,0])
-            diff_ir_mount();
+            translate([0,-fan_screw_sep-m3_rad*2+1,0])
+            diff_ir_mount(solid=1);
         }
+        
+        //mount the hotend
+        groovemount_screw_clamp(back_wall = 9+5, solid=0);
+            
+        echo(fan_screw_sep+4+m3_rad*2);
+            
+        //mount the fan
+        translate([0,-fan_screw_sep/2-m3_rad+.1+2,0])
+        fan_mount(solid=0, inset = 9+5);
+            
+        //mount the sensor
+        translate([0,-fan_screw_sep-m3_rad*2+1,0])
+        diff_ir_mount(solid=0);
     }
 }
 
-module diff_ir_mount(){
+module diff_ir_mount(solid=1){
     sensor_lift = 0;    //get it away from the hotend a little
     
     board_width = 24.25;
@@ -59,25 +72,27 @@ module diff_ir_mount(){
     board_inset = 12;
     
     hole_drop = -3;
+    adjust=5;
     screw_sep = 19;
     
     mount_len = board_width+wall;
     
     thick = sensor_lift+wall;
     
-    difference(){
-        union(){
-            translate([0,-board_inset/2,thick/2]) cube([mount_len, board_inset, thick], center=true);
+    if(solid == 1){
+        translate([0,-board_inset/2,thick/2]) cube([mount_len, board_inset, thick], center=true);
+    }else{
+        translate([0,-board_inset/4,thick*1.5-wall*1]) cube([board_width/2, board_inset/2, thick+1], center=true);
+        
+        for(i=[0,1]) mirror([i,0,0]) translate([screw_sep/2,hole_drop,0]) hull(){
+            cylinder(r=m3_rad, h=20, center=true);
+            translate([0,-adjust,0]) cylinder(r=m3_rad, h=20, center=true);
         }
-        
-        translate([0,-board_inset/4,thick*1.5-wall*1]) cube([board_width/2, board_inset/2, thick], center=true);
-        
-        for(i=[0,1]) mirror([i,0,0]) translate([screw_sep/2,hole_drop,0]) cylinder(r=m3_rad, h=20, center=true);
     }
 }
 
-module fan_mount(){
-    difference(){
+module fan_mount(solid=1, inset = 9){
+    if(solid == 1) difference(){
         union() {
                 //body
                 hull() for(i=[0,1]) for(j=[0,1]) mirror([i,0,0]) mirror([0,j,0]) translate([fan_screw_sep/2, fan_screw_sep/2, 0])
@@ -88,7 +103,7 @@ module fan_mount(){
                     for(i=[0,1]) for(j=[0,1]) mirror([i,0,0]) mirror([0,j,0]) translate([fan_screw_sep/2, fan_screw_sep/2, 0])
                 cylinder(r=m3_rad+2, h=wall);
                     
-                    translate([0,0,10]) rotate([90,0,0]) cylinder(r=15, h=fan_screw_sep, center=true);
+                    translate([0,0,8+inset]) rotate([90,0,0]) cylinder(r=hotend_rad/2+wall/2, h=fan_screw_sep, center=true);
                 }
             }
             
@@ -97,28 +112,38 @@ module fan_mount(){
             
             //screwholes
             for(i=[0,1]) for(j=[0,1]) mirror([i,0,0]) mirror([0,j,0]) translate([fan_screw_sep/2, fan_screw_sep/2, 0]) {
-                cylinder(r=m3_rad, h=100, center=true);
+                cylinder(r=m3_rad-slop, h=100, center=true);
                 hull(){
-                    translate([0,0,wall+2]) cylinder(r=m3_rad+wall/2, h=100);
-                    translate([5,5,wall+2]) cylinder(r=m3_rad+wall/2, h=100);
+                    translate([0,0,wall+2]) cylinder(r=m3_nut_rad, h=100, $fn=6);
+                    translate([5,0,wall+2]) cylinder(r=m3_nut_rad+.25, h=100, $fn=6);
                 }
             }
             
             //around the hotend
             hull() {
-                translate([0,0,17]) rotate([90,0,0]) cylinder(r=hotend_rad/2+.25, h=fan_screw_sep*2, center=true);
-                translate([0,0,23]) rotate([90,0,0]) cylinder(r=hotend_rad/2+1, h=fan_screw_sep*2, center=true);
+                translate([0,0,8+inset]) rotate([90,0,0]) cylinder(r=hotend_rad/2+.25, h=fan_screw_sep*2, center=true);
+                translate([0,0,23+inset]) rotate([90,0,0]) cylinder(r=hotend_rad/2+1, h=fan_screw_sep*2, center=true);
             }
             
             //flatten the back
             translate([0,0,-100]) cube([200,200,200], center=true);
            
            //flatten the front
-           translate([0,0,100+17]) cube([200,200,200], center=true);  
+           translate([0,0,100+8+inset]) cube([200,200,200], center=true);  
+    }else{
+        //reiterate the screw holes
+        //screwholes
+            for(i=[0,1]) for(j=[0,1]) mirror([i,0,0]) mirror([0,j,0]) translate([fan_screw_sep/2, fan_screw_sep/2, 0]) {
+                cylinder(r=m3_rad-slop, h=100, center=true);
+                hull(){
+                    translate([0,0,wall+2]) cylinder(r=m3_nut_rad, h=100, $fn=6);
+                    translate([5,0,wall+2]) cylinder(r=m3_nut_rad+.25, h=100, $fn=6);
+                }
+            }
     }
 }
 
-module groovemount_screw_clamp(back_wall = 1){
+module groovemount_screw_clamp(back_wall = 1, solid=1){
     groove_lift = back_wall;
     
     dia = 16;
@@ -130,12 +155,15 @@ module groovemount_screw_clamp(back_wall = 1){
     length = 10;
     
     
-    difference(){
+    if(solid == 1){
         hull(){
             //screwhole mounts
-            for(i=[0,1]) mirror([i,0,0]) translate([screw_mount_screw_sep/2,7,0]) cylinder(r=screw_mount_rad, h=thick);
+            for(i=[0,1]) mirror([i,0,0]){
+                translate([screw_mount_screw_sep/2-screw_mount_rad,7,0]) cylinder(r=screw_mount_rad, h=thick);
+                translate([screw_mount_screw_sep/2,7,screw_mount_rad]) cylinder(r=screw_mount_rad, h=thick-screw_mount_rad);
+            }
         }
-        
+    }else{    
         //screwholes
         for(i=[0,1]) mirror([i,0,0]) translate([screw_mount_screw_sep/2,7,-1]){     translate([0,0,groove_lift+.2]) cylinder(r=m3_rad+slop, h=wall*10);
            cylinder(r=m3_rad+2, h=groove_lift);
