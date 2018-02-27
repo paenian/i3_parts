@@ -5,13 +5,14 @@ m3_nut_rad = 6.01/2+slop;
 m3_nut_height = 2.4;
 m3_rad = 3/2+slop*2;
 m3_cap_rad = 3.25;
+m3_wash_rad = 8.5/2;
 
 m4_nut_rad = 7.66/2+slop;
 m4_nut_height = 3.2;
 m4_rad = 4/2+slop;
 m4_cap_rad = 7/2+slop;
 
-m5_nut_rad = 8.79/2+slop;
+m5_nut_rad = 8.79/2;
 m5_nut_height = 4.7;
 m5_rad = 5/2+slop;
 m5_cap_rad = 8/2+slop;
@@ -30,7 +31,39 @@ hotend_rad  = 23;
 fan_screw_sep = 24;
 thin_wall = 2;
 
-groovemount_fan_ir_clamp();
+rotate([90,0,0]) diffir_drop_mount();
+//groovemount_fan_ir_clamp();
+
+$fs = 1;
+
+%translate([0,0,-20]) cylinder(r=5, h=40, center=true);
+
+module diffir_drop_mount(adjust_height = 29, mount_drop = 39){
+    difference(){
+        hull(){
+            translate([0,wall/2,0]) cube([wall*2+m3_wash_rad*2, wall*4, adjust_height], center=true);
+            
+            translate([0,-wall/2,-mount_drop]) rotate([90,0,0]) diff_ir_mount(solid=1);
+        }
+        
+        //cutout for the sensor mount
+        translate([wall+50,wall*2+50,0]) cube([wall*2+m3_wash_rad+100, wall*3+100, adjust_height+100], center=true);
+        
+        //screw adjust slot
+        translate([wall/2,-wall/2,0]) {
+             hull() for(i=[0,1]) mirror([0,0,i]) translate([0,0,(adjust_height-wall*2-m3_wash_rad)/2]) {
+                rotate([90,0,0]) cylinder(r=m3_wash_rad, h=10);
+            }
+            
+            hull() for(i=[0,1]) mirror([0,0,i]) translate([0,0,(adjust_height-wall*2-m3_wash_rad)/2]) {
+                translate([0,10.2,0]) rotate([90,0,0]) cylinder(r=m3_rad+slop, h=10);
+            }
+        }
+        
+        //sensor mount
+        translate([0,-wall/2,-mount_drop]) rotate([90,0,0]) diff_ir_mount(solid=0, adjust=0);
+    }
+}
 
 module groovemount_fan_ir_clamp(){
     difference(){
@@ -64,7 +97,7 @@ module groovemount_fan_ir_clamp(){
     }
 }
 
-module diff_ir_mount(solid=1){
+module diff_ir_mount(solid=1, adjust=5){
     sensor_lift = 0;    //get it away from the hotend a little
     
     board_width = 24.25;
@@ -72,7 +105,6 @@ module diff_ir_mount(solid=1){
     board_inset = 12;
     
     hole_drop = -3;
-    adjust=5;
     screw_sep = 19;
     
     mount_len = board_width+wall;
@@ -82,11 +114,16 @@ module diff_ir_mount(solid=1){
     if(solid == 1){
         translate([0,-board_inset/2,thick/2]) cube([mount_len, board_inset, thick], center=true);
     }else{
-        translate([0,-board_inset/4,thick*1.5-wall*1]) cube([board_width/2, board_inset/2, thick+1], center=true);
+        translate([0,-board_inset/3-.5,thick*1.5-wall*1]) cube([board_width/2, board_inset*.666, thick*3], center=true);
         
         for(i=[0,1]) mirror([i,0,0]) translate([screw_sep/2,hole_drop,0]) hull(){
             cylinder(r=m3_rad, h=20, center=true);
             translate([0,-adjust,0]) cylinder(r=m3_rad, h=20, center=true);
+        }
+        
+        for(i=[0,1]) mirror([i,0,0]) translate([screw_sep/2,hole_drop,-20+.5]) hull(){
+            rotate([0,0,30]) cylinder(r2=m3_nut_rad, r1=m3_nut_rad+.5, h=20, $fn=6);
+            translate([0,-adjust,0]) rotate([0,0,30]) cylinder(r2=m3_nut_rad, r1=m3_nut_rad+.5, h=20, $fn=6);
         }
     }
 }
