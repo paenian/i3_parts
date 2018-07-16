@@ -27,10 +27,10 @@ mount_sep = 35;  //needs to match ext_offset from x-carriage.scad
 $fn=60;
 
 //bg10 standard
-//extruder_mount(offset=-3, mount_screw_rad=m3_rad, fan_mount=1);
+extruder_mount(offset=-3, mount_screw_rad=m3_rad, fan_mount=1);
 
 //aero - bigger offset
-extruder_mount(offset=-3-2, mount_screw_rad=m3_rad, fan_mount=0);
+//extruder_mount(offset=-3-2, mount_screw_rad=m3_rad, fan_mount=0);
 
 
 
