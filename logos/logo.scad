@@ -1,10 +1,14 @@
-scale([2,2,2]) stamp_base(base_thick = 1.5);
-scale([2,2,2]) stamp_text(base_thick = 3);
-scale([2,2,2]) stamp_border(base_thick = 3);
-scale([2,2,2]) stamp_bulb(base_thick = 3);
-scale([2,2,2]) stamp_all(base_thick = 3);
+mirror([1,0,0]) scale([2,2,2]) stamp_base(base_thick = 1.5);
+mirror([1,0,0]) scale([2,2,2]) stamp_text(base_thick = 3);
+mirror([1,0,0]) scale([2,2,2]) stamp_border(base_thick = 3);
+mirror([1,0,0]) scale([2,2,2]) stamp_bulb(base_thick = 3);
+mirror([1,0,0]) scale([2,2,2]) stamp_all(base_thick = 3);
 
-!scale([1.5,1.5,1]) logo();
+//DXFs for lasercutting
+projection() mirror([1,0,0]) scale([2,2,2]) stamp_base(base_thick = 1.5);
+!projection(cut=true) mirror([1,0,0]) scale([2,2,2]) translate([0,0,-8]) stamp_all(base_thick = 3);
+
+scale([1.5,1.5,1]) logo();
 
 sc = .1;
 
