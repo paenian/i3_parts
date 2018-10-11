@@ -1,5 +1,10 @@
+scale([2,2,2]) stamp_base(base_thick = 1.5);
+scale([2,2,2]) stamp_text(base_thick = 3);
+scale([2,2,2]) stamp_border(base_thick = 3);
+scale([2,2,2]) stamp_bulb(base_thick = 3);
+scale([2,2,2]) stamp_all(base_thick = 3);
 
-scale([2,2,2]) stamp_bulb();
+!scale([1.5,1.5,1]) logo();
 
 sc = .1;
 
@@ -11,53 +16,104 @@ inner_thick = 2;
 
 module stamp_base(){
     sphere_rad = 1;
-    for(i=[0,stamp_base_thick-base_thick]) minkowski(){
-        translate([0,0,i+sphere_rad/2-.25]) hull() linear_extrude(height=base_thick-sphere_rad){
+    minkowski(){
+        translate([0,0,stamp_base_thick-base_thick+sphere_rad/2-.25]) hull() linear_extrude(height=base_thick-sphere_rad){
             scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="border");
             scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="bulb");
         }
+        
         //cylinder(r1=1, r2=.5, h=base_thick/2, $fn=12);
         scale([2,2,1]) sphere(r=sphere_rad/2, $fn=6);
     }
     
-    hull() linear_extrude(height=stamp_base_thick-sphere_rad){
+    hull() {
+        minkowski(){
+            translate([0,0,stamp_base_thick-base_thick+sphere_rad/2-.25]) hull() linear_extrude(height=base_thick-sphere_rad){
+                scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="border");
+                scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="bulb");
+            }
+        
+            //cylinder(r1=1, r2=.5, h=base_thick/2, $fn=12);
+            scale([2,2,1]) sphere(r=sphere_rad/2, $fn=6);
+        }
+        
+        minkowski(){
+            translate([2.25,3,0]) scale([.75,.75,1]) translate([0,0,sphere_rad/2-.25]) hull() linear_extrude(height=base_thick-sphere_rad){
+                scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="border");
+                scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="bulb");
+            }
+        }
+    }
+    
+    minkowski(){
+        translate([2.25,3,0]) scale([.75,.75,1]) translate([0,0,sphere_rad/2-.25]) hull() linear_extrude(height=base_thick-sphere_rad){
             scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="border");
             scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="bulb");
         }
+        scale([2,2,1]) sphere(r=sphere_rad, $fn=6);
+    }
 }
 
-module stamp_border(){
-    sphere_rad = .5;
+module stamp_all(){
+    sphere_rad = .25;
     stamp_base();
-    translate([0,0,stamp_base_thick-.1]) minkowski(){
+    translate([0,0,stamp_base_thick-.5]) minkowski(){
         linear_extrude(height=base_thick-sphere_rad){
             scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="border");
         }
-        //cylinder(r1=1, r2=.5, h=base_thick/2, $fn=12);
+        
+        scale([1,1,1]) sphere(r=sphere_rad/2, $fn=6);
+    }
+    
+    translate([0,0,stamp_base_thick-.5]) minkowski(){
+        linear_extrude(height=base_thick-sphere_rad){
+            scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="text");
+        }
+        
+        scale([1,1,1]) sphere(r=sphere_rad/2, $fn=6);
+    }
+    
+    translate([0,0,stamp_base_thick-.5]) minkowski(){
+        linear_extrude(height=base_thick-sphere_rad){
+            scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="bulb");
+        }
+        
+        scale([1,1,1]) sphere(r=sphere_rad/2, $fn=6);
+    }
+}
+
+module stamp_border(){
+    sphere_rad = .333;
+    stamp_base();
+    translate([0,0,stamp_base_thick-.5]) minkowski(){
+        linear_extrude(height=base_thick-sphere_rad){
+            scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="border");
+        }
+        
         scale([1,1,1]) sphere(r=sphere_rad/2, $fn=6);
     }
 }
 
 module stamp_text(){
-    sphere_rad = .5;
+    sphere_rad = .25;
     stamp_base();
-    translate([0,0,stamp_base_thick-.1]) minkowski(){
+    translate([0,0,stamp_base_thick-.5]) minkowski(){
         linear_extrude(height=base_thick-sphere_rad){
             scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="text");
         }
-        //cylinder(r1=1, r2=.5, h=base_thick/2, $fn=12);
+        
         scale([1,1,1]) sphere(r=sphere_rad/2, $fn=6);
     }
 }
 
 module stamp_bulb(){
-    sphere_rad = .5;
+    sphere_rad = .25;
     stamp_base();
-    translate([0,0,stamp_base_thick-.1]) minkowski(){
+    translate([0,0,stamp_base_thick-.5]) minkowski(){
         linear_extrude(height=base_thick-sphere_rad){
             scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="bulb");
         }
-        //cylinder(r1=1, r2=.5, h=base_thick/2, $fn=12);
+        
         scale([1,1,1]) sphere(r=sphere_rad/2, $fn=6);
     }
 }
