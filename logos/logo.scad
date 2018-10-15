@@ -1,4 +1,4 @@
-mirror([1,0,0]) scale([2,2,2]) stamp_base(base_thick = 1.5);
+!mirror([1,0,0]) scale([2,2,2]) stamp_base(base_thick = 1.5);
 mirror([1,0,0]) scale([2,2,2]) stamp_text(base_thick = 3);
 mirror([1,0,0]) scale([2,2,2]) stamp_border(base_thick = 3);
 mirror([1,0,0]) scale([2,2,2]) stamp_bulb(base_thick = 3);
@@ -6,13 +6,13 @@ mirror([1,0,0]) scale([2,2,2]) stamp_all(base_thick = 3);
 
 //DXFs for lasercutting
 projection() mirror([1,0,0]) scale([2,2,2]) stamp_base(base_thick = 1.5);
-!projection(cut=true) mirror([1,0,0]) scale([2,2,2]) translate([0,0,-8]) stamp_all(base_thick = 3);
+projection(cut=true) mirror([1,0,0]) scale([2,2,2]) translate([0,0,-8]) stamp_all(base_thick = 3);
 
 scale([1.5,1.5,1]) logo();
 
 sc = .1;
 
-stamp_base_thick = 6;
+stamp_base_thick = 11;
 base_thick = 1.5;
 gear_thick = 2;
 thread_thick = 2.5;
@@ -42,7 +42,7 @@ module stamp_base(){
         }
         
         minkowski(){
-            translate([2.25,3,0]) scale([.75,.75,1]) translate([0,0,sphere_rad/2-.25]) hull() linear_extrude(height=base_thick-sphere_rad){
+            translate([6,7,0]) scale([.5,.5,1]) translate([0,0,sphere_rad/2-.25]) hull() linear_extrude(height=base_thick-sphere_rad){
                 scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="border");
                 scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="bulb");
             }
@@ -50,11 +50,11 @@ module stamp_base(){
     }
     
     minkowski(){
-        translate([2.25,3,0]) scale([.75,.75,1]) translate([0,0,sphere_rad/2-.25]) hull() linear_extrude(height=base_thick-sphere_rad){
+        translate([5.75,7,0]) scale([.5,.5,1]) translate([0,0,sphere_rad/2-.25]) hull() linear_extrude(height=base_thick-sphere_rad){
             scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="border");
             scale([sc,sc,sc]) import("nova-labs-stamp.dxf", layer="bulb");
         }
-        scale([2,2,1]) sphere(r=sphere_rad, $fn=6);
+        scale([2,2,1]) sphere(r=sphere_rad*1.5, $fn=6);
     }
 }
 
