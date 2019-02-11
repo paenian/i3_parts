@@ -41,7 +41,7 @@ ind_height = 12;
 hotend_rad = 8+slop+slop;
 e3d_fin_rad = 23/2;  //////////23 for the e3d V6; the V5 is 26 
 
-mirror([1,0,0]) cyclops_mount(); //for one Cyclops or Chimeara hotend
+!rotate([90,0,0]) mirror([1,0,0]) cyclops_mount(induction=0); //for one Cyclops or Chimeara hotend
 
 translate([0,-40, 0])
 bowden_mount_inline();  //for two e3d V6 hotends
@@ -178,7 +178,7 @@ module cyclops_holes(solid=0, jut=0){
                 }
             }
             if(solid<=0) translate([0,0,-.1]) {
-                cap_cylinder(r=m3_rad, h=wall*2);
+                translate([0,0,m3_cap_height+.2]) cap_cylinder(r=m3_rad, h=wall*2);
                 cap_cylinder(r=m3_cap_rad, h=m3_cap_height);
             }
         }
@@ -194,7 +194,7 @@ module cyclops_holes(solid=0, jut=0){
         if(solid<=0) translate([0,0,-.1]) {
             %translate([0,-5,9+wall+ind_jut+.1]) cube([30,30,18], center=true);
             %translate([0,-5,6+wall+ind_jut+.1]) rotate([90,0,0]) cylinder(r=1, h=50, center=true);
-            cap_cylinder(r=m3_rad, h=wall*2);
+            translate([0,0,m3_cap_height+.2]) cap_cylinder(r=m3_rad, h=wall*2);
             cap_cylinder(r=m3_cap_rad, h=m3_cap_height);
         }
     }
